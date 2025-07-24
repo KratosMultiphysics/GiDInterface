@@ -2,6 +2,7 @@
   <container n="MPM" pn="Material Point Method" icon="app" prefix="MPM" tree_state="open" open_window="0">
     <include n="StageInfo" active="1" path="apps/MPM/xml/StageInfo.spd"/>
     <include n="Parts" active="1" path="apps/MPM/xml/Parts.spd"/>
+    <include n="InitialConditions" active="1" path="apps/MPM/xml/InitialConditions.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/MPM/xml/BoundaryConditions.spd"/>
     <include n="Processes" active="0" path="apps/Structural/xml/Processes.spd"/>
     <include n="Intervals" active="0" path="apps/Common/xml/Intervals.spd"/>
