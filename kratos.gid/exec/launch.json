@@ -3,13 +3,13 @@
         {
             "name": "Default",
             "script": "pip_gids_python",
-            "pip_packages": "KratosMultiphysics-all==9.3.2",
+            "pip_packages": "KratosMultiphysics-all==10.3.0",
             "dependency_check": "Kratos::CheckDependenciesPipGiDsPythonMode"
         },
         {
             "name": "External python",
             "script": "pip",
-            "pip_packages": "KratosMultiphysics-all==9.3.2",
+            "pip_packages": "KratosMultiphysics-all==10.3.0",
             "dependency_check": "Kratos::CheckDependenciesPipMode"
         },
         {

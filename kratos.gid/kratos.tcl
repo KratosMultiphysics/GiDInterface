@@ -144,8 +144,6 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
     set Kratos::kratos_private(allow_logs) 1
-    # Experimental: Write mdpa as geometries
-    set Kratos::kratos_private(experimental_write_geometries) 0
     # git hash of the problemtype
     set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
@@ -169,13 +167,13 @@ proc Kratos::InitGlobalVariables {dir} {
     # Is using files modules
     set kratos_private(UseFiles) 0
     # Variables from the problemtype definition (kratos.xml)
-    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion MaximumGiDVersion}]
+    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion MaximumGiDVersion Production}]
 
     variable namespaces
     set namespaces [list ]
 
     variable pip_packages_required
-    set pip_packages_required [list KratosMultiphysics-all==9.5.1]
+    set pip_packages_required [list KratosMultiphysics-all==10.3.0]
 
     variable mesh_criteria_forced
     set mesh_criteria_forced [dict create]

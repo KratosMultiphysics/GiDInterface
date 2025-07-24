@@ -21,6 +21,7 @@ proc MPM::write::Init { } {
     SetAttribute materials_file [::MPM::GetWriteProperty materials_file]
     SetAttribute properties_location [::MPM::GetWriteProperty properties_location]
     SetAttribute model_part_name [::MPM::GetWriteProperty model_part_name]
+    SetAttribute write_mdpa_mode [::MPM::GetWriteProperty write_mdpa_mode]
 }
 
 # Events
