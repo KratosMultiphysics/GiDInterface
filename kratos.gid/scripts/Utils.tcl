@@ -105,7 +105,7 @@ proc Kratos::LoadProblemtypeLibraries {} {
 
     gid_groups_conds::SetProgramName $kratos_private(Name)
     gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
-    set spdfile [file join $kratos_private(Path) kratos_default.spd]
+    set spdfile [file join $kratos_private(Path) kratos.spd]
     if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
         gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
     } {
@@ -153,7 +153,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs experimental_write_geometries launch_configuration python_path kratos_bin_path docker_image]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path kratos_bin_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {

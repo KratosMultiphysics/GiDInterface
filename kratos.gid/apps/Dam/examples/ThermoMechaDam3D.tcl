@@ -159,17 +159,17 @@ proc ::Dam::examples::ThermoMechaDam3D::TreeAssignation {args} {
         # Surface Temperature
         set temperature_base "$damDirichletConditions/condition\[@n='INITIALTEMPERATURE'\]"
         set dam_temperature [customlib::AddConditionGroupOnXPath $temperature_base Dam]
-        set props_dam_temperature [list is_fixed false value 7.5 ]
+        set props_dam_temperature [list constrained false value 7.5 ]
         spdAux::SetValuesOnBaseNode $dam_temperature $props_dam_temperature
 
         set ground_temperature [customlib::AddConditionGroupOnXPath $temperature_base Ground]
-        set props_ground_temperature [list is_fixed false value 7.5 ]
+        set props_ground_temperature [list constrained false value 7.5 ]
         spdAux::SetValuesOnBaseNode $ground_temperature $props_ground_temperature
 
         # Constant Temperature
         set water_path "$damDirichletConditions/condition\[@n='CONSTANTRESERVOIRTEMPERATURE'\]"
         set water_node [customlib::AddConditionGroupOnXPath $water_path Water]
-        set props_water [list is_fixed true Gravity_Direction Z Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Water_temp 6 Water_level 15]
+        set props_water [list constrained true Gravity_Direction Z Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Water_temp 6 Water_level 15]
         spdAux::SetValuesOnBaseNode $water_node $props_water
 
     # Load Conditions

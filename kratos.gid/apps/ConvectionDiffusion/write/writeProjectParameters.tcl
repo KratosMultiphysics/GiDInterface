@@ -1,5 +1,5 @@
 # Project Parameters
-proc ::ConvectionDiffusion::write::getParametersDict { } {
+proc ::ConvectionDiffusion::write::getParametersDict { {stage ""} } {
 
     set projectParametersDict [dict create]
 
@@ -31,6 +31,8 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set restartDict Restart_Step 0
     dict set projectParametersDict restart_options $restartDict
 
+    # Get the modelers
+    set projectParametersDict [write::GetModelersDict $projectParametersDict $stage]
 
     return $projectParametersDict
 }

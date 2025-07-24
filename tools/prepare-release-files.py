@@ -1,4 +1,4 @@
-# read the file kratos_default.spd, and parse it as xml
+# read the file kratos.spd, and parse it as xml
 # then extract the version number 
 
 import xml.etree.ElementTree as ET
@@ -11,8 +11,22 @@ def get_version_number(file_name):
     return version
 
 if __name__ == "__main__":
+
+    # Open kratos.xml and set <Program><Production> to 1
+    file_name = "../kratos.gid/kratos.xml"
+    tree = ET.parse(file_name)
+    root = tree.getroot()
+    # Find the Production element
+    production = root.find('.//Production')
+    if production is not None:
+        production.text = '1'
+    else:
+        production = ET.SubElement(root, 'Program', 'Production')
+        production.text = '1'
+    tree.write(file_name)
+
     
-    file_name = "../kratos.gid/kratos_default.spd"
+    file_name = "../kratos.gid/kratos.spd"
     version = get_version_number(file_name)
     print(version)
 
@@ -24,7 +38,11 @@ if __name__ == "__main__":
 
     app_list = ['Common', 'Examples']
     for app in applications:
-        app_list.append(app.attrib['n'])
+        # check if the app has the attribute 'production=1'
+        if 'production' in app.attrib and app.attrib['production'] == '1':
+            # add the app to the list
+            if 'n' in app.attrib:
+                app_list.append(app.attrib['n'])
 
     print(app_list)
     # if there is a folder in the folder apps whose name is not in the list, delete it

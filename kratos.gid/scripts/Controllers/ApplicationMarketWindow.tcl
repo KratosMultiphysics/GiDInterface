@@ -43,7 +43,8 @@ proc spdAux::CreateInitialApplicationsWindow {} {
     set col 0
     set row 0
     foreach appname $appspn appid $appsid {
-        if {[apps::isPublic $appid]} {
+        if {[apps::isPublic $appid] && [apps::isProductionAvailable $appid] } {
+            # W "Application $appid is public and production available"
             set img [::apps::getImgFrom $appid]
             ttk::button $w.applications.img$appid -image $img -command [list apps::setActiveApp $appid]
             ttk::label $w.applications.text$appid -text $appname

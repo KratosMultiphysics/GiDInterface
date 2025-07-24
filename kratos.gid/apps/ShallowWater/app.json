@@ -39,7 +39,8 @@
         "materials_file": "TopographyMaterials.json",
         "properties_location": "json",
         "model_part_name": "main_model_part",
-        "output_model_part_name": "main_model_part"
+        "output_model_part_name": "main_model_part",
+        "write_mdpa_mode": "geometries"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "description": "Tools for the simulation of free surface flows under the shallow water assumptions."
