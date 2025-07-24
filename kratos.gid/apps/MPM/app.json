@@ -46,7 +46,8 @@
         "coordinates": "all",
         "materials_file": "ParticleMaterials.json",
         "properties_location": "json",
-        "model_part_name": "Background_Grid"
+        "model_part_name": "Background_Grid",
+        "write_mdpa_mode": "entities"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"

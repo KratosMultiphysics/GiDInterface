@@ -70,7 +70,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
 }
 
 # 
-proc write::writeGroupSubModelPartAsGeometry { group } {
+proc write::writeGroupSubModelPartAsGeometry { group { write_geometries 1} } {
     variable submodelparts
     variable formats_dict
     variable geometry_cnd_name
@@ -106,10 +106,12 @@ proc write::writeGroupSubModelPartAsGeometry { group } {
         WriteString "${s1}Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
         WriteString "${s1}End SubModelPartNodes"
-        # Print geometries
-        WriteString "${s1}Begin SubModelPartGeometries"
-        GiD_WriteCalculationFile elements -sorted $gdict
-        WriteString "${s1}End SubModelPartGeometries"
+        if {$write_geometries} {
+            # Print geometries only if requested, so conditions with no topology features are not printed
+            WriteString "${s1}Begin SubModelPartGeometries"
+            GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartGeometries"
+        }
         
         WriteString "${s}End SubModelPart"
     }

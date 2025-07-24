@@ -6,7 +6,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    types: [ready_for_review]
+    types: [labeled]
     branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -16,8 +16,10 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   test:
+    if: github.event_name != 'pull_request' || github.event.label.name == 'safe-to-test'
+
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
 
     env:
       GITHUB_ACTION: true
@@ -30,9 +32,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Install bins
-        run: |
-          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.3.2
+      #- name: Install bins
+      #  run: |
+      #    pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.3.0
 
       # Copy problemtype to gid and copy exec
       - name: Move kratos where it should be
@@ -40,6 +42,10 @@ jobs:
           rm -rf /gid/problemtypes/
           mkdir /gid/problemtypes
           mv $GITHUB_WORKSPACE/kratos.gid /gid/problemtypes/
+
+      - name: Check actor is trusted
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        run: echo "Safe to run"
 
       # start the tester thing
       - name: Tester

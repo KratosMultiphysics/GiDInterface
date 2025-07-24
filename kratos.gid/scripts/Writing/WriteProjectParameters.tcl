@@ -620,6 +620,30 @@ proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
     return $time_step_intervals_list
 }
 
+proc write::GetModelersDict { projectParametersDict {stage ""}  } {
+    set modelerts_list [list ]
+
+    if {[write::GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        # Move the import to the modelers
+        dict unset projectParametersDict solver_settings model_import_settings 
+        dict set projectParametersDict solver_settings model_import_settings input_type use_input_model_part
+        set importer_modeler [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler"]  
+        dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
+        lappend modelerts_list $importer_modeler
+
+        # Add the entities creation modeler
+        set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+        dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element $stage]
+        dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition $stage]
+        lappend modelerts_list $entities_modeler
+    
+    
+        dict set projectParametersDict "modelers" $modelerts_list
+    }
+    return $projectParametersDict
+}
+
+
 
 # what can be element, condition
 proc write::GetMatchSubModelPart { what {stage ""} } {
@@ -630,14 +654,19 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
     set elements_list [list ]
     set processed_groups_list [list ]
     set groups [apps::ExecuteOnCurrentXML GetListOfSubModelParts $stage]
+    if {$groups eq ""} {
+        set groups [spdAux::GetListOfSubModelParts $stage]
+    }
     foreach group $groups {
         set good_name ""
         # get the group and submodelpart name
         set group_name [$group @n]
         
         set group_name [write::GetWriteGroupName $group_name]
-        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
-        if {$what == "condition"} {set cid [[$group parent] @n]} {
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        if {$what == "condition"} {
+            set cid [[$group parent] @n]
+        } else {
             set element_node [$group selectNodes "./value\[@n='Element']"]
             if {[llength $element_node] == 0} {continue}
             set cid [write::getValueByNode $element_node]
@@ -645,6 +674,8 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         if {$cid eq ""} {continue}
         if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
         if {$entity eq ""} {continue}
+        
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
         if {$what == "condition"} {
             if {[$entity getGroupBy] eq "Condition"} {
                 set good_name "_HIDDEN_$cid"
@@ -660,10 +691,42 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         set kname [$entity getTopologyKratosName $etype $nnodes]
         # If no topology present, it may be a nodal condition
         if {$kname eq ""} {continue}
+
+        # If spd application sets a modelpartname, use it
+        set model_part_name [write::GetModelPartNameFromParentTree $group stage]
+        if {$model_part_name ne ""} {set model_part_basename $model_part_name}
+
         set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+
+        set pair_join [join [list $model_part_basename.$good_name $entity_name $kname] "__"]
+        # W "pair_join: $pair_join"
+        if {$pair_join ni $processed_groups_list} {lappend processed_groups_list $pair} {continue}
 
         lappend elements_list $pair
         
     }
     return $elements_list
+}
+
+
+# in the xml file, look up to find if some of the ancestors define a property modelpartname
+proc write::GetModelPartNameFromParentTree { group {stage ""} } {
+    set modelpart_name ""
+    set parent $group
+    set safety 0
+    set max_safety 10000
+    while {1} {
+        set parent [$parent parent]
+        if {$parent eq ""} {break}
+        if {[$parent hasAttribute modelpart_name]} {
+            set modelpart_name [get_domnode_attribute $parent modelpart_name]
+            break
+        }
+        if {$safety > $max_safety} {
+            W "GetModelPartNameFromParentTree: safety limit reached"
+            break
+        }
+        incr safety
+    }
+    return $modelpart_name
 }

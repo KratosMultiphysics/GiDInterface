@@ -59,6 +59,8 @@ proc ::EmbeddedFluid::write::getParametersDict { } {
     dict set solverSettingsDict distance_reading_settings $dist_settings_dict
 
     dict set param_dict solver_settings $solverSettingsDict
+
+    set param_dict [::write::GetModelersDict $param_dict]
     return $param_dict
 }
 

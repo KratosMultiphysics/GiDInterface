@@ -1,4 +1,4 @@
-set VERSION=9.5.1
+set VERSION=10.3.0
 @REM git checkout master
 @REM git fetch -p
 @REM git pull -p
@@ -6,16 +6,27 @@ set VERSION=9.5.1
 @REM git branch %BRANCH%
 @REM git checkout %BRANCH%
 
+@REM check if docker is on
+docker --version > NUL 2>&1
+if %errorlevel% neq 0 ( 
+    echo "Docker is not installed or not running. Please install Docker and try again."
+    exit /b 1
+)
 
-git tag -f Release-%version%
-git push --tags --force
 
 @REM run python prepare-release-files.py
 python prepare-release-files.py
 
+git commit -am "Release %VERSION% preparation"
+
+git tag -f Release-%version%
+git push --tags --force
+
 cd ..
 mkdir dist
 set FOLDER=dist\kratos-%VERSION%
+@REM delete the folder recursive if it exists
+if exist %FOLDER% rmdir /s /q %FOLDER%
 mkdir %FOLDER%
 xcopy /s/e/y/q kratos.gid %FOLDER%\kratos.gid\
 copy LICENSE.md %FOLDER%\kratos.gid\LICENSE.md
