@@ -6,7 +6,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    types: [labeled]
+    types: [ready_for_review]
     branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
