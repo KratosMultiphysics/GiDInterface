@@ -41,12 +41,18 @@ proc ::Structural::examples::MeshCantileverTest::Wizard::DrawGeometry {} {
         GiD_Geometry create point append Layer0 $x $y 0
     }
     # Lines
-    set lines [list {1 2} {2 3} {3 4} {4 5} {5 6} {6 7} {7 8} {8 9} {8 1} {7 3} {9 3}]
+    set lines [list {1 2} {2 3} {3 4} {4 5} {5 6} {6 7} {7 8} {8 9} {9 1} {7 3} {9 3}]
     foreach line $lines {
         set coords [split $line " "]
         set p1 [lindex $coords 0]
         set p2 [lindex $coords 1]
         GiD_Geometry create line append stline Layer0 $p1 $p2
+    }
+    # surfaces
+    set surfaces [list {1 2 11 9} {7 8 11 10} {3 4 5 6 10}]
+    foreach surface $surfaces {
+        # GiD_Geometry -v2 create surface append planarsurface Layer0 4 [list $p1 $p2 $p3 $p4]
+        GiD_Process Mescape Geometry Create NurbsSurface {*}$surface escape escape
     }
     
     # Update the groups window to show the created groups
