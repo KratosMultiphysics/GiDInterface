@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Wizard version="1.0.1" wizardid="StructuralMeshCantileverWizard" title="Cantilever Mesh analysis" icon="logo.png">
   <Steps>
-    <Step id="Geometry" title="Geometry definition" subtitle="Create the parametric artheria">
+    <Step id="Geometry" title="Geometry definition" subtitle="Create the example geometry">
       <Data>
         <Frame n="Image" position="right">
           <Item n="ImageGeom" v="MeshCantileverGeometry.png" type="image"/>
         </Frame>
         <Frame  n="Data" position="left">
           <Item n="Text" pn="Length" v="First of all we are going to create the geometry" type="label" />
-          <Item n="DrawButton" pn="Create geometry" type="button" v="StenosisWizard::Wizard::DrawGeometry" />
+          <Item n="DrawButton" pn="Create geometry" type="button" v="::Structural::examples::MeshCantileverTest::Wizard::DrawGeometry" />
         </Frame>
       </Data>
     </Step>
