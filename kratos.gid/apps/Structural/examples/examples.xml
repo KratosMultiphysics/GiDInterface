@@ -16,4 +16,7 @@
     <Example id="IncompressibleCookMembrane3D" app="Structural" logo="IncompressibleCookMembrane3D.png" name="Incompressible cook\nmembrane 3D" dim="3D" cmd="::Structural::examples::IncompressibleCookMembrane::Init">
         <Description></Description>
     </Example>
+    <Example id="MeshCantileverTest" app="Structural" logo="MeshCantilever.png" name="Mesh cantilever test" dim="2D" cmd="::Structural::examples::MeshCantileverTest::Init">
+        <Description></Description>
+    </Example>
 </Group>

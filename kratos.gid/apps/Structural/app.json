@@ -19,6 +19,7 @@
         "examples/TrussCantilever.tcl",
         "examples/HighRiseBuilding.tcl",
         "examples/IncompressibleCookMembrane.tcl",
+        "examples/MeshCantilever.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
