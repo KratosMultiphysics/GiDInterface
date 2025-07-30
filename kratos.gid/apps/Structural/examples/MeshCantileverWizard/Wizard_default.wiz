@@ -7,12 +7,24 @@
           <Item n="ImageGeom" v="MeshCantileverGeometry.png" type="image"/>
         </Frame>
         <Frame  n="Data" position="left">
-          <Item n="Text" pn="Length" v="First of all we are going to create the geometry" type="label" />
+          <Item n="Text" pn="Length" v="First of all we are going \nto create the geometry" type="label" />
           <Item n="DrawButton" pn="Create geometry" type="button" v="::Structural::examples::MeshCantileverTest::Wizard::DrawGeometry" />
         </Frame>
       </Data>
     </Step>
-    
+    <Step id="Material" title="Material definition" subtitle="Define the materials for the analysis">
+      <Data>
+        <Frame n="Data" position="left">
+          <Item n="concrete_DENSITY" pn="Concrete density" v="300" units="kg/m^3" type="double"/>
+          <Item n="concrete_YOUNG_MODULUS" pn="Concrete Young's modulus" v="200.9e8" units="Pa" type="double"/>
+          <Item n="concrete_POISSON_RATIO" pn="Concrete Poisson's ratio" v="0.22" type="double"/>
+          <Item n="steel_DENSITY" pn="Steel density" v="7850" units="kg/m^3" type="double"/>
+          <Item n="steel_YOUNG_MODULUS" pn="Steel Young's modulus" v="210e9" units="Pa" type="double"/>
+          <Item n="steel_POISSON_RATIO" pn="Steel Poisson's ratio" v="0.29" type="double"/>
+          <Item n="Action" pn="Create parts" type="button" v="::Structural::examples::MeshCantileverTest::Wizard::CreatePartsMaterial" />
+        </Frame>
+    </Data>
+  </Step>
   </Steps>
   <Templates>
   </Templates>

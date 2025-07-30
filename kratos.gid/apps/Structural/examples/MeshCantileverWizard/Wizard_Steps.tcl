@@ -51,79 +51,23 @@ proc ::Structural::examples::MeshCantileverTest::Wizard::DrawGeometry {} {
     # surfaces
     set surfaces [list {1 2 11 9} {7 8 11 10} {3 4 5 6 10}]
     foreach surface $surfaces {
-        # GiD_Geometry -v2 create surface append planarsurface Layer0 4 [list $p1 $p2 $p3 $p4]
+        # GiD_Geometry -v2 create surface append nurbssurface Layer0 -interpolate $surface
         GiD_Process Mescape Geometry Create NurbsSurface {*}$surface escape escape
     }
+
+    # Create the groups
+    GiD_Groups create concrete
+    GiD_Groups create steel
+    GiD_EntitiesGroups assign concrete surfaces {1 2}
+    GiD_EntitiesGroups assign steel surfaces 3
     
+
+
     # Update the groups window to show the created groups
     GidUtils::UpdateWindow GROUPS
     # Zoom frame to center the view
     GiD_Process 'Zoom Frame escape
 
-}
-
-proc ::Structural::examples::MeshCantileverTest::Wizard::DrawCircular {length radius start end delta precision } {
-    
-    #W "Drawing tube: \nLength $length \nStart $start \nEnd $end \nDelta $delta \nPrecision $precision"
-    set points [list]
-    
-    set layer [GiD_Info Project LayerToUse]
-    GiD_Process 'Layers Color $layer 153036015 Transparent $layer 255 escape 
-    
-    set zona [expr $end - $start]
-    set delta_z [expr double($zona) / double($precision)]
-    set origin_x [expr double($length)/-2]
-    set end_x [expr double($length)/2]
-
-    # Initial point
-    lappend points [list $origin_x $radius 0]
-    GiD_Geometry create point 1 $layer $origin_x $radius 0
-    
-    # first cut
-    lappend points [list $start $radius 0]
-    #W $points
-    
-    for {set i [expr $start + $delta_z]} {$i < [expr $end - $delta_z]} {set i [expr $i + $delta_z]} {
-        set y $radius
-        set y [expr double($radius)-((double($delta)/2.0)*(1.0+cos($MathUtils::PI*$i/double($end))))]
-        #W "$i $y"
-        lappend points [list $i $y 0]
-    }
-    
-    # last cut
-    lappend points [list $end $radius 0]
-    # Final point
-    GiD_Geometry create point 2 $layer $end_x $radius 0
-    lappend points [list $end_x $radius 0]
-    
-    set line [GiD_Geometry create line append nurbsline $layer 1 2 -interpolate [llength $points] {*}$points -tangents {1 0 0} {1 0 0}]
-    
-    # Time to Revolute!
-    GiD_Process Mescape Utilities Id $line escape escape Mescape Utilities Copy Lines DoExtrude Surfaces MaintainLayers MCopy 2 Rotation FNoJoin -$length,0.0,0.0 FNoJoin $length,0.0,0.0 180 1 escape
-    
-    # Closing tapas!
-    GiD_Process Mescape Geometry Create NurbsSurface 3 5 escape 6 4 escape escape 
-    
-    # Volumenizando!
-    GiD_Process Mescape Geometry Create volume 1 2 3 4 escape 
-    
-    # Agrupando
-    GiD_Groups create Inlet
-    GiD_EntitiesGroups assign Inlet surfaces {3}
-    
-    GiD_Groups create Outlet
-    GiD_EntitiesGroups assign Outlet surfaces {4}
-    
-    GiD_Groups create NoSlip
-    GiD_EntitiesGroups assign NoSlip surfaces {1 2}
-    
-    GiD_Groups create Fluid
-    GiD_EntitiesGroups assign Fluid volumes {1}
-    
-    # Partimos las superficies para refinar el mallado en el centro
-    GiD_Process Mescape Geometry Edit DivideSurf NumDivisions 2 USense 3 escape escape
-    GiD_Process Mescape Geometry Edit DivideSurf NumDivisions 1 USense 3 escape escape
-    
 }
 
 
@@ -137,19 +81,24 @@ proc ::Structural::examples::MeshCantileverTest::Wizard::Material { win } {
     ::Structural::examples::MeshCantileverTest::Wizard::FluidTypeChange
 }
 
-proc ::Structural::examples::MeshCantileverTest::Wizard::NextMaterial { } {
+proc ::Structural::examples::MeshCantileverTest::Wizard::CreatePartsMaterial { } {
     # Quitar parts existentes
-    set fluidParts [spdAux::getRoute "FLParts"]
-    gid_groups_conds::delete "${fluidParts}/group"
-    
+    set parts [spdAux::getRoute "STParts"]
+    gid_groups_conds::delete "${parts}/group"
+
     # Crear una part con los datos que toquen
-    set gnode [customlib::AddConditionGroupOnXPath $fluidParts "Fluid"]
-    
-    set props [list ConstitutiveLaw DENSITY DYNAMIC_VISCOSITY YIELD_STRESS POWER_LAW_K POWER_LAW_N]
-    foreach prop $props {
-        set propnode [$gnode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v [smart_wizard::GetProperty Material ${prop},value]
+    set gnode_concrete [customlib::AddConditionGroupOnXPath $parts/condition\[@n='Parts_Solid'\] "concrete"]
+    set gnode_steel [customlib::AddConditionGroupOnXPath $parts/condition\[@n='Parts_Solid'\] "steel"]
+
+    set parts [list concrete steel]
+    set props [list ConstitutiveLaw DENSITY YOUNG_MODULUS POISSON_RATIO]
+    foreach part $parts {
+        foreach prop $props {
+            set gnode_var_name gnode_$part
+            set propnode [[set $gnode_var_name] selectNodes "./value\[@n = '$prop'\]"]
+            if {$propnode ne "" } {
+                $propnode setAttribute v [smart_wizard::GetProperty Material ${part}_${prop},value]
+            }
         }
     }
     spdAux::RequestRefresh
