@@ -25,6 +25,20 @@
         </Frame>
     </Data>
   </Step>
+    <Step id="Conditions" title="Boundary conditions" subtitle="Define the boundary conditions for the analysis">
+      <Data>
+        <Frame n="Image" position="right">
+          <Item n="ImageGeom" v="MeshCantileverGeometry.png" type="image"/>
+        </Frame>
+        <Frame n="Data" position="left">
+          <Item n="Text" pn="Length" v="We are applying the nodal\nconditions to restrict movements.\nWe are also applying the\nfollowing boundary conditions:\n- Self weight\n- Point load in the middle\n- Line load on top" type="label" />
+
+          <Item n="PointLoad" pn="Point load" v="100000" units="N" type="double"/>
+          <Item n="LineLoad" pn="Line load" v="600000" units="N" type="double"/>
+          <Item n="Action" pn="Create boundary conditions" type="button" v="::Structural::examples::MeshCantileverTest::Wizard::CreateBoundaryConditions" />
+        </Frame>
+    </Data>
+  </Step>
   </Steps>
   <Templates>
   </Templates>
