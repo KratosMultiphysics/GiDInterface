@@ -39,6 +39,22 @@
         </Frame>
     </Data>
   </Step>
+    <Step id="Mesh" title="Meshing" subtitle="Define the mesh parameters and create the mesh">
+      <Data>
+        <Frame n="Image" position="right">
+          <Item n="ImageGeom" v="MeshCantileverGeometry.png" type="image"/>
+        </Frame>
+        <Frame n="Data" position="left">
+          <Item n="Text" pn="Length" v="We are going to mesh the geometry\nwith the following parameters:" type="label" />
+          <Item n="MeshType" pn="Mesh type" v="Structured" values="Structured,Unstructured" type="combo" onchange="::Structural::examples::MeshCantileverTest::Wizard::UpdateMeshType"  state="normal"/>
+          <Item n="ElementType" pn="Element type" v="Triangle" values="Triangle,Quadrilateral" type="combo" onchange="::Structural::examples::MeshCantileverTest::Wizard::UpdateElementType"  state="normal"/>
+          <Item n="ElementSize" pn="Element size" v="0.1" type="double" state="hidden"/>
+          <Item n="HorizontalDivisions" pn="Horizontal divisions" v="25" type="integer" state="normal"/>
+          <Item n="VerticalDivisions" pn="Vertical divisions" v="10" type="integer" state="normal"/>
+          <Item n="Action" pn="Create mesh" type="button" v="::Structural::examples::MeshCantileverTest::Wizard::CreateMesh" />
+        </Frame>
+      </Data>
+    </Step>
   </Steps>
   <Templates>
   </Templates>
