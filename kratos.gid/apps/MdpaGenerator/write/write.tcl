@@ -21,7 +21,6 @@ proc ::MdpaGenerator::write::Init { } {
     set writeAttributes [dict create ]
     
     SetAttribute parts_un [::MdpaGenerator::GetUniqueName parts]
-    SetAttribute write_mdpa_mode [::MdpaGenerator::GetWriteProperty write_mdpa_mode]
 }
 
 # MDPA write event
@@ -42,7 +41,8 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     # Nodal coordinates
     write::writeNodalCoordinates
 
-    set write_mode [::MdpaGenerator::xml::GetCurrentWriteMode]
+    set write_mode [::MdpaGenerator::xml::GetWriteMode]
+    SetAttribute write_mdpa_mode $write_mode
     if {$write_mode eq "geometries"} {
         MdpaGenerator::write::writeGeometries
     } else {
