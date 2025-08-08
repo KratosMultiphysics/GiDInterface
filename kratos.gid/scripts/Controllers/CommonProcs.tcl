@@ -544,16 +544,22 @@ proc spdAux::ProcDirectorVectorNonZero { domNode args } {
     }
 }
 proc spdAux::ProcShowInWriteMode { domNode args } {
+    set response "hidden"
     set kw [lindex $args 0]
-    if {$kw ni [list "Geometries" "Entitites"]} {return "hidden"}
+    if {$kw ni [list "Geometries" "Entitites" "geometries" "entitites"]} {return "hidden"}
     set write_geometries_enabled 0
-    if {[info exists Kratos::kratos_private(experimental_write_geometries)] && $Kratos::kratos_private(experimental_write_geometries)>0} {set write_geometries_enabled 1}
-    
-    if {$write_geometries_enabled} {
-        if {$kw eq "Geometries"} {return "normal"} {return "hidden"}
-    } else {
-        if {$kw eq "Entitites"} {return "normal"} {return "hidden"}
+
+    set write_mode [::write::GetWriteMode]
+    if {$write_mode eq "geometries"} {
+        set write_geometries_enabled 1
     }
+    if {$write_geometries_enabled} {
+        if {$kw eq "Geometries" || $kw eq "geometries"} {set response "normal"} {set response "hidden"}
+    } else {
+        if {$kw eq "Entitites" || $kw eq "entitites"} {set response "normal"} {set response "hidden"}
+    }
+    # W "$kw -> $write_mode -> $response"
+    return $response
 }
 
 
