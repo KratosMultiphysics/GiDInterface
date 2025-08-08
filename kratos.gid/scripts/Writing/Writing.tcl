@@ -396,6 +396,10 @@ proc write::isquadratic {} {
     return [GiD_Set Model(QuadraticType)]
 }
 
+proc write::GetWriteMode {} {
+    return [::write::GetAttribute write_mdpa_mode]
+}
+
 proc write::GetNodesFromElementFace {elem_id face_id} {
     set inf [GiD_Mesh get element $elem_id]
     set elem_type [lindex $inf 1]
