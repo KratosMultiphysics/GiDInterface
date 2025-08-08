@@ -413,8 +413,11 @@ proc spdAux::GetUsedElements {{alt_un ""}} {
 
         set xp1 "[spdAux::getRoute $un]/group"
         foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-            set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
-            if {$name ni $lista} {lappend lista $name}
+            set element_node [$gNode selectNodes ".//value\[@n='Element'\]"]
+            if {$element_node ne ""} {
+                set name [write::getValueByNode $element_node]
+                if {$name ni $lista} {lappend lista $name}
+            }
         }
     }
     return $lista
