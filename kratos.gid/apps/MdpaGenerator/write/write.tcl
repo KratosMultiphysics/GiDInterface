@@ -41,7 +41,7 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     # Nodal coordinates
     write::writeNodalCoordinates
 
-    set write_mode [::MdpaGenerator::xml::GetWriteMode]
+    set write_mode [::MdpaGenerator::xml::GetCurrentWriteMode]
     SetAttribute write_mdpa_mode $write_mode
     if {$write_mode eq "geometries"} {
         MdpaGenerator::write::writeGeometries
@@ -75,14 +75,23 @@ proc ::MdpaGenerator::write::writeGeometries { } {
     # Get the list of groups in the spd
     set lista [::MdpaGenerator::xml::GetListOfSubModelParts]
 
+    set list_with_geometries [list]
+    foreach group $lista {
+        if {[write::isBooleanTrue [write::getValueByNode [$group selectNodes ".//value\[@n='WriteGeometries']"] ]]} {
+            lappend list_with_geometries $group
+        }
+    }
+
     # Write the geometries
-    set ret [::write::writeGeometryConnectivities $lista]
+    set ret [::write::writeGeometryConnectivities $list_with_geometries]
 
     # Write the submodelparts
-    set what "nodal"
-    append what "&Geometries"
-    
+    # We do not use the filtered  list so we can preserve the order. Inefficient but ordered. Mental peace
     foreach group $lista {
+        set what "nodal"
+        if {[write::isBooleanTrue [write::getValueByNode [$group selectNodes ".//value\[@n='WriteGeometries']"] ]]} {
+            set what "nodal&Geometries"
+        }
         ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what
     }
     
