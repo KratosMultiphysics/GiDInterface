@@ -22,7 +22,7 @@ WORKDIR "/model"
 RUN chmod 777 /model
 
 # Kratos will start on docker run
-ENTRYPOINT [ "python3", "MainKratos.py" ]
+CMD [ "python3", "MainKratos.py" ]
 
 # docker build -t kratos-run .
 # docker run -rm -it  --entrypoint bash kratos-run
