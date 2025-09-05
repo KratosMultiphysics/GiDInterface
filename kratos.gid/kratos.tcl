@@ -64,7 +64,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_SaveModelSPD Kratos::Event_SaveModelSPD PROBLEMTYPE Kratos
 
     # Extra
-    GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
+    #GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
 
     # End
     GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
@@ -72,6 +72,9 @@ proc Kratos::RegisterGiDEvents { } {
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
     CreateWidgetsFromXml::ClearCachePreferences
+
+    # Register the menu proc
+    GiD_RegisterPluginAddedMenuProc Kratos::UpdateMenus
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -608,9 +611,9 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 }
 
 
-proc Kratos::Event_ChangedLanguage  { newlan } {
-    Kratos::UpdateMenus
-}
+# proc Kratos::Event_ChangedLanguage  { newlan } {
+#     # Kratos::UpdateMenus
+# }
 
 proc Kratos::Event_ModifyPreferencesWindow { root } {
     Kratos::ModifyPreferencesWindow $root
