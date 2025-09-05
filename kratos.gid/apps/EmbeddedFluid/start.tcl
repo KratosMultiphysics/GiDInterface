@@ -32,7 +32,7 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     # Delete previous results
     catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].post.res"]}
 
-    # Set Octree as volume mesher
+    # Set embedded meshing option
     set oldMeshType [GiD_Set MeshType]
     ::GiD_Set MeshType 2
     
