@@ -30,3 +30,10 @@ proc ::MdpaGenerator::BreakRunCalculation {} {
 proc write::GetWriteMode {} {
     return [::MdpaGenerator::xml::GetCurrentWriteMode]
 }
+
+
+proc ::MdpaGenerator::CustomToolbarItems { } {
+    variable dir
+
+    Kratos::ToolbarAddItem "OpenFlowgraph" "material-relation.png" [list -np- Flowgraph::LaunchFlowgraph] [= "Open Flowgraph"]
+}

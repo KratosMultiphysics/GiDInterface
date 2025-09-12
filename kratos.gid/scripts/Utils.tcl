@@ -316,11 +316,11 @@ proc Kratos::CheckMeshCriteria { elementsize } {
                     return -1
                 }
             }
-        }        
+        }
     }
-    
+
     if {$forced_mesh_order ne -1} {
-        
+
         set element [lindex [dict keys $force_mesh_order] 0]
         set previous_mesh_order [write::isquadratic]
         set current_mesh_type [Kratos::GetMeshOrderName $previous_mesh_order]
@@ -366,12 +366,12 @@ proc Kratos::SetMeshCriteria { elementsize } {
                     error "Incompatible mesh orders in elements"
                 }
             }
-        }        
+        }
     }
-    
+
     if {$forced_mesh_order ne -1} {
-        
-    set previous_mesh_order [write::isquadratic]
+
+        set previous_mesh_order [write::isquadratic]
         variable mesh_criteria_forced
         dict set mesh_criteria_forced "PreviousMeshOrder" [write::isquadratic]
         GiD_Set Model(QuadraticType) $forced_mesh_order
@@ -450,3 +450,45 @@ if { ![GidUtils::IsTkDisabled] } {
     }
 }
 
+# is docker available
+proc Kratos::IsDockerAvailable {} {
+
+
+    set result -2
+    catch {
+        # Instalado
+        set docker_version [exec docker --version]
+        if {[string first "Docker version" $docker_version] >= 0} {
+
+            # Corriendo?
+            set result -1.
+            catch {
+                set mypython_path [file join $::Kratos::kratos_private(Path) exec mypython.py]
+                GiD_Python_Import_File $mypython_path
+                set response [GiD_Python_Eval mypython.isDockerRunning()]
+            }
+            if {[string first "Server Version: " $response] >= 0} {
+                set result 1
+            }
+        }
+    }
+    return $result
+}
+
+proc Kratos::IsDockerContainerRunningForImage {image_name} {
+    set result 0
+    catch {
+        set mypython_path [file join $::Kratos::kratos_private(Path) exec mypython.py]
+        GiD_Python_Import_File $mypython_path
+        set result [GiD_Python_Eval mypython.isDockerRunningContainer('$image_name')]
+    }
+    return $result
+}
+
+proc Kratos::KillAllContainersForImage {image_name} {
+    catch {
+        GiD_Python_Import_File [file join $Kratos::dir exec mypython.py]
+        set result [GiD_Python_Eval mypython.killContainersFromImage('$image_name')]
+        W "Killed $result containers for image $image_name"
+    }
+}
