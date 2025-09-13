@@ -488,7 +488,7 @@ proc Kratos::IsDockerContainerRunningForImage {image_name} {
 proc Kratos::KillAllContainersForImage {image_name {external_port -1}} {
     catch {
         GiD_Python_Import_File [file join $::Kratos::kratos_private(Path) exec docker_controller.py]
-        set result [GiD_Python_Eval docker_controller.killContainersFromImage('$image_name',$external_port  )]
+        set result [GiD_Python_Eval docker_controller.killContainersFromImage('$image_name',$external_port)]
         # W "Killed $result containers for image $image_name"
         return $result
     }
@@ -500,10 +500,10 @@ proc Kratos::StartContainerForImage {image_name external_port internal_port mode
     catch {
         GiD_Python_Import_File [file join $::Kratos::kratos_private(Path) exec docker_controller.py]
         set result [GiD_Python_Eval docker_controller.startContainerForImage('$image_name',$external_port,$internal_port,'$modelname')]
-        W "Started container $result for image $image_name"
+        # W "Started container $result for image $image_name"
     }
     if {$result ne -1} {
-        
+
     }
     return $result
 }

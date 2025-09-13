@@ -64,6 +64,7 @@ proc Flowgraph::LaunchFlowgraphLocal {} {
 proc Flowgraph::LaunchFlowgraphDocker {} {
     variable docker_image
     variable flowgraph_internal_port
+    variable flowgraph_external_port
 
     set modelname [GiD_Info Project ModelName]
     if {$modelname eq "UNNAMED"} {
@@ -81,7 +82,7 @@ proc Flowgraph::LaunchFlowgraphDocker {} {
         }
         0 {
             W "Flowgraph is already running. Stop the current instance to start a new one."
-            W "You can do it by executing in a console: docker rm -f \$(docker ps -q --filter 'ancestor=$docker_image')"
+            W "You can do it by executing in a console: docker rm -f \$(docker ps -q --filter 'ancestor=$docker_image' --filter 'publish=$flowgraph_external_port')"
             W "Or copy-paste this command in the GiD Terminal:"
             W "-np- Flowgraph::KillContainer"
         }
@@ -129,7 +130,12 @@ proc Flowgraph::KillContainer {} {
     variable docker_image
     variable flowgraph_external_port
     W "Stopping all running instances of $docker_image ..."
-    Kratos::KillAllContainersForImage $docker_image $flowgraph_external_port
+    set result [Kratos::KillAllContainersForImage $docker_image $flowgraph_external_port]
+    if {$result ne -1} {
+        W "Stopped $result instances of $docker_image"
+    } else {
+        W "Error stopping instances of $docker_image"
+    }
 }
 
 Flowgraph::Init
