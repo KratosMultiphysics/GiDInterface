@@ -38,7 +38,12 @@ def isDockerRunning():
 # is docker running any container for an image
 def isDockerRunningContainer(image_name, external_port=-1):
     try:
-        result = subprocess.run(["docker", "ps", "--filter", f"ancestor={image_name}", "--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
+        args = ["docker", "ps", "-q", "--filter", f"ancestor={image_name}"]
+        if external_port != -1:
+            args.extend(["--filter", f"publish={external_port}"])
+        args.extend(["--format", "{{.ID}}"])
+        result = subprocess.run(
+            args,
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         container_ids = result.stdout.decode().strip().split('\n')
         # tcl.W(container_ids)
@@ -52,8 +57,12 @@ def isDockerRunningContainer(image_name, external_port=-1):
 
 def killContainersFromImage(image_name, external_port=-1):
     try:
+        args = ["docker", "ps", "-q", "--filter", f"ancestor={image_name}"]
+        if external_port != -1:
+            args.extend(["--filter", f"publish={external_port}"])
+        args.extend(["--format", "{{.ID}}"])
         result = subprocess.run(
-            ["docker", "ps", "-q", "--filter", f"ancestor={image_name}", "--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
+            args,
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
         container_ids = result.stdout.strip().splitlines()

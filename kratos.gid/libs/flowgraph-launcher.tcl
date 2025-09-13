@@ -134,7 +134,7 @@ proc Flowgraph::KillContainer {} {
     if {$result ne -1} {
         W "Stopped $result instances of $docker_image"
     } else {
-        W "Error stopping instances of $docker_image"
+        W "Error stopping instances of $docker_image: $result"
     }
 }
 
