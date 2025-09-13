@@ -1,6 +1,6 @@
-import tohil
+# import tohil
 
-tcl=tohil.import_tcl()
+# tcl=tohil.import_tcl()
 
 if __name__ == "__main__":
     # debug stand alone to find meshio in the plugin path, instead site-packages
@@ -43,10 +43,10 @@ def isDockerRunningContainer(image_name):
         result = subprocess.run(["docker", "ps", "--filter", f"ancestor={image_name}", "--format", "{{.ID}}"],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         container_ids = result.stdout.decode().strip().split('\n')
-        tcl.W(container_ids)
+        # tcl.W(container_ids)
         if container_ids == ['']:
             return 0
-        tcl.W(len(container_ids))
+        # tcl.W(len(container_ids))
         return len(container_ids) 
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
