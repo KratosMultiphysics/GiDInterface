@@ -463,9 +463,9 @@ proc Kratos::IsDockerAvailable {} {
             # Corriendo?
             set result -1.
             catch {
-                set mypython_path [file join $::Kratos::kratos_private(Path) exec mypython.py]
-                GiD_Python_Import_File $mypython_path
-                set response [GiD_Python_Eval mypython.isDockerRunning()]
+                set docker_controller_path [file join $::Kratos::kratos_private(Path) exec docker_controller.py]
+                GiD_Python_Import_File $docker_controller_path
+                set response [GiD_Python_Eval docker_controller.isDockerRunning()]
             }
             if {[string first "Server Version: " $response] >= 0} {
                 set result 1
@@ -478,17 +478,17 @@ proc Kratos::IsDockerAvailable {} {
 proc Kratos::IsDockerContainerRunningForImage {image_name} {
     set result 0
     catch {
-        set mypython_path [file join $::Kratos::kratos_private(Path) exec mypython.py]
-        GiD_Python_Import_File $mypython_path
-        set result [GiD_Python_Eval mypython.isDockerRunningContainer('$image_name')]
+        set docker_controller_path [file join $::Kratos::kratos_private(Path) exec docker_controller.py]
+        GiD_Python_Import_File $docker_controller_path
+        set result [GiD_Python_Eval docker_controller.isDockerRunningContainer('$image_name')]
     }
     return $result
 }
 
 proc Kratos::KillAllContainersForImage {image_name} {
     catch {
-        GiD_Python_Import_File [file join $Kratos::dir exec mypython.py]
-        set result [GiD_Python_Eval mypython.killContainersFromImage('$image_name')]
+        GiD_Python_Import_File [file join $Kratos::dir exec docker_controller.py]
+        set result [GiD_Python_Eval docker_controller.killContainersFromImage('$image_name')]
         W "Killed $result containers for image $image_name"
     }
 }

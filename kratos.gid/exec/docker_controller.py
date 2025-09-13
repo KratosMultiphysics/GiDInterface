@@ -44,6 +44,9 @@ def isDockerRunningContainer(image_name):
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         container_ids = result.stdout.decode().strip().split('\n')
         tcl.W(container_ids)
+        if container_ids == ['']:
+            return 0
+        tcl.W(len(container_ids))
         return len(container_ids) 
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
