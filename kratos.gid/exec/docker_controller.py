@@ -62,7 +62,7 @@ def killContainersFromImage(image_name, external_port=-1):
             return 0
 
         result = subprocess.run(["docker", "rm", "-f"] + container_ids, check=True)
-        return result
+        return len(container_ids)
 
     except subprocess.CalledProcessError as e:
         return -1  # Error al ejecutar docker
