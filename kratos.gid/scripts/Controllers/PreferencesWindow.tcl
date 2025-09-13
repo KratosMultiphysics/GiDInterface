@@ -44,6 +44,16 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "kratos_bin_path" {
                     set ret [file join $::Kratos::kratos_private(Path) exec kratos runkratos.exe]
                 }
+                "flowgraph_docker_image" {
+                    set ret "flowgraph"
+                }
+                "flowgraph_external_port" {
+                    set ret 8182
+                }
+                "flowgraph_mode" {
+                    set ret "docker"
+                }
+
                 default {
                     set ret 0
                 }

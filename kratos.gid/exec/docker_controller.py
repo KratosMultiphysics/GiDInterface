@@ -1,6 +1,7 @@
 # import tohil
 
 # tcl=tohil.import_tcl()
+import subprocess
 
 if __name__ == "__main__":
     # debug stand alone to find meshio in the plugin path, instead site-packages
@@ -14,7 +15,6 @@ def myfunction():
 
 def isDockerAvailable():
     # if docker is installed and available
-    import subprocess
     try:
         # execute "docker --version" and return the output
         result1 = subprocess.run(["docker", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -26,7 +26,6 @@ def isDockerAvailable():
 
 def isDockerRunning():
     # if docker is running
-    import subprocess
     try:
         result1 = subprocess.run(["docker", "info"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # get the output and check if it contains "Server Version"
@@ -37,10 +36,9 @@ def isDockerRunning():
     return -1    
 
 # is docker running any container for an image
-def isDockerRunningContainer(image_name):   
-    import subprocess
+def isDockerRunningContainer(image_name, external_port=-1):   
     try:
-        result = subprocess.run(["docker", "ps", "--filter", f"ancestor={image_name}", "--format", "{{.ID}}"],
+        result = subprocess.run(["docker", "ps", "--filter", f"ancestor={image_name}","--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         container_ids = result.stdout.decode().strip().split('\n')
         # tcl.W(container_ids)
@@ -52,11 +50,11 @@ def isDockerRunningContainer(image_name):
         return False
     return False
 
-def killContainersFromImage(image_name):
+def killContainersFromImage(image_name, external_port=-1):
     try:
-        # Obtener los IDs de contenedores que usan la imagen
+        # Obtener los IDs de contenedores que usan la imagen y si el puerto es !=-1, filtrar por ese puerto
         result = subprocess.run(
-            ["docker", "ps", "-q", "--filter", f"ancestor={image_name}", "--format", "{{.ID}}"],
+            ["docker", "ps", "-q", "--filter", f"ancestor={image_name}", "--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
         container_ids = result.stdout.strip().splitlines()
@@ -65,12 +63,24 @@ def killContainersFromImage(image_name):
             return 0  # No hay contenedores para esa imagen
 
         # Matar todos los contenedores encontrados
-        subprocess.run(["docker", "rm", "-f"] + container_ids, check=True)
-        return len(container_ids)
+        result = subprocess.run(["docker", "rm", "-f"] + container_ids, check=True)
+        return result
 
     except subprocess.CalledProcessError as e:
         return -1  # Error al ejecutar docker
 
+def startContainerForImage(image_name, external_port, internal_port, modelname):
+    try:
+        # Iniciar el contenedor
+        result = subprocess.run(
+            ["docker", "run", "-d", "-p", f"{external_port}:{internal_port}", "-v", f"{modelname}:/model", image_name],
+            check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+        container_id = result.stdout.strip()
+        return container_id  # Retornar el ID del contenedor iniciado
+
+    except subprocess.CalledProcessError as e:
+        return -1  # Error al ejecutar docker
 
 # -np- GiD_Python_Source C:/Users/jgarate/Desktop/CODE/Other/GiDInterface/kratos.gid/exec/check_docker.py
 # check_docker.check_docker()
@@ -81,4 +91,7 @@ def killContainersFromImage(image_name):
 
 # print(isDockerAvailable())
 # print(isDockerRunning())
-print(isDockerRunningContainer("flowgraph"))
+# print(isDockerRunningContainer("flowgraph"))
+# print(killContainersFromImage("flowgraph"))
+print(killContainersFromImage("flowgraph", 8080))
+# print(startContainerForImage("flowgraph", 8080, 80, "C:\\Users\\jgarate\\Desktop\\bbb.gid"))  # Adjust the model path as needed
