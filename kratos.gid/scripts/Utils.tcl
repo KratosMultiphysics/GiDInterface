@@ -456,12 +456,12 @@ proc Kratos::IsDockerAvailable {} {
 
     set result -2
     catch {
-        # Instalado
+        # Installed'
         set docker_version [exec docker --version]
         if {[string first "Docker version" $docker_version] >= 0} {
 
-            # Corriendo?
-            set result -1.
+            # Running?
+            set result -1
             catch {
                 set docker_controller_path [file join $::Kratos::kratos_private(Path) exec docker_controller.py]
                 GiD_Python_Import_File $docker_controller_path
@@ -502,8 +502,6 @@ proc Kratos::StartContainerForImage {image_name external_port internal_port mode
         set result [GiD_Python_Eval docker_controller.startContainerForImage('$image_name',$external_port,$internal_port,'$modelname')]
         # W "Started container $result for image $image_name"
     }
-    if {$result ne -1} {
-
-    }
+    
     return $result
 }

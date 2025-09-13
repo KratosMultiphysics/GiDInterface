@@ -52,7 +52,6 @@ def isDockerRunningContainer(image_name, external_port=-1):
 
 def killContainersFromImage(image_name, external_port=-1):
     try:
-        # Obtener los IDs de contenedores que usan la imagen y si el puerto es !=-1, filtrar por ese puerto
         result = subprocess.run(
             ["docker", "ps", "-q", "--filter", f"ancestor={image_name}", "--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
@@ -60,9 +59,8 @@ def killContainersFromImage(image_name, external_port=-1):
         container_ids = result.stdout.strip().splitlines()
 
         if not container_ids:
-            return 0  # No hay contenedores para esa imagen
+            return 0
 
-        # Matar todos los contenedores encontrados
         result = subprocess.run(["docker", "rm", "-f"] + container_ids, check=True)
         return result
 
@@ -71,13 +69,12 @@ def killContainersFromImage(image_name, external_port=-1):
 
 def startContainerForImage(image_name, external_port, internal_port, modelname):
     try:
-        # Iniciar el contenedor
         result = subprocess.run(
             ["docker", "run", "-d", "-p", f"{external_port}:{internal_port}", "-v", f"{modelname}:/model", image_name],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
         container_id = result.stdout.strip()
-        return container_id  # Retornar el ID del contenedor iniciado
+        return container_id 
 
     except subprocess.CalledProcessError as e:
         return -1  # Error al ejecutar docker
@@ -93,5 +90,5 @@ def startContainerForImage(image_name, external_port, internal_port, modelname):
 # print(isDockerRunning())
 # print(isDockerRunningContainer("flowgraph"))
 # print(killContainersFromImage("flowgraph"))
-print(killContainersFromImage("flowgraph", 8080))
+# print(killContainersFromImage("flowgraph", 8080))
 # print(startContainerForImage("flowgraph", 8080, 80, "C:\\Users\\jgarate\\Desktop\\bbb.gid"))  # Adjust the model path as needed
