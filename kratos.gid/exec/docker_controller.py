@@ -1,6 +1,3 @@
-# import tohil
-
-# tcl=tohil.import_tcl()
 import subprocess
 
 if __name__ == "__main__":
@@ -9,9 +6,6 @@ if __name__ == "__main__":
     plugin_site_packages=os.path.join(os.path.dirname(os.path.abspath(__file__)), "site-packages","src")
     import sys
     sys.path.append(plugin_site_packages)
-
-def myfunction():
-    return "65"
 
 def isDockerAvailable():
     # if docker is installed and available
@@ -46,10 +40,8 @@ def isDockerRunningContainer(image_name, external_port=-1):
             args,
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         container_ids = result.stdout.decode().strip().split('\n')
-        # tcl.W(container_ids)
         if container_ids == ['']:
             return 0
-        # tcl.W(len(container_ids))
         return len(container_ids) 
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
@@ -74,7 +66,7 @@ def killContainersFromImage(image_name, external_port=-1):
         return len(container_ids)
 
     except subprocess.CalledProcessError as e:
-        return -1  # Error al ejecutar docker
+        return -1
 
 def startContainerForImage(image_name, external_port, internal_port, modelname):
     try:
@@ -86,18 +78,4 @@ def startContainerForImage(image_name, external_port, internal_port, modelname):
         return container_id 
 
     except subprocess.CalledProcessError as e:
-        return -1  # Error al ejecutar docker
-
-# -np- GiD_Python_Source C:/Users/jgarate/Desktop/CODE/Other/GiDInterface/kratos.gid/exec/check_docker.py
-# check_docker.check_docker()
-# -np- GiD_Python_Exec check_docker.check_docker()
-
-# -np- GiD_Python_Import_File C:/Users/jgarate/Desktop/CODE/Other/GiDInterface/kratos.gid/exec/check_docker.py
-# -np- GiD_Python_Exec check_docker.check_docker()
-
-# print(isDockerAvailable())
-# print(isDockerRunning())
-# print(isDockerRunningContainer("flowgraph"))
-# print(killContainersFromImage("flowgraph"))
-# print(killContainersFromImage("flowgraph", 8080))
-# print(startContainerForImage("flowgraph", 8080, 80, "C:\\Users\\jgarate\\Desktop\\bbb.gid"))  # Adjust the model path as needed
+        return -1
