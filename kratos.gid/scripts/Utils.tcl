@@ -454,7 +454,7 @@ if { ![GidUtils::IsTkDisabled] } {
 proc Kratos::IsDockerAvailable {} {
     set result -2
     catch {
-        # Installed'
+        # Installed
         set docker_version [exec docker --version]
         if {[string first "Docker version" $docker_version] >= 0} {
 
