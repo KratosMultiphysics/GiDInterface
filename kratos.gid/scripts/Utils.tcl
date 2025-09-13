@@ -452,8 +452,6 @@ if { ![GidUtils::IsTkDisabled] } {
 
 # is docker available
 proc Kratos::IsDockerAvailable {} {
-
-
     set result -2
     catch {
         # Installed'
