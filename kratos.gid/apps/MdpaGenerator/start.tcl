@@ -35,5 +35,5 @@ proc write::GetWriteMode {} {
 proc ::MdpaGenerator::CustomToolbarItems { } {
     variable dir
 
-    Kratos::ToolbarAddItem "OpenFlowgraph" "material-relation.png" [list -np- Flowgraph::LaunchFlowgraph] [= "Open Flowgraph"]
+    Kratos::ToolbarAddItem "OpenFlowgraph" "graph.png" [list -np- Flowgraph::LaunchFlowgraph] [= "Open Flowgraph"]
 }
