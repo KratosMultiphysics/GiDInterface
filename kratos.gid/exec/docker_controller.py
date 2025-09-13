@@ -38,7 +38,7 @@ def isDockerRunning():
 # is docker running any container for an image
 def isDockerRunningContainer(image_name, external_port=-1):   
     try:
-        result = subprocess.run(["docker", "ps", "--filter", f"ancestor={image_name}","--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
+        result = subprocess.run(["docker", "ps", "--filter", f"ancestor={image_name}", "--filter", f"publish={external_port}" if external_port != -1 else "", "--format", "{{.ID}}"],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         container_ids = result.stdout.decode().strip().split('\n')
         # tcl.W(container_ids)
