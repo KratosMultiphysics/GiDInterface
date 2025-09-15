@@ -45,8 +45,6 @@ def isDockerRunningContainer(image_name, external_port=-1):
         return len(container_ids) 
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
-    return False
-
 def killContainersFromImage(image_name, external_port=-1):
     try:
         args = ["docker", "ps", "-q", "--filter", f"ancestor={image_name}"]
