@@ -212,7 +212,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Model $filename.tcl]]
     }
     # Libs
-    foreach filename {SimpleXMLViewer} {
+    foreach filename {SimpleXMLViewer flowgraph-launcher} {
         uplevel #0 [list source [file join $kratos_private(Path) libs $filename.tcl]]
     }
 }

@@ -1,33 +1,46 @@
 <group name='kratos_preferences' label='Kratos'>
-    <labelframe name='main_options' label='General options'>
-        <combobox name='DevMode' variable='DevMode' variablemanager='Kratos::ManagePreferences' label='Mode' help='Show/Hide some experimental features'>
-            <option value='dev' label='Developer'/>
-            <option value='release' label='Release'/>
-        </combobox>
-        <combobox name='mdpa_format' variable='mdpa_format' variablemanager='Kratos::ManagePreferences' label='MDPA Optimization' help=''>
-            <option value='0' label='Optimized'/>
-            <option value='1' label='Readable'/>
-        </combobox>
-        <combobox name='allow_logs' variable='allow_logs' variablemanager='Kratos::ManagePreferences' label='Store logs' help=''>
-            <option value='0' label='No'/>
-            <option value='1' label='Only local, so I will get better support from the developers.'/>
-            <option value='2' label='Share anonymous usage data. (See kratos > View current log) Coming soon :)'/>
-        </combobox>
-        <combobox name='echo_level' variable='echo_level' variablemanager='Kratos::ManagePreferences' label='Echo level' help='Show more/less message'>
-            <option value='0' label='0'/>
-            <option value='1' label='1'/>
-            <option value='2' label='2'/>
-        </combobox>
-        <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectoryDebug" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
-        <comboboxframe name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
-            <option value='Default' label='Default'/>
-            <option value='External python' label='External python'  setactivate="python_path"/>
-            <option value='Your compiled Kratos' label='Your compiled Kratos' setactivate="python_path kratos_bin_path"/>
-            <option value='Docker' label='Docker' setactivate="docker_image" />
-            <entrywithbutton name="python_path" variable="python_path" label="Python path (exe)" variablemanager='Kratos::ManagePreferences'  help='Path to python.exe' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectoryPython"/>
-            <entrywithbutton name="kratos_bin_path" variable="kratos_bin_path" label="Kratos path (bin)" variablemanager='Kratos::ManagePreferences'  help='Path to your compiled kratos folder' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectoryKratos"/>
-            <entry name="docker_image" variable="docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences'  help='Name of the Kratos Docker image'/>
-        </comboboxframe>
-    </labelframe>
+    <group name='main_options_group' label='General options'>
+        <labelframe name='main_options' label='General options'>
+            <combobox name='DevMode' variable='DevMode' variablemanager='Kratos::ManagePreferences' label='Mode' help='Show/Hide some experimental features'>
+                <option value='dev' label='Developer'/>
+                <option value='release' label='Release'/>
+            </combobox>
+            <combobox name='mdpa_format' variable='mdpa_format' variablemanager='Kratos::ManagePreferences' label='MDPA Optimization' help=''>
+                <option value='0' label='Optimized'/>
+                <option value='1' label='Readable'/>
+            </combobox>
+            <combobox name='allow_logs' variable='allow_logs' variablemanager='Kratos::ManagePreferences' label='Store logs' help=''>
+                <option value='0' label='No'/>
+                <option value='1' label='Only local, so I will get better support from the developers.'/>
+                <option value='2' label='Share anonymous usage data. (See kratos > View current log) Coming soon :)'/>
+            </combobox>
+            <combobox name='echo_level' variable='echo_level' variablemanager='Kratos::ManagePreferences' label='Echo level' help='Show more/less message'>
+                <option value='0' label='0'/>
+                <option value='1' label='1'/>
+                <option value='2' label='2'/>
+            </combobox>
+            <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectoryDebug" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
+            <comboboxframe name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
+                <option value='Default' label='Default'/>
+                <option value='External python' label='External python' setactivate="python_path"/>
+                <option value='Your compiled Kratos' label='Your compiled Kratos' setactivate="python_path kratos_bin_path"/>
+                <option value='Docker' label='Docker' setactivate="docker_image" />
+                <entrywithbutton name="python_path" variable="python_path" label="Python path (exe)" variablemanager='Kratos::ManagePreferences' help='Path to python.exe' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectoryPython"/>
+                <entrywithbutton name="kratos_bin_path" variable="kratos_bin_path" label="Kratos path (bin)" variablemanager='Kratos::ManagePreferences' help='Path to your compiled kratos folder' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectoryKratos"/>
+                <entry name="docker_image" variable="docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences' help='Name of the Kratos Docker image'/>
+            </comboboxframe>
+        </labelframe>
+    </group>
+    <!-- another group for flowgraph -->
+    <group name='flowgraph_options' label='Flowgraph options'>
+        <labelframe name='flowgraph_options' label='Flowgraph options'>
+            <comboboxframe name='flowgraph_mode' variable='flowgraph_mode' variablemanager='Kratos::ManagePreferences' label='Mode' help='Choose the mode for the flowgraph'>
+                <option value='docker' label='Docker' setactivate="flowgraph_docker_image flowgraph_external_port"/>
+                <option value='local' label='Local' setactivate="flowgraph_external_port"/>
+                <entry name="flowgraph_docker_image" variable="flowgraph_docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences' help='Name of the Flowgraph Docker image'/>
+                <entry name="flowgraph_external_port" variable="flowgraph_external_port" label="Port" variablemanager='Kratos::ManagePreferences' help='Port to access Flowgraph from the browser'/>
+            </comboboxframe>
+        </labelframe>
+    </group>
 </group>
 
