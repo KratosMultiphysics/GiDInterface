@@ -20,7 +20,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of material points generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,25" pvalues="1 (for triangles and quads),3 (for triangles),4 (for triangles and quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for quads),25 (for quads)" help="Number of material points generated for each element. Available options are the following. Triangular: 1,3,4,6,12 and Quadrilateral: 1,4,9,16,25" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -51,7 +51,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="integer" v="1" help="Number of material points generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,25" pvalues="1 (for triangles and quads),3 (for triangles),4 (for triangles and quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for quads),25 (for quads)" help="Number of material points generated for each element. Available options are the following. Triangular: 1,3,4,6,12 and Quadrilateral: 1,4,9,16,25" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -82,7 +82,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of material points generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,25" pvalues="1 (for triangles and quads),3 (for triangles),4 (for triangles and quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for quads),25 (for quads)" help="Number of material points generated for each element. Available options are the following. Triangular: 1,3,4,6,12 and Quadrilateral: 1,4,9,16,25" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -112,7 +112,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="integer" v="1" help="Number of material points generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,4,8,14,24,27,64,125" pvalues="1 (for tetrahedra and hexahedra),4 (for tetrahedra),8 (for tetrahedra and hexahedra),14 (for tetrahedra),24 (for tetrahedra),27 (for hexahedra),64 (for hexahedra),125 (for hexahedra)" WorkingSpaceDimension="3D" LocalSpaceDimension="3" help="Number of material points generated for each element. Available options are the following. Tetrahedra: 1,4,8,14,24 and Hexahedra: 1,8,27,64,125" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -141,7 +141,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of material points generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,4,6,8,14,24,27,64,125" pvalues="1 (for tetrahedra and hexahedra),4 (for tetrahedra),6 (for tetrahedra),8 (for hexahedra),14 (for tetrahedra),24 (for tetrahedra),27 (for hexahedra),64 (for hexahedra),125 (for hexahedra)" WorkingSpaceDimension="3D" LocalSpaceDimension="3" help="Number of material points generated for each element. Available options are the following. Tetrahedra: 1,4,6,14,24 and Hexahedra: 1,8,27,64,125" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
