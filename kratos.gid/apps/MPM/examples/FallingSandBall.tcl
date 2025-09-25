@@ -124,6 +124,9 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set props [list Element GRID$nd ]
     spdAux::SetValuesOnBaseNode $mpm_grid_part $props
 
+    # Set Initial Conditions Off
+    spdAux::SetValueOnTreeItem v "Off" InitialCondition
+
     # Fix Displacement
     ## Create interval subgroup
     GiD_Groups clone FixedDisplacement Total
@@ -149,8 +152,8 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     # Solution strategy parameters
     spdAux::SetValueOnTreeItem v "0.005" MPTimeParameters DeltaTime
     spdAux::SetValueOnTreeItem v "2" MPTimeParameters EndTime
-    spdAux::SetValueOnTreeItem v "time" GiDOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.02" GiDOptions OutputDeltaTime
-    spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.02" VtkOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "step" GiDOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "4" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "step" VtkOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "4" VtkOptions OutputDeltaTime
 }

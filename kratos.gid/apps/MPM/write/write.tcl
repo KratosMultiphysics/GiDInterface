@@ -14,6 +14,7 @@ proc MPM::write::Init { } {
     SetAttribute parts_un [::MPM::GetUniqueName parts]
     SetAttribute nodal_conditions_un [::MPM:::GetUniqueName nodal_conditions]
     SetAttribute conditions_un [::MPM::GetUniqueName conditions]
+    SetAttribute initial_conditions_un [::MPM::GetUniqueName initial_conditions]
 
     SetAttribute writeCoordinatesByGroups [::MPM::GetWriteProperty coordinates]
     SetAttribute main_launch_file [::MPM::GetAttribute main_launch_file]
@@ -146,6 +147,9 @@ proc MPM::write::writeSubmodelparts { type } {
 
         # A Condition y a meshes-> salvo lo que no tenga topologia
         writeLoads
+    } else {
+        # Write the initial conditions submodelpart
+        write::writeNodalConditions [GetAttribute initial_conditions_un]
     }
 }
 

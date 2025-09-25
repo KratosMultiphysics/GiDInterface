@@ -152,8 +152,8 @@ proc ::MPM::examples::GranularFlow::TreeAssignation2D {args} {
     # Solution strategy parameters
     spdAux::SetValueOnTreeItem v "0.00005" MPTimeParameters DeltaTime
     spdAux::SetValueOnTreeItem v "2" MPTimeParameters EndTime
-    spdAux::SetValueOnTreeItem v "time" GiDOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.01" GiDOptions OutputDeltaTime
-    spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.01" VtkOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "step" GiDOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "200" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "step" VtkOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "200" VtkOptions OutputDeltaTime
 }

@@ -8,8 +8,8 @@
 	</container>
 	<container n="StratParams" pn="Strategy parameters" un="STStratParams" icon="groupsTreeNew.gif" open_window="0" state="[HideIfUniqueName STSoluType eigen_value]">
 		<value n="ActivateStabilization" pn="Stabilization" type="combo" v="Off" values="Off,On" help="Stabilization" open_window="0" actualize_tree="1" state="[CheckActivateStabilizationState]" />
-		<value n="stabilization" pn="Stabilization method" type="combo" v="ppp" values="ppp" pvalues="PPP" help="Stabilization method" state="[CheckStabilizationState]"/>
-		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication StructuralMechanicsApplication"/>
+		<value n="stabilization" pn="Stabilization method" type="combo" v="asgs" values="ppp,asgs,osgs" pvalues="PPP" help="Stabilization method" state="[CheckStabilizationState]"/>
+		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication MPMApplication"/>
 	</container>
 	<include n="Gravity" active="1" path="apps/MPM/xml/Gravity.spd"/>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>

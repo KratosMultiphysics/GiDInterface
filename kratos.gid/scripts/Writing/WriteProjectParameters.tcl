@@ -571,7 +571,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
     if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-    dict set resultDict output_interval               $frequency
+    dict set resultDict output_interval                $frequency
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
@@ -645,6 +645,7 @@ proc write::GetModelersDict { projectParametersDict {stage ""}  } {
 
 
 
+
 # what can be element, condition
 proc write::GetMatchSubModelPart { what {stage ""} } {
     set model_part_basename [write::GetConfigurationAttribute model_part_name]
@@ -707,7 +708,6 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
     }
     return $elements_list
 }
-
 
 # in the xml file, look up to find if some of the ancestors define a property modelpartname
 proc write::GetModelPartNameFromParentTree { group {stage ""} } {

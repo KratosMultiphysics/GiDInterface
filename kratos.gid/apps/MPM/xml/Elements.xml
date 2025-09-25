@@ -152,7 +152,6 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-
   <!--background grid-->
   <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="MPMApplication" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="2D Background element required for the computation of material point method." AnalysisType="non_linear,linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -211,5 +210,4 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-
 </ElementList>

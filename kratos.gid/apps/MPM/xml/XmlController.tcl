@@ -4,13 +4,18 @@ namespace eval MPM::xml {
 
 }
 
+
 proc MPM::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::MPM::dir
 
+
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
+    
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
 
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies Strategies.xml
@@ -46,6 +51,49 @@ proc MPM::xml::Init { } {
 
 }
 
+proc ::MPM::xml::ProcGetSolutionStrategiesMPM { domNode args } {
+    set names ""
+    set pnames ""
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+    set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
+    set ids [list ]
+    foreach ss $Sols {
+        lappend ids [$ss getName]
+        append names [$ss getName] ","
+        append pnames [$ss getName] "," [$ss getPublicName] ","
+    }
+    set names [string range $names 0 end-1]
+    set pnames [string range $pnames 0 end-1]
+
+    $domNode setAttribute values $names
+    set dv [lindex $ids 0]
+    if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv}
+    if {[$domNode getAttribute v] ni $ids} {$domNode setAttribute v $dv}
+    #spdAux::RequestRefresh
+    return $pnames
+}
+
+
+proc ::MPM::xml::ProcCheckNodalConditionStateMPM {domNode args} {
+    # Overwritten the base function to add Solution Type restrictions
+    set parts_un STParts
+    if {[spdAux::getRoute $parts_un] ne ""} {
+        set conditionId [$domNode @n]
+        set condition [Model::getNodalConditionbyId $conditionId]
+        set cnd_dim [$condition getAttribute WorkingSpaceDimension]
+        if {$cnd_dim ne ""} {
+            if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
+        }
+        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
+        set elemnames [list ]
+        foreach elem $elems { lappend elemnames [$elem @v]}
+        set elemnames [lsort -unique $elemnames]
+
+        set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+        set params [list analysis_type $solutionType]
+        if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
+    } {return "normal"}
+}
 
 proc MPM::xml::MultiAppEvent {args} {
    if {$args eq "init"} {
@@ -77,7 +125,7 @@ proc MPM::xml::ProcCheckGeometry {domNode args} {
 
 proc MPM::xml::ProcCheckActivateStabilizationState {domNode args} {
     set ret "hidden"
-    set up_mixed UpdatedLagrangianUP$::Model::SpatialDimension
+    set up_mixed MPMUpdatedLagrangianUP$::Model::SpatialDimension
     set used_elements [::MPM::write::GetUsedElements Name]
     if {$up_mixed in $used_elements} {
         set ret "normal"
