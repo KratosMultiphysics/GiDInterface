@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+
+    <!-- Add Inlet Condition -->
+    <ConditionItem n="BioInlet3D" pn="Inlet velocity" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="VELOCITY" App="Fluid" ElementType="Surface" ProcessName="ApplyBioInletProcess" help="">
+        <TopologyFeatures>
+            <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <outputs></outputs>
+    </ConditionItem>
+
+    <!-- Add Windkessel Condition -->
+    <ConditionItem n="WindkesselCondition" pn="Windkessel outlet" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="PRESSURE" App="Fluid" ElementType="Surface" ProcessName="ApplyWindkesselOutletProcess" help="">
+        <TopologyFeatures>
+            <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <outputs></outputs>
+    </ConditionItem>
+
+</ConditionList>
