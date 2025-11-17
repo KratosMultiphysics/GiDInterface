@@ -82,6 +82,18 @@ proc Mesh::AddPointElementsIfNeeded {} {
         set group_nodes [dict get $condition_groups $condid]
         foreach node_tdom $group_nodes {
             set group_id [get_domnode_attribute $node_tdom n]
+
+            # if group ov is point or condition ov is point
+            set ov ""
+            if {[$node_tdom hasAttribute ov]} {
+                set ov [get_domnode_attribute $node_tdom ov]
+            } else {
+                set ov [get_domnode_attribute [$node_tdom parent] ov]
+            }
+            if { $ov ne "Point" && $ov ne "point" } {
+                continue
+            }
+
             # Get the goodname of the group
             set group_id [write::GetWriteGroupName $group_id]
             
