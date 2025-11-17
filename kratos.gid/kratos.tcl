@@ -9,7 +9,6 @@ namespace eval ::Kratos {
     variable must_write_calc_data
     variable must_exist_calc_data
 
-    variable tmp_init_mesh_time
     variable namespaces
 
     variable mesh_criteria_forced
@@ -200,7 +199,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
     # Common scripts
-    foreach filename {Utils Launch Applications spdAuxiliar Menus Deprecated Logs} {
+    foreach filename {Utils Launch Applications spdAuxiliar Mesh Menus Deprecated Logs} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename.tcl]]
     }
     # Common controllers
@@ -427,19 +426,10 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     set tmp_init_mesh_time $inittime
     Kratos::Log "Mesh BeforeMeshGeneration start"
 
-    GiD_MeshData mesh_criteria to_be_meshed 1 lines [GiD_Geometry list line]
-    GiD_MeshData mesh_criteria to_be_meshed 1 surfaces [GiD_Geometry list surface]
-    GiD_MeshData mesh_criteria to_be_meshed 1 volumes  [GiD_Geometry list volume ]
-
-    # We need to mesh every line and surface assigned to a group that appears in the tree
-    foreach group [spdAux::GetAppliedGroups] {
-        GiD_MeshData mesh_criteria to_be_meshed 2 lines [GiD_EntitiesGroups get $group lines]
-        GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
-        GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
-    }
+    Mesh::PrepareMeshGeneration $elementsize
 
     # Change the mesh settings depending on the element requirements
-    if {[Kratos::CheckMeshCriteria $elementsize]<0} {
+    if {[Mesh::CheckMeshCriteria $elementsize]<0} {
         return "-cancel-"
     }
 
@@ -459,8 +449,16 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
 proc Kratos::Event_AfterMeshGeneration {fail} {
     variable tmp_init_mesh_time
 
+    if {$fail} {
+        Kratos::Log "Mesh generation failed"
+        return
+    }
+    
     # Change the mesh settings depending on the element requirements. Reset previous settings
     # catch {Kratos::ResetMeshCriteria $fail}
+
+    Mesh::AddPointElementsIfNeeded
+
 
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
