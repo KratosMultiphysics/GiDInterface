@@ -40,7 +40,7 @@ proc write::printGeometryConnectivities {group etype nnodes} {
     # Prepare the indent
     set s [mdpaIndent]
     set nDim $::Model::SpatialDimension
-    set geometry_name ${etype}${nDim}${nnodes}
+    set geometry_name [GetGeometryName $etype $nDim $nnodes] 
 
     # Prepare the formats dict
     set formats [GetFormatDict $group "" $nnodes]
@@ -69,7 +69,6 @@ proc write::printGeometryConnectivities {group etype nnodes} {
         set num_elems [objarray length $elems]
         if {$num_elems > 0} {
             # Write header
-            set geometry_name ${etype}${nDim}
             WriteString "${s}Begin Geometries $geometry_name // GUI group identifier: $group"
             # increase indent (allows folding in text editor)
             incr ::write::current_mdpa_indent_level
@@ -100,4 +99,12 @@ proc write::writeSphereRadiusOnGroup { groupid } {
     GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
     write::WriteString "End NodalData"
     write::WriteString ""
+}
+
+proc write::GetGeometryName { etype nDim nnodes } {
+    if {$etype == "Point"} {
+        return "${etype}${nDim}"
+    } else {
+        return "${etype}${nDim}${nnodes}"
+    }
 }
