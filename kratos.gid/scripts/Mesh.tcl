@@ -72,11 +72,12 @@ proc Mesh::AddPointElementsIfNeeded {} {
         if {$cond eq ""} {
             continue
         }
+        
+        # if group element is point and has topology for points
         set topology [$cond getTopologyFeature "Point" 1]
         if {$topology eq ""} {
             continue
         }
-        W " Groups assigned to condition $condid will be meshed with Point elements."
 
         set group_nodes [dict get $condition_groups $condid]
         foreach node_tdom $group_nodes {
@@ -95,7 +96,4 @@ proc Mesh::AddPointElementsIfNeeded {} {
         }
     }
 
-    # if group element is point and has topology for points
-
-    # foreach nodeid [GiD_Mesh] GiD_Mesh create element append Point 1 [list $nodeid]
 }
