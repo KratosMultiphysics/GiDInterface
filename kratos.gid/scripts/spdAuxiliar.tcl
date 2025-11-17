@@ -423,6 +423,29 @@ proc spdAux::GetUsedElements {{alt_un ""}} {
     return $lista
 }
 
+# returns ["condition1" {gNode1 gNode2} "condition2" {gNode3 gNode4}]
+proc spdAux::GetUsedConditions {{root ""}} {
+    set resultDict [dict create]
+
+
+    set xp1 "./condition/group"
+    if {$root eq "" } {
+        set root [customlib::GetBaseRoot]
+        set xp1 "//condition/group"
+    }
+
+    foreach gNode [$root selectNodes $xp1] {
+        set condition_node [$gNode parent]
+        set condition_name [$condition_node @n]
+        
+        set cond [Model::getCondition $condition_name]
+        if {$cond eq ""} {continue}
+        dict lappend resultDict $condition_name $gNode
+
+    }
+    return $resultDict
+}
+
 proc spdAux::LoadIntervalGroups { {root ""} } {
     customlib::UpdateDocument
     variable GroupsEdited
