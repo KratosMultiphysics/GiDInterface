@@ -516,4 +516,8 @@ proc spdAux::RegisterWindow {window_name} {
 }
 
 
+proc spdAux::ProcFillSimulations { domNode args } {
+    # W "Filling simulations..."
+}
+
 spdAux::Init

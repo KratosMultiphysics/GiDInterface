@@ -36,6 +36,9 @@
 	<appLink n="MdpaGenerator" public="1" pn="Mdpa Generator" active="0" appid="MdpaGenerator" prefix="MDPAGen_" is_tool="1" production="1"/>
 	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_" is_tool="1"  production="1"/>
 	<appLink n="GeoMechanics" public="1" pn="GeoMechanics" active="0" appid="GeoMechanics" prefix="GEOM_" />
+	<container n="Simulations" pn="Simulation runs" un="simulation_runs" open_window="0" icon="run16" state="[FillSimulations]">
+
+	</container>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
 		<value n='units_system' pn='Units system' units_system_definition="1">
@@ -330,9 +333,6 @@
 				return [spdAux::ProcGetFilesValues $domNode]
 			]]>
 		</proc>
-		
-
-
 		<proc n='GetMaterialsList' args='args'>
 			<![CDATA[
 				spdAux::ProcGetMaterialsList $domNode {*}$args
@@ -347,6 +347,13 @@
 					}
 				}
 				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
+			]]>
+		</proc>
+		
+		<proc n='FillSimulations' args='args'>
+			<![CDATA[
+				spdAux::ProcFillSimulations $domNode {*}$args
+				return "normal"
 			]]>
 		</proc>
 		<dynamicnode command="spdAux::injectProcs" args=""/>
