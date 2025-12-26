@@ -38,7 +38,7 @@
 	<appLink n="GeoMechanics" public="1" pn="GeoMechanics" active="0" appid="GeoMechanics" prefix="GEOM_" />
 	<container n="Simulations" pn="Simulations" un="simulation_runs" open_window="1" icon="run16" state="[FillSimulations]" removecontextualmenu='{Edit}'>
 		<value n="current_simulation_run" pn="Simulation name" v="Run_1"/>
-		<container n="simulation_run_list" pn="Simulation runs list" icon="run16" open_window="1">
+		<container n="simulation_run_list" pn="Simulation runs list" icon="run16" open_window="1" removecontextualmenu='{Edit} {List entities} '>
 		</container>
 	</container>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">

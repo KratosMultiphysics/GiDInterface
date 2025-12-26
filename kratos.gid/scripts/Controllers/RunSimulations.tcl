@@ -8,18 +8,15 @@ namespace eval ::runsimulations {
 
     variable folder_name
     variable spd_un
-    variable dir 
 }
 
 
 proc runsimulations::Init { } {
     variable folder_name
     variable spd_un
-    variable dir 
 
     set folder_name "Simulations"
     set spd_un "simulation_runs"
-    set dir [GidUtils::GetDirectoryModel]
 }
 
 proc runsimulations::GetPastSimulationsRunsList { } {
@@ -27,7 +24,7 @@ proc runsimulations::GetPastSimulationsRunsList { } {
     set return_list [list ]
 
     # Find in the folder
-    variable dir
+    set dir [GidUtils::GetDirectoryModel]
     variable folder_name
     set simulations_dir [file join $dir $folder_name]
     if {[file isdirectory $simulations_dir]} {
@@ -58,12 +55,35 @@ proc runsimulations::GetNextSimulationRunName {  } {
 
     set run_index [llength $previous_runs_names]
     incr run_index
-    set run_name "Run $run_index"
+    set run_name "Run_$run_index"
     while {[lsearch -exact $previous_runs_names $run_name] != -1} {
         incr run_index
-        set run_name "Run $run_index"
+        set run_name "Run_$run_index"
     }
     return $run_name
+}
+proc runsimulations::GetCurrentSimulationRunName {  } {
+    set dir [GidUtils::GetDirectoryModel]
+    variable folder_name
+    set simulations_dir [file join $dir $folder_name]
+    if {[file isdirectory $simulations_dir]} {
+        # find all the folders inside
+        set dir_list [glob -nocomplain -directory $simulations_dir *]
+        set latest_time 0
+        set latest_run ""
+        foreach sim_dir $dir_list {
+            if {[file isdirectory $sim_dir]} {
+                set mod_time [file mtime $sim_dir]
+                if {$mod_time > $latest_time} {
+                    set latest_time $mod_time
+                    set latest_run [file tail $sim_dir]
+                }
+            }
+        }
+        return $latest_run
+    } else {
+        return ""
+    }
 }
 
 proc runsimulations::DeleteSimulationRun { sim_path } {
@@ -71,6 +91,14 @@ proc runsimulations::DeleteSimulationRun { sim_path } {
     if {[file isdirectory $sim_path]} {
         file delete -force $sim_path
     }
+}
+
+proc runsimulations::GetSimulationRunPath { run_name } {
+    set dir [GidUtils::GetDirectoryModel]
+    variable folder_name
+    set simulations_dir [file join $dir $folder_name]
+    set run_path [file join $simulations_dir $run_name]
+    return $run_path
 }
 
 runsimulations::Init

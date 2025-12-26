@@ -543,6 +543,8 @@ proc spdAux::ProcFillSimulations { domNode args } {
 
         # add delete option 
         append add_menu_command " { advanced-16 {Delete} {spdAux::DeleteSimulationRun $sim_path} }"
+        # add rerun case
+        append add_menu_command " { advanced-16 {Rerun} {runsimulations::RerunSimulation $sim_path} }"
 
         
         
@@ -555,7 +557,24 @@ proc spdAux::ProcFillSimulations { domNode args } {
         foreach file $folder_files {
             set folder_size [expr $folder_size + [file size $file]]
         }
-        set str "<value n='size' pn='Size' v='$folder_size' state='readonly'/>"
+        # express size in units that make sense
+        set unit "B"
+        if {$folder_size > 1024} {
+            set folder_size [expr $folder_size / 1024.0]
+            set unit "KB"
+            if {$folder_size > 1024} {
+                set folder_size [expr $folder_size / 1024.0]
+                set unit "MB"
+                if {$folder_size > 1024} {
+                    set folder_size [expr $folder_size / 1024.0]
+                    set unit "GB"
+                }
+            }
+        }
+        # only two decimals
+        set folder_size [format "%.2f" $folder_size]
+        # TODO: Not working well in MB
+        set str "<value n='size' pn='Size' v='$folder_size' unit='$unit' unit_magnitude='Storage' state='readonly'/>"
         # append it to the current run node
         $current_run_node appendChild [[dom parse $str] documentElement]
 

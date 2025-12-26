@@ -562,7 +562,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     # replace next_run whitespaces by underscores. Do not use regsub
     set next_run [string map {" " "_"} $next_run]
     
-    set filename [file join [file dirname $filename] $runsimulations::folder_name $next_run [file tail $filename]]
+    set filename [file join [runsimulations::GetSimulationRunPath $next_run] [file tail $filename]]
     # create the folder if it does not exist
     file mkdir [file dirname $filename]
 
