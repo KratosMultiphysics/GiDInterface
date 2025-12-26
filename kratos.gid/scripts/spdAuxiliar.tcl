@@ -522,13 +522,8 @@ proc spdAux::ProcFillSimulations { domNode args } {
     # detect previous simulation runs
     set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
 
-    set simulations_names [list ]
-    foreach sim_run $sim_runs_list {
-        dict get $sim_run name
-        lappend simulations_names [dict get $sim_run name]
-    }
     # set the next simulation name
-    set next_sim_name [runsimulations::GetNextSimulationRunName $simulations_names]
+    set next_sim_name [runsimulations::GetNextSimulationRunName]
     set next_name_node [$domNode selectNodes ".//value\[@n='current_simulation_run'\]"]
     $next_name_node setAttribute v $next_sim_name
 
@@ -545,11 +540,14 @@ proc spdAux::ProcFillSimulations { domNode args } {
         set add_menu_command "{advanced-16 {View in Code} {spdAux::OpenRunInCode $sim_path}}"
         append add_menu_command " { advanced-16 {Rename} {spdAux::RenameSimulationRun $sim_path} }"
         set del_menu_command "removecontextualmenu='{-} {Edit} {List entities} {Expand} {View this}'"
+
+        # add delete option 
+        append add_menu_command " { advanced-16 {Delete} {spdAux::DeleteSimulationRun $sim_path} }"
+
+        
         
         set str "<container n='$sim_name' pn='$sim_name' icon='ok16' addcontextualmenu='$add_menu_command' $del_menu_command />"
         set current_run_node [ $sim_list_node appendChild [[dom parse $str] documentElement]]
-
-        
         # add extra info as status, size, date...
         # get the size of the folder
         set folder_size 0
@@ -581,6 +579,17 @@ proc spdAux::ProcFillSimulations { domNode args } {
         #     $sim_list_node appendChild [[dom parse $str] documentElement]
         # }
     }
+}
+
+proc spdAux::GetNextSimulationRunName {  } {
+    set base_node [customlib::GetBaseRoot]
+    set sim_node [write::getValueByNode [$base_node selectNodes ".//value\[@n='current_simulation_run'\]"]]
+    return $sim_node
+}
+
+proc spdAux::DeleteSimulationRun { sim_path } {
+    runsimulations::DeleteSimulationRun $sim_path
+    spdAux::RequestRefresh
 }
 
 proc spdAux::OpenRunInCode { args } {

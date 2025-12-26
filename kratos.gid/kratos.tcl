@@ -453,7 +453,7 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
         Kratos::Log "Mesh generation failed"
         return
     }
-    
+
     # Change the mesh settings depending on the element requirements. Reset previous settings
     # catch {Kratos::ResetMeshCriteria $fail}
 
@@ -557,6 +557,15 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
             set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName]]
         }
     }
+
+    set next_run [runsimulations::GetNextSimulationRunName]
+    # replace next_run whitespaces by underscores. Do not use regsub
+    set next_run [string map {" " "_"} $next_run]
+    
+    set filename [file join [file dirname $filename] $runsimulations::folder_name $next_run [file tail $filename]]
+    # create the folder if it does not exist
+    file mkdir [file dirname $filename]
+
     # The calculation process may need the files of the file selector entries inside the model folder
     if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
@@ -572,7 +581,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
     }
-    if {[::write::GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; 
+    if {[::write::GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}];
         W "Nodal coordinates time: [Kratos::Duration $ttime]"
         Kratos::Log "Write calculation files in [Duration $ttime]"
     }

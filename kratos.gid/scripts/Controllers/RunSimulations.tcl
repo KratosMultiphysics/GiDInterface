@@ -47,7 +47,15 @@ proc runsimulations::GetPastSimulationsRunsList { } {
 
 }
 
-proc runsimulations::GetNextSimulationRunName {  previous_runs_names } {
+proc runsimulations::GetNextSimulationRunName {  } {
+    
+    set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
+    set previous_runs_names [list ]
+    foreach sim_run $sim_runs_list {
+        dict get $sim_run name
+        lappend previous_runs_names [dict get $sim_run name]
+    }
+
     set run_index [llength $previous_runs_names]
     incr run_index
     set run_name "Run $run_index"
@@ -56,6 +64,13 @@ proc runsimulations::GetNextSimulationRunName {  previous_runs_names } {
         set run_name "Run $run_index"
     }
     return $run_name
+}
+
+proc runsimulations::DeleteSimulationRun { sim_path } {
+    # delete the folder and all its contents
+    if {[file isdirectory $sim_path]} {
+        file delete -force $sim_path
+    }
 }
 
 runsimulations::Init
