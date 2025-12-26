@@ -518,6 +518,74 @@ proc spdAux::RegisterWindow {window_name} {
 
 proc spdAux::ProcFillSimulations { domNode args } {
     # W "Filling simulations..."
+
+    # detect previous simulation runs
+    set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
+
+    set simulations_names [list ]
+    foreach sim_run $sim_runs_list {
+        dict get $sim_run name
+        lappend simulations_names [dict get $sim_run name]
+    }
+    # set the next simulation name
+    set next_sim_name [runsimulations::GetNextSimulationRunName $simulations_names]
+    set next_name_node [$domNode selectNodes ".//value\[@n='current_simulation_run'\]"]
+    $next_name_node setAttribute v $next_sim_name
+
+    # fill the simulations list
+    set sim_list_node [$domNode selectNodes ".//container\[@n='simulation_run_list'\]"]
+    # clear previous entries
+    foreach child_node [$sim_list_node childNodes] {
+        $sim_list_node removeChild $child_node
+    }
+    foreach sim_run $sim_runs_list {
+        set sim_name [dict get $sim_run name]
+        set sim_path [dict get $sim_run path]
+
+        set add_menu_command "{advanced-16 {View in Code} {spdAux::OpenRunInCode $sim_path}}"
+        append add_menu_command " { advanced-16 {Rename} {spdAux::RenameSimulationRun $sim_path} }"
+        set del_menu_command "removecontextualmenu='{-} {Edit} {List entities} {Expand} {View this}'"
+        
+        set str "<container n='$sim_name' pn='$sim_name' icon='ok16' addcontextualmenu='$add_menu_command' $del_menu_command />"
+        set current_run_node [ $sim_list_node appendChild [[dom parse $str] documentElement]]
+
+        
+        # add extra info as status, size, date...
+        # get the size of the folder
+        set folder_size 0
+        set folder_files [glob -nocomplain -directory $sim_path -types {file} *]
+        foreach file $folder_files {
+            set folder_size [expr $folder_size + [file size $file]]
+        }
+        set str "<value n='size' pn='Size' v='$folder_size' state='readonly'/>"
+        # append it to the current run node
+        $current_run_node appendChild [[dom parse $str] documentElement]
+
+        # get the modification date of the projectparameters file
+        set folder_mtime 0
+        set sim_params_file [file join $sim_path "ProjectParameters.json"]
+        if {[file exists $sim_params_file]} {
+            set folder_mtime [file mtime $sim_params_file]
+        }
+        # timestamp as yyyy-mm-dd hh:mm:ss
+        set folder_mtime [clock format $folder_mtime -format "%Y-%m-%d %H:%M:%S"]
+        set str "<value n='modification_date' pn='Date' v='$folder_mtime' state='readonly'/>"
+        # append it to the current run node
+        $current_run_node appendChild [[dom parse $str] documentElement]
+
+        # find a file named ProjectParameters.json inside the simulation folder
+        # set sim_spd_file [file join $sim_path "ProjectParameters.json"]
+        # if {[file exists $sim_spd_file]} {
+        #     # insert a value disabled saying true
+        #     set str "<value n='has_project_parameters_file' v='true' state='disabled'/>"
+        #     $sim_list_node appendChild [[dom parse $str] documentElement]
+        # }
+    }
+}
+
+proc spdAux::OpenRunInCode { args } {
+    set path $args
+    Kratos::OpenCaseIn VSCode $path
 }
 
 spdAux::Init

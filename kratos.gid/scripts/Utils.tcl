@@ -361,13 +361,30 @@ proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
 }
 
-proc Kratos::OpenCaseIn {program} {
+proc Kratos::OpenCaseIn {program {ext_path ""}} {
     switch $program {
         "VSCode" {
             if {[GiD_Info Project ModelName] eq "UNNAMED"} {W "Save your model first"} {
-                catch {exec code -n [GidUtils::GetDirectoryModel]} msg
+                if {$ext_path ne ""} {
+                    set model_dir $ext_path
+                } else {
+                    set model_dir [GiD_Info Project ModelName].gid
+                }
+                catch {
+                    GidUtils::SetWarnLine "Opening $model_dir in Visual Studio Code..."
+                    # set command {code -n 'C:/Users/garat/Desktop/aaa.gid/Simulations/Run 1'}
+                    # exec $command
+                    # exec [list code -n $model_dir]
+                    # exec code -n "$model_dir"
+                    exec code -n $model_dir
+                    # exec "{*}[auto_execok code] -n $model_dir"
+                    # exec {*}[auto_execok code] -n $model_dir
+                    #W [gid_cross_platform::execute_program_in_path [list "code" "-n" $model_dir]]
+                } msg
                 if {$msg eq {couldn't execute "code": no such file or directory}} {
                     W "Install Visual Studio Code and add it to your PATH"
+                } elseif {$msg ne ""} {
+                    W "Error opening Visual Studio Code: $msg"
                 }
             }
         }
