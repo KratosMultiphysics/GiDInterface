@@ -376,7 +376,7 @@ proc Kratos::OpenCaseIn {program {ext_path ""}} {
                     # exec $command
                     # exec [list code -n $model_dir]
                     # exec code -n "$model_dir"
-                    exec code -n $model_dir
+                    Kratos::openInVSCode $model_dir
                     # exec "{*}[auto_execok code] -n $model_dir"
                     # exec {*}[auto_execok code] -n $model_dir
                     #W [gid_cross_platform::execute_program_in_path [list "code" "-n" $model_dir]]
@@ -390,6 +390,51 @@ proc Kratos::OpenCaseIn {program {ext_path ""}} {
         }
         default {}
     }
+}
+
+proc Kratos::openInVSCode {path} {
+
+    if {![file exists $path]} {
+        error "Path does not exist: $path"
+    }
+
+    set platform $::tcl_platform(platform)
+
+
+    switch -glob -- $platform {
+
+        "windows" {
+            exec [Kratos::get_full_path_code] -n $path
+        }
+
+        "Darwin" {
+            # macOS
+            exec open -a "Visual Studio Code" $path &
+        }
+
+        default {
+            # Linux / Unix
+            exec code -n $path &
+        }
+    }
+}
+proc Kratos::get_full_path_code {} {
+
+    set cmd [auto_execok code]
+    if {$cmd eq ""} {
+        error "VS Code not found in PATH"
+    }
+
+    set full_path_code [lindex $cmd 0]
+
+    if {$::tcl_platform(platform) eq "windows"} {
+        # auto_execok returns .../bin/code.cmd
+        # real executable is ../Code.exe
+        set base [file dirname [file dirname $full_path_code]]
+        set full_path_code [file join $base Code.exe]
+    }
+
+    return $full_path_code
 }
 
 if { ![GidUtils::IsTkDisabled] } {
