@@ -54,6 +54,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile Kratos::Event_AfterWriteCalculationFile PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_BeforeRunCalculation Kratos::Event_BeforeRunCalculation PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_SelectGIDBatFile Kratos::Event_SelectGIDBatFile PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterRunCalculation Kratos::Event_AfterRunCalculation PROBLEMTYPE Kratos
 
     # Postprocess
     GiD_RegisterEvent GiD_Event_BeforeInitGIDPostProcess Kratos::BeforeInitGIDPostProcess PROBLEMTYPE Kratos
@@ -521,6 +522,11 @@ proc Kratos::Event_EndGIDPostProcess {} {
     }
     # Show the kratos toolbar
     ::Kratos::CreatePreprocessModelTBar
+}
+
+proc Kratos::Event_AfterRunCalculation { basename dir problemtypedir where error errorfilename } {
+    # Refresh tree
+    spdAux::RequestRefresh
 }
 
 proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
