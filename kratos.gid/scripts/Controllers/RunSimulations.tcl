@@ -101,4 +101,42 @@ proc runsimulations::GetSimulationRunPath { run_name } {
     return $run_path
 }
 
+proc runsimulations::GoToPostprocess { sim_path } {
+    set Kratos::pending_postprocess_simulation $sim_path
+    # W "Changing to Postprocess... $sim_path"
+    runsimulations::WritePostprocessRequest $sim_path
+    GiD_Process Postprocess MEscape
+}
+
+# TODO: Ask kike if there is a better way to change to post and return the path of a post.lst file
+# Instead of writing the post.lst manually
+proc runsimulations::WritePostprocessRequest { sim_path } {
+    # In the model folder, create a file named "{model_name}.post.lst" 
+    # The content of the file is a copy of the file simp_path/{simulation_name}.post.lst but adding the full path to the simulation folder
+    set dir [GidUtils::GetDirectoryModel]
+    set model_name [file tail $dir]
+    # remove the extension if any
+    set model_name [file rootname $model_name]
+
+    set postprocess_request_file [file join $dir "${model_name}.post.lst"]
+    set sim_name [file tail $sim_path]  
+    set sim_postprocess_file [file join $sim_path "${sim_name}.post.lst"]
+    if {[file exists $sim_postprocess_file]} {
+        set infile [open $sim_postprocess_file r]
+        set outfile [open $postprocess_request_file w]
+        while {[gets $infile line] >= 0} {
+            # write the line to the output file, if it is not "Multiple" "Single" or "Merge", add the path
+            if {[string match "Multiple*" $line] || [string match "Single*" $line] || [string match "Merge*" $line]} {
+                puts $outfile $line
+            } else {
+                puts $outfile "[file join $sim_path $line]"
+            }
+        }
+        close $infile
+        close $outfile
+    } else {
+        W "Simulation postprocess file not found: $sim_postprocess_file"
+    }
+}
+
 runsimulations::Init

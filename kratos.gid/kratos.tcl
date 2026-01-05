@@ -12,10 +12,12 @@ namespace eval ::Kratos {
     variable namespaces
 
     variable mesh_criteria_forced
+
+    variable pending_postprocess_simulation
 }
 
 proc GiD_Event_InitProblemtype { dir } {
-            Kratos::Event_InitProblemtype $dir
+    Kratos::Event_InitProblemtype $dir
 }
 
 proc Kratos::Events { } {
@@ -179,6 +181,9 @@ proc Kratos::InitGlobalVariables {dir} {
 
     variable mesh_criteria_forced
     set mesh_criteria_forced [dict create]
+
+    variable pending_postprocess_simulation
+    set pending_postprocess_simulation ""
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -491,6 +496,17 @@ proc Kratos::BeforeInitGIDPostProcess {} {
                 file copy -force $list_file [GidUtils::GetFilenameInsideProject [file rootname [GidUtils::GetDirectoryModel]] .post.lst]
             }
         }
+    }
+
+    # Check if there is a pending postprocess request
+    variable pending_postprocess_simulation
+    if {$pending_postprocess_simulation ne ""} {
+        # Open the postprocess of the requested simulation
+
+        # TODO: Ask kike if there is a better way to change to post and return the path of a post.lst file
+        # Instead of writing the post.lst manually
+        
+        set pending_postprocess_simulation ""
     }
 }
 

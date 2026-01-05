@@ -538,13 +538,15 @@ proc spdAux::ProcFillSimulations { domNode args } {
         set sim_path [dict get $sim_run path]
 
         set add_menu_command "{advanced-16 {View in Code} {spdAux::OpenRunInCode $sim_path}}"
-        append add_menu_command " { advanced-16 {Rename} {spdAux::RenameSimulationRun $sim_path} }"
+        # append add_menu_command " { advanced-16 {Rename} {spdAux::RenameSimulationRun $sim_path} }"
         set del_menu_command "removecontextualmenu='{-} {Edit} {List entities} {Expand} {View this}'"
 
         # add delete option 
         append add_menu_command " { advanced-16 {Delete} {spdAux::DeleteSimulationRun $sim_path} }"
         # add rerun case
         append add_menu_command " { advanced-16 {Rerun} {runsimulations::RerunSimulation $sim_path} }"
+        # add view results option
+        append add_menu_command " { advanced-16 {View Results} {runsimulations::GoToPostprocess $sim_path} }"
 
         
         
@@ -574,7 +576,8 @@ proc spdAux::ProcFillSimulations { domNode args } {
         # only two decimals
         set folder_size [format "%.2f" $folder_size]
         # TODO: Not working well in MB
-        set str "<value n='size' pn='Size' v='$folder_size' unit='$unit' unit_magnitude='Storage' state='readonly'/>"
+        set str "<value n='size' pn='Size' v='$folder_size $unit' state='readonly'/>"
+        # set str "<value n='size' pn='Size' v='$folder_size' unit='$unit' unit_magnitude='Storage' state='readonly'/>"
         # append it to the current run node
         $current_run_node appendChild [[dom parse $str] documentElement]
 
