@@ -518,6 +518,8 @@ proc spdAux::RegisterWindow {window_name} {
 
 proc spdAux::ProcFillSimulations { domNode args } {
     # W "Filling simulations..."
+    set model_name [GiD_Info Project ModelName]
+    # remove the extension if any
 
     # detect previous simulation runs
     set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
@@ -548,9 +550,18 @@ proc spdAux::ProcFillSimulations { domNode args } {
         # add view results option
         append add_menu_command " { advanced-16 {View Results} {runsimulations::GoToPostprocess $sim_path} }"
 
+        set icon "ok16"
+        # if there is an error file (modelname.err) inside the simulation folder, change the icon to 
+        if {[file exists [file join $sim_path "[file tail $model_name].err"]]} {
+            # if the size is greater than 0
+            if {[file size [file join $sim_path "[file tail $model_name].err"] ] > 0} {
+                set icon "error16"
+                # Add view error option
+                append add_menu_command " { advanced-16 {View Error Log} {Kratos::OpenCaseIn VSCode [file join $sim_path "[file tail $model_name].err"]} }"
+            }
+        }
         
-        
-        set str "<container n='$sim_name' pn='$sim_name' icon='ok16' addcontextualmenu='$add_menu_command' $del_menu_command />"
+        set str "<container n='$sim_name' pn='$sim_name' icon='$icon' addcontextualmenu='$add_menu_command' $del_menu_command />"
         set current_run_node [ $sim_list_node appendChild [[dom parse $str] documentElement]]
         # add extra info as status, size, date...
         # get the size of the folder
