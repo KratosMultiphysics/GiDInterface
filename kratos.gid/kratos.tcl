@@ -527,6 +527,11 @@ proc Kratos::Event_EndGIDPostProcess {} {
 proc Kratos::Event_AfterRunCalculation { basename dir problemtypedir where error errorfilename } {
     # Refresh tree
     spdAux::RequestRefresh
+
+    set currrent_simulation [runsimulations::GetCurrentSimulationRunName]
+    set sim_path [file join [GidUtils::GetDirectoryModel] $::runsimulations::folder_name $currrent_simulation]
+    # W "Writing postprocess request for simulation: $sim_path"
+    runsimulations::WritePostprocessRequest $sim_path
 }
 
 proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {

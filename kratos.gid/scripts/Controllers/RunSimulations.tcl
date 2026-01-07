@@ -118,9 +118,15 @@ proc runsimulations::WritePostprocessRequest { sim_path } {
     # remove the extension if any
     set model_name [file rootname $model_name]
 
+    # remove  from sim_path the dir (initial part)
+    if {[string first $dir $sim_path] == 0} {
+        set sim_path [string range $sim_path [expr [string length $dir] +1] end]
+    }
+
     set postprocess_request_file [file join $dir "${model_name}.post.lst"]
     set sim_name [file tail $sim_path]  
-    set sim_postprocess_file [file join $sim_path "${sim_name}.post.lst"]
+    set sim_postprocess_file [file join $dir $sim_path "${sim_name}.post.lst"]
+    # W "Writing postprocess request from $sim_postprocess_file to $postprocess_request_file"
     if {[file exists $sim_postprocess_file]} {
         set infile [open $sim_postprocess_file r]
         set outfile [open $postprocess_request_file w]
