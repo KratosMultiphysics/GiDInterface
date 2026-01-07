@@ -86,6 +86,14 @@ proc runsimulations::GetCurrentSimulationRunName {  } {
     }
 }
 
+proc runsimulations::DeleteAllSimulationRuns {  } {
+    set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
+    foreach sim_run $sim_runs_list {
+        set sim_path [dict get $sim_run path]
+        runsimulations::DeleteSimulationRun $sim_path
+    }
+}
+
 proc runsimulations::DeleteSimulationRun { sim_path } {
     # delete the folder and all its contents
     if {[file isdirectory $sim_path]} {

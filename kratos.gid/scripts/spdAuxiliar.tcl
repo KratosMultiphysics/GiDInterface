@@ -525,12 +525,19 @@ proc spdAux::ProcFillSimulations { domNode args } {
     set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
 
     # set the next simulation name
-    set next_sim_name [runsimulations::GetNextSimulationRunName]
-    set next_name_node [$domNode selectNodes ".//value\[@n='current_simulation_run'\]"]
-    $next_name_node setAttribute v $next_sim_name
+    # set next_sim_name [runsimulations::GetNextSimulationRunName]
+    # set next_name_node [$domNode selectNodes ".//value\[@n='current_simulation_run'\]"]
+    # $next_name_node setAttribute v $next_sim_name
 
     # fill the simulations list
     set sim_list_node [$domNode selectNodes ".//container\[@n='simulation_run_list'\]"]
+
+    # add contextual entry to delete all
+    set glob_add_menu_command "{advanced-16 {Delete All} {spdAux::DeleteAllSimulationRuns}}"
+    set glob_del_menu_command "{-} {Edit} {List entities} {Expand} {View this}"
+    $sim_list_node setAttribute addcontextualmenu $glob_add_menu_command
+    $sim_list_node setAttribute removecontextualmenu $glob_del_menu_command
+
     # clear previous entries
     foreach child_node [$sim_list_node childNodes] {
         $sim_list_node removeChild $child_node
@@ -622,6 +629,11 @@ proc spdAux::GetNextSimulationRunName {  } {
 
 proc spdAux::DeleteSimulationRun { sim_path } {
     runsimulations::DeleteSimulationRun $sim_path
+    spdAux::RequestRefresh
+}
+
+proc spdAux::DeleteAllSimulationRuns {  } {
+    runsimulations::DeleteAllSimulationRuns
     spdAux::RequestRefresh
 }
 
