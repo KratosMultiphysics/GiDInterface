@@ -105,7 +105,7 @@ proc runsimulations::GoToPostprocess { sim_path } {
     set Kratos::pending_postprocess_simulation $sim_path
     # W "Changing to Postprocess... $sim_path"
     runsimulations::WritePostprocessRequest $sim_path
-    GiD_Process Postprocess MEscape
+    GiD_Process MEscape Postprocess MEscape
 }
 
 # TODO: Ask kike if there is a better way to change to post and return the path of a post.lst file
@@ -137,6 +137,8 @@ proc runsimulations::WritePostprocessRequest { sim_path } {
     } else {
         W "Simulation postprocess file not found: $sim_postprocess_file"
     }
+
 }
+
 
 runsimulations::Init

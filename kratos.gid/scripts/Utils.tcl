@@ -471,3 +471,37 @@ if { ![GidUtils::IsTkDisabled] } {
     }
 }
 
+
+proc Kratos::CreateLinksRunData { } {
+    
+    set next_run [runsimulations::GetCurrentSimulationRunName]
+    # replace next_run whitespaces by underscores. Do not use regsub
+    set next_run [string map {" " "_"} $next_run]
+    # W "Starting simulation run: $next_run"
+    
+    set simulation_case [runsimulations::GetSimulationRunPath $next_run]
+
+    # Create link for model_name.info and model_name.err 
+    set dir [GidUtils::GetDirectoryModel]
+    set model_name [Kratos::GetModelName]
+    set info_file [file join $dir "$model_name.info"]
+    set err_file [file join $dir "$model_name.err"]
+
+    foreach file_to_link [list $info_file $err_file] {
+        if {[file exists $file_to_link]} {
+            file delete -force $file_to_link
+        }
+        set link_content [file join $simulation_case [file tail $file_to_link]]
+        # W "Creating link: $link_content -> $file_to_link"
+        if {[file exists $link_content]} {
+            # create the link
+            file link $file_to_link $link_content
+        } else {
+            # W "File to link does not exist: $link_content"
+            after 5000 {
+                Kratos::CreateLinksRunData
+            }
+        }
+        
+    }
+}

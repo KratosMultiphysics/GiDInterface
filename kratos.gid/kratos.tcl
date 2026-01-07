@@ -546,6 +546,10 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
     if {[Kratos::CheckDependencies] ne 0} {return [list "-cancel-" "Unable to run. Missing dependencies"]}
 
+    # after 3 seconds
+    after 3000 {
+        Kratos::CreateLinksRunData
+    }
 }
 
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
