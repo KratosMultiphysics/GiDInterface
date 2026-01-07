@@ -524,13 +524,8 @@ proc spdAux::ProcFillSimulations { domNode args } {
     # detect previous simulation runs
     set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
 
-    # set the next simulation name
-    # set next_sim_name [runsimulations::GetNextSimulationRunName]
-    # set next_name_node [$domNode selectNodes ".//value\[@n='current_simulation_run'\]"]
-    # $next_name_node setAttribute v $next_sim_name
-
     # fill the simulations list
-    set sim_list_node [$domNode selectNodes ".//container\[@n='simulation_run_list'\]"]
+    set sim_list_node $domNode
 
     # add contextual entry to delete all
     set glob_add_menu_command "{advanced-16 {Delete All} {spdAux::DeleteAllSimulationRuns}}"

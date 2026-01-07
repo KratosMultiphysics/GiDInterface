@@ -486,7 +486,8 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
     set folder_name [dict get $outputProcessParams postprocess_parameters folder_name]
     dict unset outputProcessParams postprocess_parameters folder_name
-    dict set outputProcessParams output_name [file join $folder_name $model_name]
+    set current_simulation_name [runsimulations::GetCurrentSimulationRunName]
+    dict set outputProcessParams output_name [file join $folder_name ${model_name}_${current_simulation_name}]
 
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
