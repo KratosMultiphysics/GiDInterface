@@ -519,7 +519,7 @@ proc spdAux::RegisterWindow {window_name} {
 proc spdAux::ProcFillSimulations { domNode args } {
     # W "Filling simulations..."
     set model_name [GiD_Info Project ModelName]
-    # remove the extension if any
+    set model_dir [GidUtils::GetDirectoryModel]
 
     # detect previous simulation runs
     set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
@@ -550,7 +550,7 @@ proc spdAux::ProcFillSimulations { domNode args } {
         # add rerun case
         append add_menu_command " { advanced-16 {Rerun} {runsimulations::RerunSimulation $sim_path} }"
         # add view results option
-        append add_menu_command " { advanced-16 {View Results} {runsimulations::GoToPostprocess $sim_path} }"
+        append add_menu_command " { advanced-16 {View Results} {runsimulations::GoToPostprocess \"$sim_path\"} }"
 
         set icon "ok16"
         # if there is an error file (modelname.err) inside the simulation folder, change the icon to 

@@ -119,6 +119,7 @@ proc runsimulations::GoToPostprocess { sim_path } {
 # TODO: Ask kike if there is a better way to change to post and return the path of a post.lst file
 # Instead of writing the post.lst manually
 proc runsimulations::WritePostprocessRequest { sim_path } {
+    # W "Writing postprocess request for simulation path: $sim_path"
     # In the model folder, create a file named "{model_name}.post.lst" 
     # The content of the file is a copy of the file simp_path/{simulation_name}.post.lst but adding the full path to the simulation folder
     set dir [GidUtils::GetDirectoryModel]
@@ -133,7 +134,14 @@ proc runsimulations::WritePostprocessRequest { sim_path } {
 
     set postprocess_request_file [file join $dir "${model_name}.post.lst"]
     set sim_name [file tail $sim_path]  
-    set sim_postprocess_file [file join $dir $sim_path "${sim_name}.post.lst"]
+
+    # instead of looking for a file called ${sim_name}, lets find the first with .post.lst extension
+    set sim_postprocess_file ""
+    set files [glob -nocomplain -directory [file join $dir $sim_path] *.post.lst]
+    set sim_postprocess_file [lindex $files 0]
+    # W "Using simulation postprocess file: $sim_postprocess_file"
+
+    # set sim_postprocess_file [file join $dir $sim_path "${sim_name}.post.lst"]
     # W "Writing postprocess request from $sim_postprocess_file to $postprocess_request_file"
     if {[file exists $sim_postprocess_file]} {
         set infile [open $sim_postprocess_file r]
