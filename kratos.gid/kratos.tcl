@@ -209,7 +209,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename.tcl]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow ExamplesWindow CommonProcs PreferencesWindow TreeInjections MdpaImportMesh Drawer ImportFiles RunSimulations} {
+    foreach filename {ApplicationMarketWindow ExamplesWindow CommonProcs PreferencesWindow TreeInjections MdpaImportMesh Drawer ImportFiles RunSimulations RunWindow} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename.tcl]]
     }
     # Model class
