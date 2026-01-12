@@ -27,7 +27,7 @@ proc Kratos::InstallAllPythonDependencies { } {
     if {[llength $missing_packages] > 0} {
         exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
     }
-    exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$Kratos::pip_packages_required
+    exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$::Kratos::pip_packages_required
     ::GidUtils::SetWarnLine "Packages updated"
 }
 
@@ -168,14 +168,14 @@ proc Kratos::ShowErrorsAndActions {errs} {
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on a terminal (note: On Windows systems, use cmd, not PowerShell):"
-            W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
+            W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $::Kratos::pip_packages_required"
         }
         "MISSING_PIP_PACKAGES_GiDS_PYTHON" {
             W "Kratos package was not found on your system."
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on the GiD Command line:"
-            W "-np- W \[GiD_Python_PipInstall \[list $Kratos::pip_packages_required \] 1 \]"
+            W "-np- W \[GiD_Python_PipInstall \[list $::Kratos::pip_packages_required \] 1 \]"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
@@ -265,7 +265,7 @@ proc Kratos::LoadConfigurationFile {config_file} {
 }
 
 proc Kratos::SetDefaultLaunchMode { } {
-    set curr_mode $Kratos::kratos_private(launch_configuration)
+    set curr_mode $::Kratos::kratos_private(launch_configuration)
     set modes [list ]
     set first ""
     foreach mode $::Kratos::kratos_private(configurations) {
@@ -273,7 +273,7 @@ proc Kratos::SetDefaultLaunchMode { } {
         lappend modes $mode_name
         if {$first eq ""} {set first $mode_name}
     }
-    if {$curr_mode ni $modes} {set Kratos::kratos_private(launch_configuration) $first}
+    if {$curr_mode ni $modes} {set ::Kratos::kratos_private(launch_configuration) $first}
 }
 
 proc Kratos::ExecuteLaunchByMode {launch_mode} {
@@ -313,7 +313,7 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
 
 proc Kratos::GetLaunchMode { {launch_mode "current"} } {
     set curr_mode ""
-    if {$launch_mode eq "current"} {set launch_mode $Kratos::kratos_private(launch_configuration)}
+    if {$launch_mode eq "current"} {set launch_mode $::Kratos::kratos_private(launch_configuration)}
     foreach mode $::Kratos::kratos_private(configurations) {
         set mode_name [dict get $mode name]
         if {$mode_name eq $launch_mode} {
