@@ -20,6 +20,9 @@ proc RunWindow::Init { } {
 
     # initialize show-again flag from global Kratos private setting
     variable show_dialog_again
+    if {![info exists ::Kratos::kratos_private(run_window)]} {
+        set ::Kratos::kratos_private(run_window) 1
+    }
     set show_dialog_again $::Kratos::kratos_private(run_window)
 }
 
