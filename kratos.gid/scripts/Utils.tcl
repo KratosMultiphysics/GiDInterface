@@ -112,7 +112,7 @@ proc Kratos::LoadProblemtypeLibraries {} {
         gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
     }
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
+        set ::gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $::gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
     }
@@ -220,9 +220,9 @@ proc Kratos::LogInitialData { } {
 
     set initial_data [dict create]
     dict set initial_data gid_version [GiD_Info gidversion]
-    dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
-    dict set initial_data problemtype_version $Kratos::kratos_private(Version)
-    # dict set initial_data executable_version $Kratos::kratos_private(exec_version)
+    dict set initial_data problemtype_git_hash $::Kratos::kratos_private(problemtype_git_hash)
+    dict set initial_data problemtype_version $::Kratos::kratos_private(Version)
+    # dict set initial_data executable_version $::Kratos::kratos_private(exec_version)
     dict set initial_data current_platform $::tcl_platform(platform)
 
     Kratos::Log [write::tcl2json $initial_data]

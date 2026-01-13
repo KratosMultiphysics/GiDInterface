@@ -27,6 +27,11 @@ proc Mesh::CheckMeshCriteria { elementsize } {
     set forced_mesh_order -1
     foreach element_id $elements_used {
         set element [Model::getElement $element_id]
+        if { $element == "" } {
+            # kike: It is happening in tester case D5E101BC834E1E5F284E3FA4F027EE67 , must raise an error? by now try to continue
+            W "Mesh::CheckMeshCriteria element $element_id empty"
+            continue
+        }
         if {[$element hasAttribute "MeshOrder"]} {
             set element_forces [$element getAttribute "MeshOrder"]
             if {$element_forces eq "Quadratic"} {

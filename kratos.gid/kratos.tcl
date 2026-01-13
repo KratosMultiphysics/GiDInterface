@@ -145,14 +145,14 @@ proc Kratos::InitGlobalVariables {dir} {
     # Version of the kratos executable
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
-    set Kratos::kratos_private(allow_logs) 1
+    set ::Kratos::kratos_private(allow_logs) 1
     # git hash of the problemtype
-    set Kratos::kratos_private(problemtype_git_hash) 0
+    set ::Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
-    set Kratos::kratos_private(model_log_folder) ""
+    set ::Kratos::kratos_private(model_log_folder) ""
     # Check exec/launch.json
-    set Kratos::kratos_private(configurations) [list ]
-    set Kratos::kratos_private(launch_configuration) ""
+    set ::Kratos::kratos_private(configurations) [list ]
+    set ::Kratos::kratos_private(launch_configuration) ""
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -228,7 +228,7 @@ proc Kratos::LoadModelSPD { filespd } {
     update
 
     # Dont open the init window. Saved models have already app and dimension
-    set spdAux::must_open_init_window 0
+    set ::spdAux::must_open_init_window 0
 
     # Need this check for old gid compatibility. Sometimes this event was called by mistake.
     Kratos::CheckProjectIsNew $filespd
@@ -483,8 +483,8 @@ proc Kratos::Event_InitGIDPostProcess {} {
 
 proc Kratos::BeforeInitGIDPostProcess {} {
     # In docker run, rename lst file
-    if {[info exists Kratos::kratos_private(launch_configuration)]} {
-        set launch_mode $Kratos::kratos_private(launch_configuration)
+    if {[info exists ::Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $::Kratos::kratos_private(launch_configuration)
         if {$launch_mode eq "Docker"} {
             set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
             if {[file exists $list_file]} {
@@ -528,8 +528,8 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
 
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
     set result ""
-    if {[info exists Kratos::kratos_private(launch_configuration)]} {
-        set launch_mode $Kratos::kratos_private(launch_configuration)
+    if {[info exists ::Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $::Kratos::kratos_private(launch_configuration)
         ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
         catch {set result [Kratos::ExecuteLaunchByMode $launch_mode]} error_msg
     }
@@ -538,7 +538,7 @@ proc Kratos::Event_SelectGIDBatFile { dir basename } {
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
     # Only write if required
-    if {$Kratos::must_write_calc_data} {
+    if {$::Kratos::must_write_calc_data} {
         set errcode [Kratos::WriteCalculationFilesEvent $filename]
         if {$errcode} {return "-cancel-"}
     }
@@ -558,7 +558,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         }
     }
     # The calculation process may need the files of the file selector entries inside the model folder
-    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
+    if {$::Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
     # Start the write configuration clean
     write::Init
@@ -597,13 +597,13 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
-    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
+    if {$::Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
 
     # Log it
-    set Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
+    set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
     Kratos::Log "Save model [file tail $filespd ]"
 
 }

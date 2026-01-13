@@ -29,7 +29,7 @@ proc ::DEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
 
     # 3D gravity
-    if {$Model::SpatialDimension eq "3D"} {
+    if {$::Model::SpatialDimension eq "3D"} {
         catch {
             spdAux::SetValueOnTreeItem v 0.0 DEMGravity Cy
             spdAux::SetValueOnTreeItem v -1.0 DEMGravity Cz
