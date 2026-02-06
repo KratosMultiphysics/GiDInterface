@@ -39,7 +39,7 @@ proc ::FSI::write::writeParametersEvent { } {
 
 proc ::FSI::write::GetProblemDataDict { } {
     # Copy the section from the Fluid, who owns the time parameters of the model
-    set problem_data_dict [dict get $FSI::write::fluid_project_parameters problem_data]
+    set problem_data_dict [dict get $::FSI::write::fluid_project_parameters problem_data]
     return $problem_data_dict
 }
 
@@ -55,8 +55,8 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     # TODO: place an echo level in coupling
     dict set solver_settings_dict echo_level 1
 
-    dict set solver_settings_dict structure_solver_settings [dict get $FSI::write::structure_project_parameters solver_settings]
-    dict set solver_settings_dict fluid_solver_settings [dict get $FSI::write::fluid_project_parameters solver_settings]
+    dict set solver_settings_dict structure_solver_settings [dict get $::FSI::write::structure_project_parameters solver_settings]
+    dict set solver_settings_dict fluid_solver_settings [dict get $::FSI::write::fluid_project_parameters solver_settings]
 
     # TODO: place an echo level in meshing
     set mesh_settings_dict [dict create ]
@@ -114,14 +114,14 @@ proc ::FSI::write::GetProcessesDict { } {
     set processes_dict [dict create]
 
     # Fluid
-    dict set processes_dict fluid_initial_conditions_process_list [dict get $FSI::write::fluid_project_parameters processes initial_conditions_process_list]
-    dict set processes_dict fluid_boundary_conditions_process_list [GetNonDeprecatedProcessList [dict get $FSI::write::fluid_project_parameters processes boundary_conditions_process_list]]
-    dict set processes_dict fluid_gravity [dict get $FSI::write::fluid_project_parameters processes gravity]
-    dict set processes_dict fluid_auxiliar_process_list [dict get $FSI::write::fluid_project_parameters processes auxiliar_process_list]
+    dict set processes_dict fluid_initial_conditions_process_list [dict get $::FSI::write::fluid_project_parameters processes initial_conditions_process_list]
+    dict set processes_dict fluid_boundary_conditions_process_list [GetNonDeprecatedProcessList [dict get $::FSI::write::fluid_project_parameters processes boundary_conditions_process_list]]
+    dict set processes_dict fluid_gravity [dict get $::FSI::write::fluid_project_parameters processes gravity]
+    dict set processes_dict fluid_auxiliar_process_list [dict get $::FSI::write::fluid_project_parameters processes auxiliar_process_list]
 
     # Structure
-    dict set processes_dict structure_constraints_process_list [dict get $FSI::write::structure_project_parameters processes constraints_process_list]
-    dict set processes_dict structure_loads_process_list [GetNonDeprecatedProcessList [dict get $FSI::write::structure_project_parameters processes loads_process_list]]
+    dict set processes_dict structure_constraints_process_list [dict get $::FSI::write::structure_project_parameters processes constraints_process_list]
+    dict set processes_dict structure_loads_process_list [GetNonDeprecatedProcessList [dict get $::FSI::write::structure_project_parameters processes loads_process_list]]
 
     return $processes_dict
 }
@@ -139,9 +139,9 @@ proc ::FSI::write::GetOutputProcessesDict { } {
     set gid_output_list [list ]
 
     # Set a different output_name for the fluid and structure domains
-    set structure_output [lindex [dict get $FSI::write::structure_project_parameters output_processes gid_output] 0]
+    set structure_output [lindex [dict get $::FSI::write::structure_project_parameters output_processes gid_output] 0]
     dict set structure_output Parameters output_name "[dict get $structure_output Parameters output_name]_structure"
-    set fluid_output [lindex [dict get $FSI::write::fluid_project_parameters output_processes gid_output] 0]
+    set fluid_output [lindex [dict get $::FSI::write::fluid_project_parameters output_processes gid_output] 0]
     dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
 
     # Append the fluid and structure output processes to the output processes dictionary
@@ -183,7 +183,7 @@ proc ::FSI::write::InitExternalProjectParameters { } {
     UpdateUniqueNames Fluid
     apps::setActiveAppSoft Fluid
     write::initWriteConfiguration [Fluid::write::GetAttributes]
-    set FSI::write::fluid_project_parameters [Fluid::write::getParametersDict]
+    set ::FSI::write::fluid_project_parameters [Fluid::write::getParametersDict]
 
     # Structure section
     UpdateUniqueNames Structure
@@ -191,7 +191,7 @@ proc ::FSI::write::InitExternalProjectParameters { } {
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
     Structural::SetWriteProperty enable_dynamic_substepping [::FSI::GetWriteProperty "enable_dynamic_substepping"]
-    set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
+    set ::FSI::write::structure_project_parameters [Structural::write::getParametersDict]
 
     apps::setActiveAppSoft FSI
 }
