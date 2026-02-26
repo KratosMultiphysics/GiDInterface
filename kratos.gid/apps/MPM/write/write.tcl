@@ -117,12 +117,18 @@ proc MPM::write::writeBodyElementConnectivities { } {
 }
 
 proc MPM::write::writeGridConnectivities { } {
+    set grid_elems [list GRID2D GRID3D]
+    set grid_groups [list]
     foreach gNode [MPM::write::GetPartsGroups grid node] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
         if {$elem in [list GRID2D GRID3D]} {
-            write::writeGroupElementConnectivities $gNode $elem
+            # write::writeGroupElementConnectivities $gNode $elem
+            lappend grid_groups $gNode
         }
     }
+        
+    # Write the geometries
+    ::write::writeGeometryConnectivities $grid_groups
 }
 
 proc MPM::write::writeConditions { } {
