@@ -24,17 +24,6 @@ proc ::MPM::write::getParametersDict { } {
     # Change the model part name
     dict set project_parameters_dict solver_settings model_part_name MPM_Material
 
-    # create grid_import_settings
-    set grid_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
-    dict append grid_import_settings_dict input_filename _Grid
-    dict set project_parameters_dict solver_settings grid_model_import_settings $grid_import_settings_dict
-
-    # add _Body to model_import_settings
-    set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
-    dict append model_import_settings_dict input_filename _Body
-    if {[write::isBooleanTrue [write::getValue EnableRestartOutput]]} {dict set model_import_settings_dict restart_load_file_label " "}
-    dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
-
 
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
@@ -123,6 +112,8 @@ proc ::MPM::write::getParametersDict { } {
 
     # REMOVE use_old_stiffness_in_first_iteration
     dict unset project_parameters_dict solver_settings use_old_stiffness_in_first_iteration
+
+    dict set project_parameters_dict modelers [write::getModelersParametersList [dict get $project_parameters_dict modelers]]
 
     return $project_parameters_dict
 }
@@ -247,6 +238,47 @@ proc ::MPM::write::GetOutputProcessesList { } {
     return $output_process
 }
 
+proc ::MPM::write::getModelersParametersList { old_modelers } {
+
+    set body_groups [MPM::write::GetPartsGroupsNames Body]
+    set lista [list ]
+    foreach modeler $old_modelers {
+        set new_modeler [dict create]
+        # if [dict get $modeler name] contains "ImportMDPAModeler"
+        set name [dict get $modeler name]
+        if {[string match "*ImportMDPAModeler" $name]} {
+            dict set new_modeler name $name
+            dict set new_modeler parameters input_filename [Kratos::GetModelName]_Grid
+            dict set new_modeler parameters model_part_name "Background_Grid"
+            lappend lista $new_modeler
+            
+            dict set new_modeler name $name
+            dict set new_modeler parameters input_filename [Kratos::GetModelName]_Body
+            dict set new_modeler parameters model_part_name "MPM_Material"
+            lappend lista $new_modeler
+        } elseif {[string match "*CreateEntitiesFromGeometriesModeler" $name]} {
+            dict set new_modeler name $name
+            set elements_list [list ]
+            foreach element [dict get $modeler parameters elements_list] {
+                set new_element [dict create]
+                set model_part_name [dict get $element model_part_name]
+                set group_name [lindex [split $model_part_name "."] end]
+                if {$group_name in $body_groups} {
+                    dict set new_element model_part_name "MPM_Material.$group_name"
+                } else {
+                    dict set new_element model_part_name $model_part_name
+                }
+                dict set new_element element_name [dict get $element element_name]
+                lappend elements_list $new_element
+            }
+
+            dict set new_modeler parameters elements_list $elements_list
+            dict set new_modeler parameters conditions_list [dict get $modeler parameters conditions_list]
+            lappend lista $new_modeler
+        }
+    }
+    return $lista
+}
 
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
