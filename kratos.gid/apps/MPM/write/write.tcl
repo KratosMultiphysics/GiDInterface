@@ -81,27 +81,9 @@ proc ::MPM::write::GetUsedElements { {get "Objects"} } {
     return $lista
 }
 
-proc MPM::write::writeBodyNodalCoordinates { } {
-    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroupsNames Body]
-}
-
-
 proc MPM::write::writeSubmodelparts { type } {
-
-    variable grid_elements
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
-    foreach gNode [MPM::write::GetPartsGroups $type] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        set part_name [get_domnode_attribute [$gNode parent] n]
-        set group_name [get_domnode_attribute $gNode n]
-        write::writeGroupSubModelPart $part_name $group_name "Elements"
-    }
-    if {$type eq "grid"} {
-        # Write the boundary conditions submodelpart
-        write::writeNodalConditions [GetAttribute nodal_conditions_un]
-
-        # A Condition y a meshes-> salvo lo que no tenga topologia
-        writeLoads
+    foreach group [MPM::write::GetPartsGroupsNames $type] {
+        write::writeGroupSubModelPartAsGeometry $group
     }
 }
 
@@ -109,26 +91,6 @@ proc MPM::write::GetConditionsGroups { } {
 
     set groups [::write::GetGroupsNamesAssignedIn [GetAttribute conditions_un]]
     return $groups
-}
-
-proc MPM::write::GetNodalConditionsGroups { } {
-    return [::write::GetGroupsNamesAssignedIn [GetAttribute nodal_conditions_un]]
-}
-
-proc MPM::write::writeLoads { } {
-    variable ConditionsDictGroupIterators
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        #W "Writing mesh of Load $groupid"
-        if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
-        } else {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
-        }
-    }
 }
 
 proc MPM::write::writeCustomFilesEvent { } {

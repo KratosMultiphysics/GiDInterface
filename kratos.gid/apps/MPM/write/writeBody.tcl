@@ -4,7 +4,7 @@ proc MPM::write::WriteBodyMDPA { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates
-    writeBodyNodalCoordinates
+    ::write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroupsNames Body]
 
     # Body element connectivities
     ::write::writeGeometryConnectivities [MPM::write::GetPartsGroups body] 
@@ -12,3 +12,10 @@ proc MPM::write::WriteBodyMDPA { } {
     # Write Submodelparts
     writeSubmodelparts particles
 }
+
+proc MPM::write::writeConditionsSubmodelparts { } {
+    foreach group [MPM::write::GetConditionsGroups] {
+        write::writeGroupSubModelPartAsGeometry $group
+    }
+}
+
