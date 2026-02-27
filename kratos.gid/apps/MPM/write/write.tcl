@@ -3,13 +3,12 @@ namespace eval MPM::write {
     Kratos::AddNamespace [namespace current]
 
     variable writeAttributes
-    variable ConditionsDictGroupIterators
+    variable ConditionsDictGroupIterators  [dict create]
+
+    variable grid_elems [list GRID2D GRID3D]
 }
 
 proc MPM::write::Init { } {
-    # Namespace variables inicialization
-    variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [dict create]
 
     SetAttribute parts_un [::MPM::GetUniqueName parts]
     SetAttribute nodal_conditions_un [::MPM:::GetUniqueName nodal_conditions]
@@ -47,19 +46,25 @@ proc MPM::write::writeModelPartEvent { } {
     write::CloseFile
 }
 
-proc MPM::write::GetPartsGroups { part_type {what "name"} } {
+proc MPM::write::GetPartsGroupsNames { part_type } {
+    set groups [MPM::write::GetPartsGroups $part_type]
+    set result [list ]
+    foreach group $groups {
+        lappend result [$group @n]
+    }
+    return $result
+}
+
+proc MPM::write::GetPartsGroups { part_type } {
+    variable grid_elems
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set body_groups [list ]
-    set grid_elems [list GRID2D GRID3D]
+    
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
 
         if {($part_type eq "grid" && $elem in $grid_elems) || ($part_type ne "grid" && $elem ni $grid_elems)} {
-            if {$what eq "name"} {
-                lappend body_groups [$gNode @n]
-            } {
-                lappend body_groups $gNode
-            }
+            lappend body_groups $gNode
         }
     }
     return $body_groups
@@ -67,7 +72,7 @@ proc MPM::write::GetPartsGroups { part_type {what "name"} } {
 
 proc ::MPM::write::GetUsedElements { {get "Objects"} } {
     set lista [list ]
-    foreach gNode [MPM::write::GetPartsGroups Body node] {
+    foreach gNode [MPM::write::GetPartsGroups Body] {
         set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {$get eq "Name"} { set e [$e getName] }
@@ -77,42 +82,15 @@ proc ::MPM::write::GetUsedElements { {get "Objects"} } {
 }
 
 proc MPM::write::writeBodyNodalCoordinates { } {
-    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups Body]
+    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroupsNames Body]
 }
 
-proc MPM::write::writeBodyElementConnectivities { } {
-    foreach gNode [MPM::write::GetPartsGroups Body node] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem ni [list GRID2D GRID3D]} {
-            write::writeGroupElementConnectivities $gNode $elem
-        }
-    }
-}
-
-proc MPM::write::writeGridConnectivities { } {
-    set grid_elems [list GRID2D GRID3D]
-    set grid_groups [list]
-    foreach gNode [MPM::write::GetPartsGroups grid node] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem in [list GRID2D GRID3D]} {
-            # write::writeGroupElementConnectivities $gNode $elem
-            lappend grid_groups $gNode
-        }
-    }
-        
-    # Write the geometries
-    ::write::writeGeometryConnectivities $grid_groups
-}
-
-proc MPM::write::writeConditions { } {
-    write::writeGeometryConnectivities [::write::GetGroupsAssignedIn [GetAttribute conditions_un]]
-}
 
 proc MPM::write::writeSubmodelparts { type } {
 
-    set grid_elements [list GRID2D GRID3D]
+    variable grid_elements
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
-    foreach gNode [MPM::write::GetPartsGroups $type node] {
+    foreach gNode [MPM::write::GetPartsGroups $type] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
         set part_name [get_domnode_attribute [$gNode parent] n]
         set group_name [get_domnode_attribute $gNode n]

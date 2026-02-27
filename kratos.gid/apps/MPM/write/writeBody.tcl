@@ -7,7 +7,7 @@ proc MPM::write::WriteBodyMDPA { } {
     writeBodyNodalCoordinates
 
     # Body element connectivities
-    writeBodyElementConnectivities
+    ::write::writeGeometryConnectivities [MPM::write::GetPartsGroups body] 
 
     # Write Submodelparts
     writeSubmodelparts particles

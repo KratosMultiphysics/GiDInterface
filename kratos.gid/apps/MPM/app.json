@@ -22,7 +22,9 @@
         "examples/GranularFlow.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
-        "write/writeProjectParameters.tcl"
+        "write/writeProjectParameters.tcl",
+        "write/writeBody.tcl",
+        "write/writeGrid.tcl"
     ],
     "start_script": "::MPM::Init",
     "requirements": {
