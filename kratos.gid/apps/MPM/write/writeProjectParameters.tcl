@@ -243,6 +243,11 @@ proc ::MPM::write::GetOutputProcessesList { } {
 proc ::MPM::write::getModelersParametersList { old_modelers } {
 
     set body_groups [MPM::write::GetPartsGroupsNames Body]
+    set corrected_names [list ]
+    foreach g $body_groups {
+        lappend corrected_names [write::transformGroupName $g]
+    }
+    set body_groups $corrected_names
     set lista [list ]
     foreach modeler $old_modelers {
         set new_modeler [dict create]
@@ -265,8 +270,9 @@ proc ::MPM::write::getModelersParametersList { old_modelers } {
                 set new_element [dict create]
                 set model_part_name [dict get $element model_part_name]
                 set group_name [lindex [split $model_part_name "."] end]
-                if {$group_name in $body_groups} {
-                    dict set new_element model_part_name "Initial_MPM_Material.$group_name"
+                set good_name [write::transformGroupName $group_name]
+                if {$good_name in $body_groups} {
+                    dict set new_element model_part_name "Initial_MPM_Material.$good_name"
                 } else {
                     dict set new_element model_part_name $model_part_name
                 }
