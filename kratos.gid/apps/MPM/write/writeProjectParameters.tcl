@@ -254,7 +254,7 @@ proc ::MPM::write::getModelersParametersList { old_modelers } {
             
             dict set new_modeler name $name
             dict set new_modeler parameters input_filename [Kratos::GetModelName]_Body
-            dict set new_modeler parameters model_part_name "MPM_Material"
+            dict set new_modeler parameters model_part_name "Initial_MPM_Material"
             lappend lista $new_modeler
         } elseif {[string match "*CreateEntitiesFromGeometriesModeler" $name]} {
             dict set new_modeler name $name
