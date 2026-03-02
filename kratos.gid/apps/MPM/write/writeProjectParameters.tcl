@@ -264,7 +264,7 @@ proc ::MPM::write::getModelersParametersList { old_modelers } {
                 set model_part_name [dict get $element model_part_name]
                 set group_name [lindex [split $model_part_name "."] end]
                 if {$group_name in $body_groups} {
-                    dict set new_element model_part_name "MPM_Material.$group_name"
+                    dict set new_element model_part_name "Initial_MPM_Material.$group_name"
                 } else {
                     dict set new_element model_part_name $model_part_name
                 }
