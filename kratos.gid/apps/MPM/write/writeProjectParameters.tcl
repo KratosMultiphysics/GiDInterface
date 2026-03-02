@@ -24,6 +24,8 @@ proc ::MPM::write::getParametersDict { } {
     # Change the model part name
     dict set project_parameters_dict solver_settings model_part_name MPM_Material
 
+    # create grid_import_settings
+    dict set project_parameters_dict solver_settings grid_model_import_settings input_type use_input_model_part
 
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
