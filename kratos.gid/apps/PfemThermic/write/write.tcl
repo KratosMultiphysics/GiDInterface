@@ -130,7 +130,7 @@ proc PfemThermic::write::getPropertiesList {parts_un {write_claw_name "True"} {m
     set mat_dict [write::getMatDict]
     set props_dict [dict create]
     set props [list]
-    set doc $gid_groups_conds::doc
+    set doc $::gid_groups_conds::doc
     set root [$doc documentElement]
 
     set xp1 "[spdAux::getRoute $parts_un]/group"

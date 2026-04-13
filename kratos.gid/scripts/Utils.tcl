@@ -112,7 +112,7 @@ proc Kratos::LoadProblemtypeLibraries {} {
         gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
     }
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
+        set ::gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $::gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
     }
@@ -220,9 +220,9 @@ proc Kratos::LogInitialData { } {
 
     set initial_data [dict create]
     dict set initial_data gid_version [GiD_Info gidversion]
-    dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
-    dict set initial_data problemtype_version $Kratos::kratos_private(Version)
-    # dict set initial_data executable_version $Kratos::kratos_private(exec_version)
+    dict set initial_data problemtype_git_hash $::Kratos::kratos_private(problemtype_git_hash)
+    dict set initial_data problemtype_version $::Kratos::kratos_private(Version)
+    # dict set initial_data executable_version $::Kratos::kratos_private(exec_version)
     dict set initial_data current_platform $::tcl_platform(platform)
 
     Kratos::Log [write::tcl2json $initial_data]
@@ -292,47 +292,6 @@ proc Kratos::GetMeshBasicData { } {
     return $result
 }
 
-proc Kratos::CheckMeshCriteria { elementsize } {
-
-    set force_mesh_order [dict create]
-    set elements_used [spdAux::GetUsedElements]
-    set forced_mesh_order -1
-    foreach element_id $elements_used {
-        set element [Model::getElement $element_id]
-        if {[$element hasAttribute "MeshOrder"]} {
-            set element_forces [$element getAttribute "MeshOrder"]
-            if {$element_forces eq "Quadratic"} {
-                set element_forces 1
-            } else {
-                set element_forces 0
-            }
-            dict set force_mesh_order $element_id $element_forces
-            if {$forced_mesh_order eq -1} {
-                set forced_mesh_order $element_forces
-            } else {
-                if {$forced_mesh_order ne $element_forces} {
-                    # W "The element $element_id requires a different mesh order"
-                    W "Incompatible mesh orders in elements"
-                    return -1
-                }
-            }
-        }        
-    }
-    
-    if {$forced_mesh_order ne -1} {
-        
-        set element [lindex [dict keys $force_mesh_order] 0]
-        set previous_mesh_order [write::isquadratic]
-        set current_mesh_type [Kratos::GetMeshOrderName $previous_mesh_order]
-        set desired_mesh_type [Kratos::GetMeshOrderName $forced_mesh_order]
-        if {$previous_mesh_order ne $forced_mesh_order} {
-            W "The element $element requires a different mesh order: $desired_mesh_type"
-            W "Currently the mesh order is $current_mesh_type. please change it in the menu Mesh > Quadratic type"
-            return -1
-        }
-    }
-    return 0
-}
 
 proc Kratos::GetMeshOrderName {order} {
     switch $order {

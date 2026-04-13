@@ -116,9 +116,10 @@ proc ::Fluid::write::writeModelPartEvent { } {
         # SubmodelParts
         writeMeshes
         
-        # Write custom blocks at the end of the file
-        writeCustomBlocks
     }
+    
+    # Write custom blocks at the end of the file
+    writeCustomBlocks
     
     # Clean
     unset ::Fluid::write::FluidConditionMap

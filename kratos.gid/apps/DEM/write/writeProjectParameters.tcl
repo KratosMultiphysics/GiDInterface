@@ -114,6 +114,7 @@ proc ::DEM::write::getParametersDict { } {
 proc ::DEM::write::GetElementType { } {
     set used_elements [spdAux::GetUsedElements]
     set element_type [lindex $used_elements 0]
+    if {$element_type eq ""} {set element_type "SphericPartDEMElement$::Model::SpatialDimension"}
     return $element_type
 }
 
@@ -123,19 +124,19 @@ proc ::DEM::write::GetDemStrategyName { } {
     # set used_elements [spdAux::GetUsedElements]
 
     # set ElementType SphericPartDEMElement3D
-	# if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
-	#     set dem_strategy "sphere_strategy"
-	# } elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
-	#     set dem_strategy "continuum_sphere_strategy"
-	# } elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
-	#    set dem_strategy "thermal_sphere_strategy"
-	# } elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
-	#    set dem_strategy "thermal_continuum_sphere_strategy"
-	# } elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
-	#    set dem_strategy "thermal_continuum_sphere_strategy"
-	# } elseif {$ElementType eq "IceContPartDEMElement3D"} {
-	#    set dem_strategy "ice_continuum_sphere_strategy"
-	# }
+        # if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
+        #     set dem_strategy "sphere_strategy"
+        # } elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
+        #     set dem_strategy "continuum_sphere_strategy"
+        # } elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
+        #    set dem_strategy "thermal_sphere_strategy"
+        # } elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
+        #    set dem_strategy "thermal_continuum_sphere_strategy"
+        # } elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
+        #    set dem_strategy "thermal_continuum_sphere_strategy"
+        # } elseif {$ElementType eq "IceContPartDEMElement3D"} {
+        #    set dem_strategy "ice_continuum_sphere_strategy"
+        # }
 }
 
 proc ::DEM::write::GetTimeSettings { } {

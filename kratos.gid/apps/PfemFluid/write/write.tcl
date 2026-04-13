@@ -1,7 +1,7 @@
 namespace eval ::PfemFluid::write {
     namespace path ::PfemFluid
     Kratos::AddNamespace [namespace current]
-
+    
     variable writeAttributes
     variable remesh_domains_dict
     variable bodies_list
@@ -16,11 +16,11 @@ proc PfemFluid::write::Init { } {
     set bodies_list [list ]
     variable Names
     set Names [dict create DeltaTime DeltaTime]
-
-
+    
+    
     SetAttribute materials_un [::PfemFluid::GetUniqueName materials]
     SetAttribute nodal_conditions_un [::PfemFluid::GetUniqueName nodal_conditions]
-
+    
     SetAttribute main_launch_file [::PfemFluid::GetAttribute main_launch_file]
     SetAttribute materials_file [::PfemFluid::GetWriteProperty materials_file]
     SetAttribute properties_location [::PfemFluid::GetWriteProperty properties_location]
@@ -33,20 +33,20 @@ proc PfemFluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
-
+    
     # Init data
     write::initWriteConfiguration [GetAttributes]
-
+    
     set parts_un_list [GetPartsUN]
     foreach part_un $parts_un_list {
         write::initWriteData $part_un [GetAttribute materials_un]
     }
-
+    
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     # write::writeMaterials "PfemFluid"
-
+    
     write::writeNodalCoordinates
     foreach part_un $parts_un_list {
         write::initWriteData $part_un [GetAttribute materials_un]
@@ -56,7 +56,7 @@ proc PfemFluid::write::writeModelPartEvent { } {
 }
 
 proc PfemFluid::write::writeMeshes { } {
-
+    
     foreach part_un [GetPartsUN] {
         write::initWriteData $part_un [GetAttribute materials_un]
         write::writePartSubModelPart
@@ -64,8 +64,8 @@ proc PfemFluid::write::writeMeshes { } {
     # Solo Malla , no en conditions
     writeNodalConditions [GetAttribute nodal_conditions_un]
     #writeWaveMonitorMesh
-
-
+    
+    
 }
 
 
@@ -97,7 +97,7 @@ proc PfemFluid::write::GetPartsUN { } {
 
 
 proc PfemFluid::write::writeWaveMonitorMesh {  } {
-
+    
     set xp1 "[spdAux::getRoute "WaveMonitor"]/group"
     set groups_wave_height [[customlib::GetBaseRoot] selectNodes $xp1]
     foreach group $groups_wave_height {
@@ -111,7 +111,7 @@ proc PfemFluid::write::writeWaveMonitorMesh {  } {
 proc ::PfemFluid::write::Validate {} {
     set err ""
     set root [customlib::GetBaseRoot]
-
+    
     
     return $err
 }
@@ -132,10 +132,18 @@ proc PfemFluid::write::WriteMaterialsFile { {write_const_law True} {include_mode
 
 proc PfemFluid::write::writePropertiesJsonFile { {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
     set mats_json [dict create properties [list ] ]
-    foreach parts_un [PfemFluid::write::GetPartsUN] {
-        foreach property [dict get [write::getPropertiesList $parts_un $write_claw_name $model_part_name] properties ] {
+    set parts_uns [PfemFluid::write::GetPartsUN]
+    set ids [list ]
+    foreach parts_un $parts_uns {
+        set properties_dict [write::getPropertiesList $parts_un $write_claw_name $model_part_name]
+        set properties [dict get $properties_dict properties ]
+        foreach property $properties {
             if {$property ne "\[\]"} {
-                dict lappend mats_json properties $property
+                set property_id [dict get $property properties_id]
+                if {$property_id ni $ids} {
+                    lappend ids $property_id
+                    dict lappend mats_json properties $property
+                }
             }
         }
     }

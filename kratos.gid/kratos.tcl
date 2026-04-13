@@ -9,7 +9,6 @@ namespace eval ::Kratos {
     variable must_write_calc_data
     variable must_exist_calc_data
 
-    variable tmp_init_mesh_time
     variable namespaces
 
     variable mesh_criteria_forced
@@ -64,7 +63,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_SaveModelSPD Kratos::Event_SaveModelSPD PROBLEMTYPE Kratos
 
     # Extra
-    GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
+    #GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
 
     # End
     GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
@@ -72,6 +71,9 @@ proc Kratos::RegisterGiDEvents { } {
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
     CreateWidgetsFromXml::ClearCachePreferences
+
+    # Register the menu proc
+    GiD_RegisterPluginAddedMenuProc Kratos::UpdateMenus
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -143,14 +145,14 @@ proc Kratos::InitGlobalVariables {dir} {
     # Version of the kratos executable
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
-    set Kratos::kratos_private(allow_logs) 1
+    set ::Kratos::kratos_private(allow_logs) 1
     # git hash of the problemtype
-    set Kratos::kratos_private(problemtype_git_hash) 0
+    set ::Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
-    set Kratos::kratos_private(model_log_folder) ""
+    set ::Kratos::kratos_private(model_log_folder) ""
     # Check exec/launch.json
-    set Kratos::kratos_private(configurations) [list ]
-    set Kratos::kratos_private(launch_configuration) ""
+    set ::Kratos::kratos_private(configurations) [list ]
+    set ::Kratos::kratos_private(launch_configuration) ""
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -197,7 +199,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
     # Common scripts
-    foreach filename {Utils Launch Applications spdAuxiliar Menus Deprecated Logs} {
+    foreach filename {Utils Launch Applications spdAuxiliar Mesh Menus Deprecated Logs} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename.tcl]]
     }
     # Common controllers
@@ -226,7 +228,7 @@ proc Kratos::LoadModelSPD { filespd } {
     update
 
     # Dont open the init window. Saved models have already app and dimension
-    set spdAux::must_open_init_window 0
+    set ::spdAux::must_open_init_window 0
 
     # Need this check for old gid compatibility. Sometimes this event was called by mistake.
     Kratos::CheckProjectIsNew $filespd
@@ -424,19 +426,10 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     set tmp_init_mesh_time $inittime
     Kratos::Log "Mesh BeforeMeshGeneration start"
 
-    GiD_MeshData mesh_criteria to_be_meshed 1 lines [GiD_Geometry list line]
-    GiD_MeshData mesh_criteria to_be_meshed 1 surfaces [GiD_Geometry list surface]
-    GiD_MeshData mesh_criteria to_be_meshed 1 volumes  [GiD_Geometry list volume ]
-
-    # We need to mesh every line and surface assigned to a group that appears in the tree
-    foreach group [spdAux::GetAppliedGroups] {
-        GiD_MeshData mesh_criteria to_be_meshed 2 lines [GiD_EntitiesGroups get $group lines]
-        GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
-        GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
-    }
+    Mesh::PrepareMeshGeneration $elementsize
 
     # Change the mesh settings depending on the element requirements
-    if {[Kratos::CheckMeshCriteria $elementsize]<0} {
+    if {[Mesh::CheckMeshCriteria $elementsize]<0} {
         return "-cancel-"
     }
 
@@ -456,8 +449,16 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
 proc Kratos::Event_AfterMeshGeneration {fail} {
     variable tmp_init_mesh_time
 
+    if {$fail} {
+        Kratos::Log "Mesh generation failed"
+        return
+    }
+    
     # Change the mesh settings depending on the element requirements. Reset previous settings
     # catch {Kratos::ResetMeshCriteria $fail}
+
+    Mesh::AddPointElementsIfNeeded
+
 
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
@@ -482,8 +483,8 @@ proc Kratos::Event_InitGIDPostProcess {} {
 
 proc Kratos::BeforeInitGIDPostProcess {} {
     # In docker run, rename lst file
-    if {[info exists Kratos::kratos_private(launch_configuration)]} {
-        set launch_mode $Kratos::kratos_private(launch_configuration)
+    if {[info exists ::Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $::Kratos::kratos_private(launch_configuration)
         if {$launch_mode eq "Docker"} {
             set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
             if {[file exists $list_file]} {
@@ -527,8 +528,8 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
 
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
     set result ""
-    if {[info exists Kratos::kratos_private(launch_configuration)]} {
-        set launch_mode $Kratos::kratos_private(launch_configuration)
+    if {[info exists ::Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $::Kratos::kratos_private(launch_configuration)
         ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
         catch {set result [Kratos::ExecuteLaunchByMode $launch_mode]} error_msg
     }
@@ -537,7 +538,7 @@ proc Kratos::Event_SelectGIDBatFile { dir basename } {
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
     # Only write if required
-    if {$Kratos::must_write_calc_data} {
+    if {$::Kratos::must_write_calc_data} {
         set errcode [Kratos::WriteCalculationFilesEvent $filename]
         if {$errcode} {return "-cancel-"}
     }
@@ -557,7 +558,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         }
     }
     # The calculation process may need the files of the file selector entries inside the model folder
-    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
+    if {$::Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
     # Start the write configuration clean
     write::Init
@@ -596,21 +597,21 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
-    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
+    if {$::Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
 
     # Log it
-    set Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
+    set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
     Kratos::Log "Save model [file tail $filespd ]"
 
 }
 
 
-proc Kratos::Event_ChangedLanguage  { newlan } {
-    Kratos::UpdateMenus
-}
+# proc Kratos::Event_ChangedLanguage  { newlan } {
+#     # Kratos::UpdateMenus
+# }
 
 proc Kratos::Event_ModifyPreferencesWindow { root } {
     Kratos::ModifyPreferencesWindow $root

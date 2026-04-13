@@ -1,20 +1,22 @@
 # Default values. Use --build-arg on build to change
-ARG pyversion=3.11
+ARG pyversion=3.12
 
 # Base pyton image
 FROM python:$pyversion
-# FROM python:3.10.10-alpine3.17
 
 # Update pip
 RUN pip install --upgrade pip
 
-ARG krversion=10.3.0
-
 # WORKDIR /tmp
 # COPY ./wheels/ ./wheels/
 
-# Install Kratos and dependencies
-RUN python3 -m pip install KratosMultiphysics-all==$krversion numpy
+# Copy dependency manifest from Kratos GiD
+COPY kratos.gid/kratos.xml /tmp/kratos.xml
+COPY dockers/generate_requirements_from_xml.py /tmp/generate_requirements_from_xml.py
+
+# Install Kratos packages listed in kratos.xml
+RUN python3 /tmp/generate_requirements_from_xml.py --xml /tmp/kratos.xml --out /tmp/requirements.txt \
+    && python3 -m pip install --no-cache-dir -r /tmp/requirements.txt
 # RUN python3 -m pip install ./wheels/*.whl
 
 # Prepare run folder
@@ -22,7 +24,7 @@ WORKDIR "/model"
 RUN chmod 777 /model
 
 # Kratos will start on docker run
-ENTRYPOINT [ "python3", "MainKratos.py" ]
+CMD [ "python3", "MainKratos.py" ]
 
-# docker build -t kratos-run .
+# docker build -t kratos-run -f dockers/dockerfile .
 # docker run -rm -it  --entrypoint bash kratos-run
