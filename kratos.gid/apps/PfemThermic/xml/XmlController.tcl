@@ -48,7 +48,7 @@ proc PfemThermic::xml::CustomTree { args } {
 	set inlet_result_node [[$root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
 	if { $inlet_result_node ne "" } { $inlet_result_node delete }
 	
-	if {$Model::SpatialDimension eq "3D"} {
+	if {$::Model::SpatialDimension eq "3D"} {
         catch {
             spdAux::SetValueOnTreeItem v -9.81 PFEMFLUID_Gravity Cy  
             spdAux::SetValueOnTreeItem v  0.0  PFEMFLUID_Gravity Cz } }

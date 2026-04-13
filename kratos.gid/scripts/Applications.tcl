@@ -388,16 +388,16 @@ proc apps::ActivateApp_do {app} {
 
     # If theme is dark, set the Black images dir before the normal one, so images for dark theme are loaded first
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
+        set ::gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $::gid_groups_conds::imagesdirList [list [file join $dir images]]]
         gid_groups_conds::add_images_dir [file join $dir images Black]
     }
     gid_groups_conds::add_images_dir [file join $dir images]
 }
 
 proc apps::ApplyAppPreferences {app} {
-    if {[write::isBooleanTrue [$app getPermission stages]]} {set spdAux::UseStages 1} {set spdAux::UseStages 0}
-    if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1} {set spdAux::TreeVisibility 0}
-    if {[write::isBooleanTrue [$app getPermission show_toolbar]]} {set spdAux::ToolbarVisibility 1} {set spdAux::ToolbarVisibility 0}
+    if {[write::isBooleanTrue [$app getPermission stages]]} {set ::spdAux::UseStages 1} {set ::spdAux::UseStages 0}
+    if {[write::isBooleanTrue [$app getPermission open_tree]]} {set ::spdAux::TreeVisibility 1} {set ::spdAux::TreeVisibility 0}
+    if {[write::isBooleanTrue [$app getPermission show_toolbar]]} {set ::spdAux::ToolbarVisibility 1} {set ::spdAux::ToolbarVisibility 0}
     if {[$app getProperty dimensions] ne ""} { set ::Model::ValidSpatialDimensions [$app getProperty dimensions] }
 }
 
