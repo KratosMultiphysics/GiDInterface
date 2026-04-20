@@ -3,13 +3,12 @@ namespace eval MPM::write {
     Kratos::AddNamespace [namespace current]
 
     variable writeAttributes
-    variable ConditionsDictGroupIterators
+    variable ConditionsDictGroupIterators  [dict create]
+
+    variable grid_elems [list GRID2D GRID3D]
 }
 
 proc MPM::write::Init { } {
-    # Namespace variables inicialization
-    variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [dict create]
 
     SetAttribute parts_un [::MPM::GetUniqueName parts]
     SetAttribute nodal_conditions_un [::MPM:::GetUniqueName nodal_conditions]
@@ -34,23 +33,7 @@ proc MPM::write::writeModelPartEvent { } {
     set filename [Kratos::GetModelName]
 
     ## Grid MPDA ##
-    # Headers
-    write::writeModelPartData
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-
-    # Nodal coordinates
-    set list_of_groups [concat [MPM::write::GetPartsGroups grid] [MPM::write::GetConditionsGroups] [MPM::write::GetNodalConditionsGroups]]
-    write::writeNodalCoordinatesOnGroups $list_of_groups
-
-    # Grid element connectivities
-    writeGridConnectivities
-
-    # Write conditions
-    writeConditions
-
-    # Write Submodelparts
-    writeSubmodelparts grid
+    MPM::write::WriteGridMDPA
 
     write::CloseFile
     write::RenameFileInModel "$filename.mdpa" "${filename}_Grid.mdpa"
@@ -59,35 +42,30 @@ proc MPM::write::writeModelPartEvent { } {
     write::OpenFile "${filename}_Body.mdpa"
 
     # Headers
-    write::writeModelPartData
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-
-    # Nodal coordinates
-    writeBodyNodalCoordinates
-
-    # Body element connectivities
-    writeBodyElementConnectivities
-
-    # Write Submodelparts
-    writeSubmodelparts particles
+    MPM::write::WriteBodyMDPA
 
     write::CloseFile
 }
 
-proc MPM::write::GetPartsGroups { part_type {what "name"} } {
+proc MPM::write::GetPartsGroupsNames { part_type } {
+    set groups [MPM::write::GetPartsGroups $part_type]
+    set result [list ]
+    foreach group $groups {
+        lappend result [$group @n]
+    }
+    return $result
+}
+
+proc MPM::write::GetPartsGroups { part_type } {
+    variable grid_elems
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set body_groups [list ]
-    set grid_elems [list GRID2D GRID3D]
+    
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
 
         if {($part_type eq "grid" && $elem in $grid_elems) || ($part_type ne "grid" && $elem ni $grid_elems)} {
-            if {$what eq "name"} {
-                lappend body_groups [$gNode @n]
-            } {
-                lappend body_groups $gNode
-            }
+            lappend body_groups $gNode
         }
     }
     return $body_groups
@@ -95,7 +73,7 @@ proc MPM::write::GetPartsGroups { part_type {what "name"} } {
 
 proc ::MPM::write::GetUsedElements { {get "Objects"} } {
     set lista [list ]
-    foreach gNode [MPM::write::GetPartsGroups Body node] {
+    foreach gNode [MPM::write::GetPartsGroups Body] {
         set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {$get eq "Name"} { set e [$e getName] }
@@ -104,95 +82,18 @@ proc ::MPM::write::GetUsedElements { {get "Objects"} } {
     return $lista
 }
 
-proc MPM::write::writeBodyNodalCoordinates { } {
-    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups Body]
-}
-
-proc MPM::write::writeBodyElementConnectivities { } {
-    foreach gNode [MPM::write::GetPartsGroups Body node] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem ni [list GRID2D GRID3D]} {
-            write::writeGroupElementConnectivities $gNode $elem
-        }
-    }
-}
-
-proc MPM::write::writeGridConnectivities { } {
-    foreach gNode [MPM::write::GetPartsGroups grid node] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem in [list GRID2D GRID3D]} {
-            write::writeGroupElementConnectivities $gNode $elem
-        }
-    }
-}
-
-proc MPM::write::writeConditions { } {
-    variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
-}
-
 proc MPM::write::writeSubmodelparts { type } {
 
-    set grid_elements [list GRID2D GRID3D]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
-    foreach gNode [MPM::write::GetPartsGroups $type node] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        set part_name [get_domnode_attribute [$gNode parent] n]
-        set group_name [get_domnode_attribute $gNode n]
-        write::writeGroupSubModelPart $part_name $group_name "Elements"
-    }
-    if {$type eq "grid"} {
-        # Write the boundary conditions submodelpart
-        write::writeNodalConditions [GetAttribute nodal_conditions_un]
+    foreach group [MPM::write::GetPartsGroupsNames $type] {
+        write::writeGroupSubModelPartAsGeometry $group
 
-        # A Condition y a meshes-> salvo lo que no tenga topologia
-        writeLoads
-    } else {
-        # Write the initial conditions submodelpart
-        write::writeNodalConditions [GetAttribute initial_conditions_un]
     }
 }
 
 proc MPM::write::GetConditionsGroups { } {
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    set condition_groups [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set group_name [get_domnode_attribute $gNode n]
-        set good_group_name [write::GetWriteGroupName $group_name]
-        if {$good_group_name ne $condition_groups} {
-            lappend condition_groups $good_group_name
-        }    
-    }
-    return $condition_groups
-}
 
-proc MPM::write::GetNodalConditionsGroups { } {
-    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition/group"
-    set condition_groups [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set group_name [get_domnode_attribute $gNode n]
-        set good_group_name [write::GetWriteGroupName $group_name]
-        if {$good_group_name ne $condition_groups} {
-            lappend condition_groups $good_group_name
-        }    
-    }
-    return $condition_groups
-}
-
-proc MPM::write::writeLoads { } {
-    variable ConditionsDictGroupIterators
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        #W "Writing mesh of Load $groupid"
-        if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
-        } else {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
-        }
-    }
+    set groups [::write::GetGroupsNamesAssignedIn [GetAttribute conditions_un]]
+    return $groups
 }
 
 proc MPM::write::writeCustomFilesEvent { } {
