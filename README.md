@@ -3,59 +3,120 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/36d3d305c87e4bb398bc87ea2e3b890e)](https://www.codacy.com/gh/KratosMultiphysics/GiDInterface/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=KratosMultiphysics/GiDInterface&amp;utm_campaign=Badge_Grade)
 [![Tester](https://github.com/KratosMultiphysics/GiDInterface/actions/workflows/tester.yml/badge.svg)](https://github.com/KratosMultiphysics/GiDInterface/actions/workflows/tester.yml)
 
-The user interface of Kratos with [GiD](http://www.gidsimulation.com).
+User interface and problemtype integration to run KratosMultiphysics models from [GiD](http://www.gidsimulation.com).
 
-If you need the latest stable release, launch your GiD, navigate to Data > Problemtype > Internet retrieve and download Kratos there.
-Available for Linux. Windows, and macOS.
+If you only need a stable package, open GiD and install from:
 
-If you need the developer version, you are on the right place.
+1. Data -> Problem type -> Internet retrieve
+2. Search for Kratos
 
-## First steps
-* 1- Clone this repository, or install a stable [release](https://github.com/KratosMultiphysics/GiDInterface/releases)
-* 2- Install the latest GiD developer version **(minimum 16.1.4d)** -> [Developer version](https://www.gidsimulation.com/gid-for-science/downloads/)
-* 3- Navigate to GiD's problemtype folder and delete any previous kratos.gid
-    * Create there a link to our [kratos.gid](./kratos.gid/) downloaded in step 1
-        * Windows: Simple shortcut to kratos.gid folder
-* 4- Choose your execution mode:
-    * 4.1- **Default execution mode.** Use GiD's python:
-        * You don't need to install python. The program will detect if you have any pending package to install.
-        * If there's any missing package, use the GiD command line and execute:
-        
-            `-np- W [GiD_Python_PipInstall [list $::Kratos::pip_packages_required ] 1 ]`
-    * 4.1- To execute Kratos using the standard pip packages:
-        * Python version recommended: 3.8, 3.9, 3.10, 3.11, 3.12
-        * Open a terminal and run
-            - Linux: `python3 -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.3.0`
-            - Windows: `python -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.3.0`
-    * 4.2- To execute Kratos using your compiled binaries:
-        * Fill the Kratos preferences windows with
-            - Path to the python folder
-            - Path to the kratos build folder
-        * Step by step video: https://www.youtube.com/watch?v=zZq7ypDdudo
-    * 4.3- To execute Kratos using docker, just install docker.
-        * Note: This is the ONLY option if you are a **macOS** user at this moment
+If you want to develop or test the latest changes, this repository is the right place.
 
-### Launch modes
-In Kratos preferences, select the execution mode:
-* GiD's python: Use the GiD internal python to run. It will help you install the pip packages
-* Pip packages: Kratos will be installed via `pip install`
-* local compiled: If you are a developer and build your applications, use this one
-* docker: If you do not want to install any dependency, just run via docker!
-    * The default image is [fjgarate/kratos-run](https://hub.docker.com/repository/docker/fjgarate/kratos-run)
+## Compatibility
 
-### Usage
-* Run GiD
-* Go to top menu: Data / Problem type / kratos
-* Go to top menu: kratos / Preferences / Developer mode (recommended)
+- Kratos interface version: 10.3.0
+- Minimum GiD version: 16.1.10d
+- Maximum GiD version tested in metadata: 17.99.99d
+- Supported platforms: Linux, Windows, macOS
 
-### Examples
-* [Fluid dynamics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#3-set-a-fluid-dynamics-problem)
-* [Structural mechanics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#4-set-a-structural-mechanics-problem)
-* [Fluid-Structure interaction example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#5-set-a-fluid-structure-interaction-problem)
+## Quick Start (Developer Version)
 
-## Warnings
-* This repository is in Beta version. This means that everything can change.
+1. Clone this repository.
+2. Install/update GiD developer build from the [official downloads page](https://www.gidsimulation.com/gid-for-science/downloads/).
+3. Go to your GiD problemtypes folder and remove older kratos.gid installations.
+4. Create a link to this repository's [kratos.gid](./kratos.gid/) folder:
+    - Windows: create a shortcut to the folder.
+    - Linux/macOS: create a symbolic link.
+5. Open GiD and select Data -> Problem type -> kratos.
+6. Open Kratos -> Preferences and select the launch configuration you want.
 
-## Want to develop?
-* Ask for access -> contact fjgarate@cimne.upc.edu
+## Launch Configurations
+
+The interface currently exposes these launch configurations in Preferences:
+
+1. Default
+    - Uses GiD embedded Python.
+    - Good for first use and minimal setup.
+    - Missing packages can be installed from GiD command line.
+2. External python
+    - Uses your own Python executable.
+    - Configure Python path in Preferences.
+3. Your compiled Kratos
+    - For developers running a local compiled Kratos build.
+    - Configure both Python path and Kratos bin path.
+4. Docker
+    - Runs with Docker image configured in Preferences.
+    - Useful to avoid local dependency setup.
+    - Required fallback option for macOS users without local compatible setup.
+
+## Python and Package Setup
+
+If you use an external Python environment, recommended versions are 3.8 to 3.12.
+
+Install Kratos pip packages with:
+
+- Linux:
+
+```bash
+python3 -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.3.0
+```
+
+- Windows:
+
+```bat
+python -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.3.0
+```
+
+From GiD command line, required packages can also be installed with:
+
+```tcl
+-np- W [GiD_Python_PipInstall [list $::Kratos::pip_packages_required ] 1 ]
+```
+
+## Typical Workflow
+
+1. Open GiD.
+2. Select Data -> Problem type -> kratos.
+3. Set project preferences from Kratos -> Preferences.
+4. Prepare geometry/mesh, assign conditions, and run.
+5. Inspect output logs (.info/.err) and postprocess in GiD.
+
+## Repository Layout
+
+- [kratos.gid/](./kratos.gid/): GiD problemtype (apps, scripts, launchers, xml descriptors).
+- [kratos.gid/apps/](./kratos.gid/apps/): Kratos applications integrated into GiD.
+- [kratos.gid/scripts/](./kratos.gid/scripts/): TCL logic for UI, launch, writing, and utilities.
+- [kratos.gid/exec/](./kratos.gid/exec/): launch scripts for default/python/compiled/docker execution.
+- [dockers/](./dockers/): release/build support for containerized packaging.
+- [tools/](./tools/): release preparation utilities.
+
+## Examples
+
+- [Fluid dynamics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#3-set-a-fluid-dynamics-problem)
+- [Structural mechanics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#4-set-a-structural-mechanics-problem)
+- [Fluid-Structure interaction example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#5-set-a-fluid-structure-interaction-problem)
+
+## Troubleshooting
+
+1. Kratos does not appear in GiD
+    - Verify the link/shortcut points to the repository [kratos.gid](./kratos.gid/) folder.
+    - Remove duplicated kratos.gid folders from GiD problemtypes path.
+2. Docker mode fails
+    - Check Docker daemon is running.
+    - Verify the configured image name in Preferences.
+3. Python mode fails
+    - Confirm Python executable path is valid.
+    - Reinstall Kratos packages in the selected environment.
+4. Run produced only .err output
+    - Open generated .info/.err files in project directory for stack trace and missing dependency hints.
+
+## Notes for Contributors
+
+- CI checks are available in the repository Actions tab.
+- Release and packaging helpers are under [dockers/](./dockers/) and [tools/](./tools/).
+- Main maintainers are reachable through the Kratos organization channels.
+
+## Warning
+
+This repository is under active development. Internal APIs, launch behavior, and app integrations may evolve between releases.
 
