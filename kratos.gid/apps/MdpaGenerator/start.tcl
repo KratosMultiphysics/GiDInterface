@@ -26,3 +26,7 @@ proc ::MdpaGenerator::Init { app } {
 proc ::MdpaGenerator::BreakRunCalculation {} {
     return true
 }
+
+proc write::GetWriteMode {} {
+    return [::MdpaGenerator::xml::GetCurrentWriteMode]
+}

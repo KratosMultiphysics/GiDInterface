@@ -252,8 +252,8 @@ proc write::GetWriteGroupName { group_id } {
     # Interval trick
     # If a group is child, and has been created due to the Interval issue
     # it's entities are on the father, so we need to use it's fathers name
-    foreach parent [dict keys $spdAux::GroupsEdited] {
-        if {$group_id in [dict get $spdAux::GroupsEdited $parent]} {
+    foreach parent [dict keys $::spdAux::GroupsEdited] {
+        if {$group_id in [dict get $::spdAux::GroupsEdited $parent]} {
             set group_id $parent
             break
         }
@@ -394,6 +394,10 @@ proc write::getEtype {ov group} {
 }
 proc write::isquadratic {} {
     return [GiD_Set Model(QuadraticType)]
+}
+
+proc write::GetWriteMode {} {
+    return [::write::GetAttribute write_mdpa_mode]
 }
 
 proc write::GetNodesFromElementFace {elem_id face_id} {
@@ -627,8 +631,8 @@ proc write::getSpacing {number} {
 }
 proc write::mdpaIndent { {b 4} } {
     variable current_mdpa_indent_level
-    if {[info exists Kratos::kratos_private(mdpa_format)]} {
-        if {$Kratos::kratos_private(mdpa_format) == 0} {
+    if {[info exists ::Kratos::kratos_private(mdpa_format)]} {
+        if {$::Kratos::kratos_private(mdpa_format) == 0} {
             return ""
         }
     }
@@ -688,7 +692,7 @@ proc write::WriteAssignedValues {condNode} {
 proc write::writeLaunchJSONFile { } {
     # Check if developer
     if {[Kratos::IsDeveloperMode]} {
-        set debug_folder $Kratos::kratos_private(debug_folder)
+        set debug_folder $::Kratos::kratos_private(debug_folder)
 
         # Prepare JSON as dict
         set json [dict create version "0.2.0"]

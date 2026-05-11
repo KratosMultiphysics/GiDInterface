@@ -91,7 +91,7 @@ proc ::Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
         set condition [Model::getNodalConditionbyId $conditionId]
         set cnd_dim [$condition getAttribute WorkingSpaceDimension]
         if {$cnd_dim ne ""} {
-            if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
+            if {$cnd_dim ne $::Model::SpatialDimension} {return "hidden"}
         }
         set parts_xpath [spdAux::getRoute $parts_un $domNode]
         set elems [$domNode selectNodes "$parts_xpath/condition/group/value\[@n='Element'\]"]
