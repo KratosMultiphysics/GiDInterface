@@ -167,7 +167,6 @@ proc ::MPM::write::getParametersDict { } {
         dict set tracking_dict Parameters $tracking_parameters_dict
         dict set project_parameters_dict processes grid_point_tracking [list $tracking_dict]
     }
-    
 
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
@@ -303,6 +302,34 @@ proc ::MPM::write::GetOutputProcessesList { } {
         
     }
     
+    # Energy output
+    lassign [write::getValue EnergyOutput EnableEnergyOutput] energy_output
+    if {$energy_output eq "Yes"} {
+        set energy_dict [dict create ]
+        dict set energy_dict python_module mpm_write_energy_output_process
+        dict set energy_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set energy_dict process_name MPMWriteEnergyOutputProcess
+
+        set energy_parameters_dict [dict create ]
+        dict set energy_parameters_dict model_part_name [write::getValue EnergyOptions ModelPartName]
+        set energy_output_control [write::getValue EnergyOptions OutputControlType]
+        dict set energy_parameters_dict output_control_type $energy_output_control
+        if {$energy_output_control eq "time"} {
+            dict set energy_parameters_dict output_interval [write::getValue EnergyOptions OutputDeltaTime]
+        } else {
+            dict set energy_parameters_dict output_interval [write::getValue EnergyOptions OutputDeltaStep]
+        }
+        dict set energy_parameters_dict print_format [write::getValue EnergyOptions PrintFormat]
+
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict output_path [write::getValue OutputFileSettings OutputPath]
+        dict set output_file_settings_dict file_name [write::getValue OutputFileSettings FileName]
+        dict set output_file_settings_dict file_extension [write::getValue OutputFileSettings FileExtension]
+        dict set energy_parameters_dict output_file_settings $output_file_settings_dict
+
+        dict set energy_dict Parameters $energy_parameters_dict
+        dict set output_process mpm_energy_output [list $energy_dict]
+    }
 
 
     return $output_process
