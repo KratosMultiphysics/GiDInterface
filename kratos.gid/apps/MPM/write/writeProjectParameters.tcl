@@ -311,7 +311,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set energy_dict process_name MPMWriteEnergyOutputProcess
 
         set energy_parameters_dict [dict create ]
-        dict set energy_parameters_dict model_part_name [write::getValue EnergyOptions ModelPartName]
+        dict set energy_parameters_dict model_part_name "MPM_Material"
         set energy_output_control [write::getValue EnergyOptions OutputControlType]
         dict set energy_parameters_dict output_control_type $energy_output_control
         if {$energy_output_control eq "time"} {

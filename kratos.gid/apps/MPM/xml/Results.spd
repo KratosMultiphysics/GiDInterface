@@ -93,7 +93,6 @@
             <dependencies value="On" node="../container[@n='EnergyOptions']" att1="state" v1="normal"/>
         </value>
         <container n="EnergyOptions" pn="Options" un="EnergyOptions" help="MPM energy output options" open_window="1" icon="options" state="[checkStateByUniqueName EnableEnergyOutput Yes]">
-            <value n="ModelPartName" pn="Model part name" v="MPM_Material" help="Name of the model part containing the material points for energy computation" />
             <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
                 <dependencies node="../value" actualize="1"/>
             </value>
