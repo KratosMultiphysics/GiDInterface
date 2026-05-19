@@ -257,7 +257,12 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set energy_parameters_dict print_format [write::getValue EnergyOptions PrintFormat]
 
         set output_file_settings_dict [dict create ]
-        dict set output_file_settings_dict output_path [write::getValue OutputFileSettings OutputPath]
+        set output_path_value [write::getValue OutputFileSettings OutputPath]
+        # If OutputPath is empty, use "." (current folder), otherwise use the provided value
+        if {$output_path_value eq ""} {
+            set output_path_value "."
+        }
+        dict set output_file_settings_dict output_path [string map {} $output_path_value]
         dict set output_file_settings_dict file_name [write::getValue OutputFileSettings FileName]
         dict set output_file_settings_dict file_extension [write::getValue OutputFileSettings FileExtension]
         dict set energy_parameters_dict output_file_settings $output_file_settings_dict
@@ -321,3 +326,6 @@ proc ::MPM::write::getModelersParametersList { old_modelers } {
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
+
+
+
