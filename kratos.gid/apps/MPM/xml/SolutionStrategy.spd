@@ -12,6 +12,7 @@
 		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication MPMApplication"/>
 	</container>
 	<include n="Gravity" active="1" path="apps/MPM/xml/Gravity.spd"/>
+	<include n="BodyAcceleration" active="1" path="apps/MPM/xml/BodyAcceleration.spd"/>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>

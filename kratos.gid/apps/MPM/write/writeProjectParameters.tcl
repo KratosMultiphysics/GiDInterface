@@ -112,6 +112,25 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict processes gravity [list $gravity_dict]
     }
 
+    # Body acceleration
+    set activate_body_acceleration [write::getValue ActivateBodyAcceleration]
+    if {$activate_body_acceleration eq "On"} {
+        set body_acceleration_dict [dict create ]
+        dict set body_acceleration_dict python_module assign_body_acceleration_to_material_point_process
+        dict set body_acceleration_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set body_acceleration_dict process_name AssignBodyAccelerationToMaterialPointProcess
+        set body_acceleration_parameters_dict [dict create ]
+        dict set body_acceleration_parameters_dict model_part_name MPM_Material
+        dict set body_acceleration_parameters_dict variable_name MP_VOLUME_ACCELERATION
+        dict set body_acceleration_parameters_dict modulus [write::getValue MPMBodyAcceleration modulus]
+        dict set body_acceleration_parameters_dict component [MPM::write::GetBodyAccelerationComponent]
+        dict set body_acceleration_parameters_dict set_initial_mp_acceleration [MPM::write::GetBodyAccelerationInitialFlag]
+        dict set body_acceleration_dict Parameters $body_acceleration_parameters_dict
+        set list_other_processes [dict get $project_parameters_dict processes list_other_processes]
+        lappend list_other_processes $body_acceleration_dict
+        dict set project_parameters_dict processes list_other_processes $list_other_processes
+    }
+
     
     # Tracking of mp points
     lassign [write::getValue MPTracking ActivateTracking] track
@@ -394,5 +413,24 @@ proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
 
+proc ::MPM::write::GetBodyAccelerationComponent { } {
+    set component [list ]
+    foreach direction [list X Y Z] {
+        set selector [write::getValue MPMBodyAcceleration selector_component_$direction]
+        if {$selector eq "ByFunction"} {
+            lappend component [write::getValue MPMBodyAcceleration function_component_$direction]
+        } else {
+            lappend component [expr [write::getValue MPMBodyAcceleration value_component_$direction]]
+        }
+    }
+    return $component
+}
 
+proc ::MPM::write::GetBodyAccelerationInitialFlag { } {
+    set initial_acceleration [write::getValue MPMBodyAcceleration InitialAcceleration]
+    if {$initial_acceleration eq "On"} {
+        return true
+    }
+    return false
+}
 
