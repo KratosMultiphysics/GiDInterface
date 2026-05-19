@@ -236,6 +236,41 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set output_process save_restart_process [list $restart_dict]
 
     }
+    
+    # Energy output
+    lassign [write::getValue EnergyOutput EnableEnergyOutput] energy_output
+    if {$energy_output eq "Yes"} {
+        set energy_dict [dict create ]
+        dict set energy_dict python_module mpm_write_energy_output_process
+        dict set energy_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set energy_dict process_name MPMWriteEnergyOutputProcess
+
+        set energy_parameters_dict [dict create ]
+        dict set energy_parameters_dict model_part_name "MPM_Material"
+        set energy_output_control [write::getValue EnergyOptions OutputControlType]
+        dict set energy_parameters_dict output_control_type $energy_output_control
+        if {$energy_output_control eq "time"} {
+            dict set energy_parameters_dict output_interval [write::getValue EnergyOptions OutputDeltaTime]
+        } else {
+            dict set energy_parameters_dict output_interval [write::getValue EnergyOptions OutputDeltaStep]
+        }
+        dict set energy_parameters_dict print_format [write::getValue EnergyOptions PrintFormat]
+
+        set output_file_settings_dict [dict create ]
+        set output_path_value [write::getValue OutputFileSettings OutputPath]
+        # If OutputPath is empty, use "." (current folder), otherwise use the provided value
+        if {$output_path_value eq ""} {
+            set output_path_value "."
+        }
+        dict set output_file_settings_dict output_path [string map {} $output_path_value]
+        dict set output_file_settings_dict file_name [write::getValue OutputFileSettings FileName]
+        dict set output_file_settings_dict file_extension [write::getValue OutputFileSettings FileExtension]
+        dict set energy_parameters_dict output_file_settings $output_file_settings_dict
+
+        dict set energy_dict Parameters $energy_parameters_dict
+        dict set output_process mpm_energy_output [list $energy_dict]
+    }
+
 
     return $output_process
 }
@@ -291,3 +326,6 @@ proc ::MPM::write::getModelersParametersList { old_modelers } {
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
+
+
+
