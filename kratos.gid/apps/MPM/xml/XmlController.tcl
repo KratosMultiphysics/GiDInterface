@@ -111,6 +111,8 @@ proc MPM::xml::CustomTree { args } {
 #     spdAux::SetValueOnTreeItem v "time" Results OutputControlType
 #     spdAux::SetValueOnTreeItem values "time" Results OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
+    spdAux::SetValueOnTreeItem v No NodalResults REACTION
+    spdAux::SetValueOnTreeItem v No NodalResults PRESSURE
     spdAux::SetValueOnTreeItem v "LinearSolversApplication.sparse_lu" MPMimplicitlinear_solver_settings Solver
 }
 
