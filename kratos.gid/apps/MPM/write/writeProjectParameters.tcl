@@ -292,9 +292,18 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict unset project_parameters_dict output_processes vtk_output
         dict unset grid_output_configuration_dict Parameters gauss_point_results
 
-        # Append the fluid and solid output processes to the output processes list
-        lappend vtk_output_processes_list $grid_output_configuration_dict
-        lappend vtk_output_processes_list $body_output_configuration_dict
+        # Append only the VTK output processes selected in Results > Vtk-Output.
+        set vtk_output_processes_list [list]
+        set vtk_print_option [write::getValue VtkOptions PrintOption]
+        if {$vtk_print_option eq ""} {
+            set vtk_print_option "body"
+        }
+        if {$vtk_print_option eq "grid" || $vtk_print_option eq "both"} {
+            lappend vtk_output_processes_list $grid_output_configuration_dict
+        }
+        if {$vtk_print_option eq "body" || $vtk_print_option eq "both"} {
+            lappend vtk_output_processes_list $body_output_configuration_dict
+        }
         dict set output_process vtk_output_processes $vtk_output_processes_list
 
 
@@ -433,4 +442,3 @@ proc ::MPM::write::GetBodyAccelerationInitialFlag { } {
     }
     return false
 }
-
