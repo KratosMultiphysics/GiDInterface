@@ -11,7 +11,7 @@
   <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="MP_VELOCITY" ImplementedInApplication="MPMApplication" analysis_type="Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
 
-  <NodalConditionItem n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorVariableProcess" VariableName="ACCELERATION" ImplementedInApplication="MPMApplication" analysis_type="Dynamic" unit_magnitude="Acceleration" units="m/s^2" v="No" App="MPM" Type="BoundaryCondition" state="CheckNodalConditionStateMPM" Interval="Total">
+  <NodalConditionItem n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorVariableProcess" VariableName="ACCELERATION" ImplementedInApplication="MPMApplication" analysis_type="Dynamic" unit_magnitude="Acceleration" units="m/s^2" v="No" App="MPM" Type="Output" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
 
 </NodalConditionList>
