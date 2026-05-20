@@ -144,3 +144,33 @@ proc MPM::xml::ProcCheckStabilizationState {domNode args} {
     }
     return $ret
 }
+
+proc MPM::xml::ProcCheckGridTrackingPressureState {domNode args} {
+    set tracking_state [write::getValue GridTracking ActivateTrackingGrid]
+    if {$tracking_state ne "On"} {
+        return "hidden"
+    }
+
+    set used_elements [::MPM::write::GetUsedElements Name]
+    foreach up_mixed [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D] {
+        if {$up_mixed in $used_elements} {
+            return "normal"
+        }
+    }
+    return "hidden"
+}
+
+proc MPM::xml::ProcCheckMPTrackingPressureState {domNode args} {
+    set tracking_state [write::getValue MPTracking ActivateTracking]
+    if {$tracking_state ne "On"} {
+        return "hidden"
+    }
+
+    set used_elements [::MPM::write::GetUsedElements Name]
+    foreach up_mixed [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D] {
+        if {$up_mixed in $used_elements} {
+            return "normal"
+        }
+    }
+    return "hidden"
+}

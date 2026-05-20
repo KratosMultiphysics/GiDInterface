@@ -36,4 +36,16 @@
 	  ]]>
 	</proc>
 
+	<proc n='CheckGridTrackingPressureState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckGridTrackingPressureState $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='CheckMPTrackingPressureState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckMPTrackingPressureState $domNode $args]
+	  ]]>
+	</proc>
+
 </container>
