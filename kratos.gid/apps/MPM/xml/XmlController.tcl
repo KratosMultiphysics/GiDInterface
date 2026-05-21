@@ -159,3 +159,16 @@ proc MPM::xml::ProcCheckNodalConditionOutputState {domNode args} {
 
     return [MPM::xml::CheckNodalConditionStateById $conditionId $domNode]
 }
+
+proc MPM::xml::ProcElementOutputState {domNode args} {
+    set outputId [$domNode @n]
+    if {$outputId eq "MP_PRESSURE"} {
+        if {[MPM::xml::UsesMixedUPElements]} {
+            $domNode setAttribute v Yes
+            return "normal"
+        }
+        return "hidden"
+    }
+
+    return [spdAux::ProcElementOutputState $domNode $args]
+}

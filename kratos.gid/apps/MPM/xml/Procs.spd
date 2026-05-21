@@ -54,4 +54,10 @@
 	  ]]>
 	</proc>
 
+	<proc n='ElementOutputState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcElementOutputState $domNode $args]
+	  ]]>
+	</proc>
+
 </container>
