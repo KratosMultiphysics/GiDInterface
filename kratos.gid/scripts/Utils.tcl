@@ -409,3 +409,18 @@ if { ![GidUtils::IsTkDisabled] } {
     }
 }
 
+
+proc Kratos::ExecuteCustomScript {script_name} {
+    variable kratos_private
+    set script_path [file join $kratos_private(Path) scripts Custom ${script_name}.py]
+    if {[file exists $script_path]} {
+        # first version will assume that its for writing meshes in mdpa format
+        # must be python
+        # W "Executing custom script: $script_path"
+        GiD_Python_Source $script_path
+        GiD_Python_Call ${script_name}.start "[GiD_Info project ModelName].mdpa"
+        # [GiD_Python_Call gid_meshio.my_meshio_write_mesh2 $filename]
+    } else {
+        W "Custom script $script_name not found in path $script_path"
+    }
+}
