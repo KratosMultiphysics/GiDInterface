@@ -58,11 +58,48 @@ proc MPM::xml::getUniqueName {name} {
     return MPM${name}
 }
 
+proc ::MPM::xml::ProcCheckNodalConditionStateMPM {domNode args} {
+    return [MPM::xml::CheckNodalConditionStateById [$domNode @n] $domNode]
+}
+
+proc MPM::xml::CheckNodalConditionStateById {conditionId domNode} {
+    set parts_un STParts
+    if {[spdAux::getRoute $parts_un] ne ""} {
+        set condition [Model::getNodalConditionbyId $conditionId]
+        set cnd_dim [$condition getAttribute WorkingSpaceDimension]
+        if {$cnd_dim ne "" && $cnd_dim ne $Model::SpatialDimension} {
+            return "hidden"
+        }
+        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
+        set elemnames [list]
+        foreach elem $elems {
+            lappend elemnames [$elem @v]
+        }
+        set elemnames [lsort -unique $elemnames]
+
+        set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+        set params [list analysis_type $solutionType]
+        if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {
+            return "normal"
+        }
+        return "hidden"
+    }
+    return "normal"
+}
+
 proc MPM::xml::CustomTree { args } {
 
 #     spdAux::SetValueOnTreeItem v "time" Results OutputControlType
 #     spdAux::SetValueOnTreeItem values "time" Results OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
+    spdAux::SetValueOnTreeItem v No NodalResults REACTION
+    spdAux::SetValueOnTreeItem state {[CheckNodalConditionOutputStateMPM DISPLACEMENT]} NodalResults REACTION
+    if {[MPM::xml::UsesMixedUPElements]} {
+        spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
+    } else {
+        spdAux::SetValueOnTreeItem v No NodalResults PRESSURE
+    }
+    spdAux::SetValueOnTreeItem state {[CheckNodalConditionOutputStateMPM DISPLACEMENT]} NodalResults PRESSURE
     spdAux::SetValueOnTreeItem v "LinearSolversApplication.sparse_lu" MPMimplicitlinear_solver_settings Solver
 }
 
@@ -93,4 +130,32 @@ proc MPM::xml::ProcCheckStabilizationState {domNode args} {
         if {$second_check eq "On"} {set ret "normal"}
     }
     return $ret
+}
+
+proc MPM::xml::UsesMixedUPElements { } {
+    foreach elem [::MPM::write::GetUsedElements Name] {
+        if {$elem in [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D]} {
+            return 1
+        }
+    }
+    return 0
+}
+
+proc MPM::xml::ProcCheckNodalConditionOutputState {domNode args} {
+    set conditionId [lindex $args 0]
+    set outputId [$domNode @n]
+
+    if {![::Model::CheckNodalConditionOutputState $conditionId $outputId]} {
+        return "hidden"
+    }
+
+    if {$outputId eq "PRESSURE"} {
+        if {[MPM::xml::UsesMixedUPElements]} {
+            $domNode setAttribute v Yes
+            return "normal"
+        }
+        return "hidden"
+    }
+
+    return [MPM::xml::CheckNodalConditionStateById $conditionId $domNode]
 }
