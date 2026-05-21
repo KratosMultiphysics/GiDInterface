@@ -1,15 +1,18 @@
 #!/bin/bash
 # OutputFile: "$2/$1.info"
 # ErrorFile: "$2/$1.err"
+
+cd "$case_path"
+
 #delete previous result file
-rm -f "$2/$1*.post.bin"
-rm -f "$2/$1*.post.res"
-rm -f "$2/$1*.post.msh"
-rm -f "$2/$1.info"
-rm -f "$2/$1.err"
-rm -f "$2/$1.flavia.dat"
-rm -fr "$2/gid_output"
-rm -fr "$2/vtk_output"
+rm -f "./$1*.post.bin"
+rm -f "./$1*.post.res"
+rm -f "./$1*.post.msh"
+rm -f "./$1.info"
+rm -f "./$1.err"
+rm -f "./$1.flavia.dat"
+rm -fr "./gid_output"
+rm -fr "./vtk_output"
 
 # include .bashrc if it exists
 if [ -f "$HOME/.bashrc" ]; then
@@ -36,6 +39,5 @@ export PYTHONHOME=$python_home
 
 KERNEL_NAME="linux"
 
-
 # Run Python using the script MainKratos.py
-$python_path MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+$python_path MainKratos.py > "./$1.info" 2> "./$1.err"

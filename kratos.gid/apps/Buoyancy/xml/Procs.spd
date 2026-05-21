@@ -61,7 +61,7 @@
         lappend arguments "SolutionType" $solutionType
         #W "arguments $arguments"
 		set Sols [::Model::GetSolutionStrategies $arguments ]
-    set ids [list ]
+    	set ids [list ]
 		foreach ss $Sols {
 			lappend ids [$ss getName]
 			append names [$ss getName] ","

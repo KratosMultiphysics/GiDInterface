@@ -361,18 +361,80 @@ proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
 }
 
-proc Kratos::OpenCaseIn {program} {
+proc Kratos::OpenCaseIn {program {ext_path ""}} {
     switch $program {
         "VSCode" {
             if {[GiD_Info Project ModelName] eq "UNNAMED"} {W "Save your model first"} {
-                catch {exec code -n [GidUtils::GetDirectoryModel]} msg
+                if {$ext_path ne ""} {
+                    set model_dir $ext_path
+                } else {
+                    set model_dir [GiD_Info Project ModelName].gid
+                }
+                catch {
+                    GidUtils::SetWarnLine "Opening $model_dir in Visual Studio Code..."
+                    # set command {code -n 'C:/Users/garat/Desktop/aaa.gid/Simulations/Run 1'}
+                    # exec $command
+                    # exec [list code -n $model_dir]
+                    # exec code -n "$model_dir"
+                    Kratos::openInVSCode $model_dir
+                    # exec "{*}[auto_execok code] -n $model_dir"
+                    # exec {*}[auto_execok code] -n $model_dir
+                    #W [gid_cross_platform::execute_program_in_path [list "code" "-n" $model_dir]]
+                } msg
                 if {$msg eq {couldn't execute "code": no such file or directory}} {
                     W "Install Visual Studio Code and add it to your PATH"
+                } elseif {$msg ne ""} {
+                    W "Error opening Visual Studio Code: $msg"
                 }
             }
         }
         default {}
     }
+}
+
+proc Kratos::openInVSCode {path} {
+
+    if {![file exists $path]} {
+        error "Path does not exist: $path"
+    }
+
+    set platform $::tcl_platform(platform)
+
+
+    switch -glob -- $platform {
+
+        "windows" {
+            exec [Kratos::get_full_path_code] -n $path
+        }
+
+        "Darwin" {
+            # macOS
+            exec open -a "Visual Studio Code" $path &
+        }
+
+        default {
+            # Linux / Unix
+            exec code -n $path &
+        }
+    }
+}
+proc Kratos::get_full_path_code {} {
+
+    set cmd [auto_execok code]
+    if {$cmd eq ""} {
+        error "VS Code not found in PATH"
+    }
+
+    set full_path_code [lindex $cmd 0]
+
+    if {$::tcl_platform(platform) eq "windows"} {
+        # auto_execok returns .../bin/code.cmd
+        # real executable is ../Code.exe
+        set base [file dirname [file dirname $full_path_code]]
+        set full_path_code [file join $base Code.exe]
+    }
+
+    return $full_path_code
 }
 
 if { ![GidUtils::IsTkDisabled] } {
@@ -409,3 +471,37 @@ if { ![GidUtils::IsTkDisabled] } {
     }
 }
 
+
+proc Kratos::CreateLinksRunData { } {
+    
+    set next_run [runsimulations::GetCurrentSimulationRunName]
+    # replace next_run whitespaces by underscores. Do not use regsub
+    set next_run [string map {" " "_"} $next_run]
+    # W "Starting simulation run: $next_run"
+    
+    set simulation_case [runsimulations::GetSimulationRunPath $next_run]
+
+    # Create link for model_name.info and model_name.err 
+    set dir [GidUtils::GetDirectoryModel]
+    set model_name [Kratos::GetModelName]
+    set info_file [file join $dir "$model_name.info"]
+    set err_file [file join $dir "$model_name.err"]
+
+    foreach file_to_link [list $info_file $err_file] {
+        if {[file exists $file_to_link]} {
+            file delete -force $file_to_link
+        }
+        set link_content [file join $simulation_case [file tail $file_to_link]]
+        # W "Creating link: $link_content -> $file_to_link"
+        if {[file exists $link_content]} {
+            # create the link
+            file link $file_to_link $link_content
+        } else {
+            # W "File to link does not exist: $link_content"
+            after 5000 {
+                Kratos::CreateLinksRunData
+            }
+        }
+        
+    }
+}

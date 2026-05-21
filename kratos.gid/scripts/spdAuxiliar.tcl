@@ -516,4 +516,138 @@ proc spdAux::RegisterWindow {window_name} {
 }
 
 
+proc spdAux::ProcFillSimulations { domNode args } {
+    # W "Filling simulations..."
+    set model_name [GiD_Info Project ModelName]
+    set model_dir [GidUtils::GetDirectoryModel]
+
+    # detect previous simulation runs
+    set sim_runs_list [runsimulations::GetPastSimulationsRunsList]
+
+    # fill the simulations list
+    set sim_list_node $domNode
+
+    # add contextual entry to delete all
+    set glob_add_menu_command "{advanced-16 {Delete All} {spdAux::DeleteAllSimulationRuns}}"
+    set glob_del_menu_command "{-} {Edit} {List entities} {Expand} {View this}"
+    $sim_list_node setAttribute addcontextualmenu $glob_add_menu_command
+    $sim_list_node setAttribute removecontextualmenu $glob_del_menu_command
+
+    # clear previous entries
+    foreach child_node [$sim_list_node childNodes] {
+        $sim_list_node removeChild $child_node
+    }
+    foreach sim_run $sim_runs_list {
+        set sim_name [dict get $sim_run name]
+        set sim_path [dict get $sim_run path]
+
+        # make simpath relative to model_dir
+        set sim_path [string map [list "$model_dir/" ""] $sim_path]
+
+        set add_menu_command "{advanced-16 {View in Code} {spdAux::OpenRunInCode \"$sim_path\"}}"
+        # append add_menu_command " { advanced-16 {Rename} {spdAux::RenameSimulationRun $sim_path} }"
+        set del_menu_command "removecontextualmenu='{-} {Edit} {List entities} {Expand} {View this}'"
+
+        # add delete option 
+        append add_menu_command " { advanced-16 {Delete} {spdAux::DeleteSimulationRun \"$sim_path\"} }"
+        # add rerun case
+        append add_menu_command " { advanced-16 {Rerun} {runsimulations::RerunSimulation \"$sim_path\"} }"
+        # add view results option
+        append add_menu_command " { advanced-16 {View Results} {runsimulations::GoToPostprocess \"$sim_path\"} }"
+
+        set icon "ok16"
+        # if there is an error file (modelname.err) inside the simulation folder, change the icon to 
+        if {[file exists [file join [spdAux::MakeRunAbsolutePath $sim_path] "[file tail $model_name].err"]]} {
+            # if the size is greater than 0
+            if {[file size [file join [spdAux::MakeRunAbsolutePath $sim_path] "[file tail $model_name].err"] ] > 0} {
+                set icon "error16"
+                # Add view error option
+                append add_menu_command " { advanced-16 {View Error Log} {Kratos::OpenCaseIn VSCode [file join $sim_path "[file tail $model_name].err"]} }"
+            }
+        }
+        
+        set str "<container n='$sim_name' pn='$sim_name' icon='$icon' addcontextualmenu='$add_menu_command' $del_menu_command />"
+        set current_run_node [ $sim_list_node appendChild [[dom parse $str] documentElement]]
+        # add extra info as status, size, date...
+        # get the size of the folder
+        set folder_size 0
+        set folder_files [glob -nocomplain -directory [spdAux::MakeRunAbsolutePath $sim_path] -types {file} *]
+        foreach file $folder_files {
+            set folder_size [expr $folder_size + [file size $file]]
+        }
+        # express size in units that make sense
+        set unit "B"
+        if {$folder_size > 1024} {
+            set folder_size [expr $folder_size / 1024.0]
+            set unit "KB"
+            if {$folder_size > 1024} {
+                set folder_size [expr $folder_size / 1024.0]
+                set unit "MB"
+                if {$folder_size > 1024} {
+                    set folder_size [expr $folder_size / 1024.0]
+                    set unit "GB"
+                }
+            }
+        }
+        # only two decimals
+        set folder_size [format "%.2f" $folder_size]
+        # TODO: Not working well in MB
+        set str "<value n='size' pn='Size' v='$folder_size $unit' state='readonly'/>"
+        # set str "<value n='size' pn='Size' v='$folder_size' unit='$unit' unit_magnitude='Storage' state='readonly'/>"
+        # append it to the current run node
+        $current_run_node appendChild [[dom parse $str] documentElement]
+
+        # get the modification date of the projectparameters file
+        set folder_mtime 0
+        set sim_params_file [file join [spdAux::MakeRunAbsolutePath $sim_path] "ProjectParameters.json"]
+        if {[file exists $sim_params_file]} {
+            set folder_mtime [file mtime $sim_params_file]
+        }
+        # timestamp as yyyy-mm-dd hh:mm:ss
+        set folder_mtime [clock format $folder_mtime -format "%Y-%m-%d %H:%M:%S"]
+        set str "<value n='modification_date' pn='Date' v='$folder_mtime' state='readonly'/>"
+        # append it to the current run node
+        $current_run_node appendChild [[dom parse $str] documentElement]
+
+        # find a file named ProjectParameters.json inside the simulation folder
+        # set sim_spd_file [file join $sim_path "ProjectParameters.json"]
+        # if {[file exists $sim_spd_file]} {
+        #     # insert a value disabled saying true
+        #     set str "<value n='has_project_parameters_file' v='true' state='disabled'/>"
+        #     $sim_list_node appendChild [[dom parse $str] documentElement]
+        # }
+    }
+}
+
+proc spdAux::GetNextSimulationRunName {  } {
+    set base_node [customlib::GetBaseRoot]
+    set sim_node [write::getValueByNode [$base_node selectNodes ".//value\[@n='current_simulation_run'\]"]]
+    return $sim_node
+}
+
+proc spdAux::DeleteSimulationRun { sim_path } {
+    set path [spdAux::MakeRunAbsolutePath $args]
+    runsimulations::DeleteSimulationRun $sim_path
+    spdAux::RequestRefresh
+}
+
+proc spdAux::DeleteAllSimulationRuns {  } {
+    runsimulations::DeleteAllSimulationRuns
+    spdAux::RequestRefresh
+}
+
+# args is the relative path inside the model folder
+proc spdAux::OpenRunInCode { args } {
+    set path [spdAux::MakeRunAbsolutePath $args]
+    Kratos::OpenCaseIn VSCode $path
+}
+
+proc spdAux::MakeRunAbsolutePath { run_path } {
+    set model_dir [GidUtils::GetDirectoryModel]
+    if {[file pathtype $run_path] ne "absolute"} {
+        set run_path [file join $model_dir $run_path]
+    }
+    return $run_path
+}
+
 spdAux::Init
