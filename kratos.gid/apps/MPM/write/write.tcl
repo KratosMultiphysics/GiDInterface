@@ -83,10 +83,8 @@ proc ::MPM::write::GetUsedElements { {get "Objects"} } {
 }
 
 proc MPM::write::writeSubmodelparts { type } {
-
     foreach group [MPM::write::GetPartsGroupsNames $type] {
         write::writeGroupSubModelPartAsGeometry $group
-
     }
 }
 

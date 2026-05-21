@@ -101,7 +101,6 @@
             <value n="OutputDeltaStep" pn="Time steps between outputs" v="1" help="Output will be printed in intervals of this number of steps" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} step]"/>
             <value n="PrintFormat" pn="Format" v=".8f" help="Format used for energy output values" />
             <container n="OutputFileSettings" pn="Output file settings" un="OutputFileSettings" open_window="1" icon="options">
-
                 <value n="OutputPath" pn="Output path" v="" help="Folder for energy output files. Leave empty for current folder" />
                 <value n="FileName" pn="File name" v="MPM_Material_energy" help="Energy output file name" />
                 <value n="FileExtension" pn="File extension" v="dat" help="Energy output file extension" />

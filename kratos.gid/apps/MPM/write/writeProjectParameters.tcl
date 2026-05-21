@@ -1,9 +1,10 @@
 # Project Parameters
 proc ::MPM::write::getParametersDict { } {
     set project_parameters_dict [Structural::write::getParametersDict]
-    
+
     # Analysis stage field
     dict set project_parameters_dict analysis_stage "KratosMultiphysics.MPMApplication.mpm_analysis"
+
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]
     dict set project_parameters_dict solver_settings solver_type $solutiontype
@@ -11,31 +12,29 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict solver_settings time_integration_method [write::getValue STSolStrat]
         dict set project_parameters_dict solver_settings scheme_type [write::getValue STcheme]
     }
-    
+
     # Time Parameters
     if {$solutiontype eq "Dynamic"} {
         dict unset project_parameters_dict solver_settings time_stepping "time_step_table"
         dict set project_parameters_dict solver_settings time_stepping "time_step" [write::getValue MPTimeParameters DeltaTime]
         dict set project_parameters_dict problem_data start_time [write::getValue MPTimeParameters StartTime]
         dict set project_parameters_dict problem_data end_time [write::getValue MPTimeParameters EndTime]
-
     }
-    
+
     # Change the model part name
     dict set project_parameters_dict solver_settings model_part_name MPM_Material
-    
+
     # create grid_import_settings
     dict set project_parameters_dict solver_settings grid_model_import_settings input_type use_input_model_part
 
-
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
-    
+
     # Axis-symmetric flag
     if {$::Model::SpatialDimension eq "2Da"} {
         dict set project_parameters_dict solver_settings axis_symmetric_flag true
     }
-    
+
     # Pressure dofs
     foreach elem [MPM::write::GetMixedUPElements] {
         if {$elem in [MPM::write::GetUsedElements Name]} {
@@ -54,18 +53,18 @@ proc ::MPM::write::getParametersDict { } {
             dict unset project_parameters_dict solver_settings stabilization
         }
     }
-    
-    
+
+
     # Rotation dofs
     dict unset project_parameters_dict solver_settings rotation_dofs
-    
+
     # Line search
     dict unset project_parameters_dict solver_settings line_search
-    
+
     # Volumetric strain dofs
     dict unset project_parameters_dict solver_settings strain_dofs
     dict unset project_parameters_dict solver_settings volumetric_strain_dofs
-    
+
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict MPM] ]
@@ -193,17 +192,17 @@ proc ::MPM::write::getParametersDict { } {
 
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
-    
+
+
     # REMOVE RAYLEIGH
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
     dict unset project_parameters_dict solver_settings rayleigh_alpha
     dict unset project_parameters_dict solver_settings rayleigh_beta
-    
+
     # REMOVE use_old_stiffness_in_first_iteration
     dict unset project_parameters_dict solver_settings use_old_stiffness_in_first_iteration
 
     dict set project_parameters_dict modelers [write::getModelersParametersList [dict get $project_parameters_dict modelers]]
-
 
     return $project_parameters_dict
 }
@@ -213,6 +212,8 @@ proc write::GetResultsList { un {cnd ""} } {
     if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
     return [GetResultsByXPathList $xp1]
 }
+
+
 
 proc ::MPM::write::GetOutputProcessesList { } {
     set output_process [dict create]
@@ -245,8 +246,8 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
         dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
 
-        dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
 
+        dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
 
 
         dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
@@ -291,6 +292,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict unset grid_output_configuration_dict Parameters element_data_value_variables
         dict unset grid_output_configuration_dict Parameters condition_data_value_variables
 
+
         dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
         #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
         dict unset project_parameters_dict output_processes vtk_output
@@ -311,11 +313,9 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set output_process vtk_output_processes $vtk_output_processes_list
 
 
-
     }
 
     # Restart
-
     set need_restart [write::getValue EnableRestartOutput]
     if {[write::isBooleanTrue $need_restart]} {
         set restart_dict [dict create ]
@@ -331,7 +331,6 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set restart_dict Parameters $restart_parameters_dict
         dict set output_process save_restart_process [list $restart_dict]
 
-        
     }
     
     # Energy output
@@ -354,14 +353,12 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set energy_parameters_dict print_format [write::getValue EnergyOptions PrintFormat]
 
         set output_file_settings_dict [dict create ]
-
         set output_path_value [write::getValue OutputFileSettings OutputPath]
         # If OutputPath is empty, use "." (current folder), otherwise use the provided value
         if {$output_path_value eq ""} {
             set output_path_value "."
         }
         dict set output_file_settings_dict output_path [string map {} $output_path_value]
-
         dict set output_file_settings_dict file_name [write::getValue OutputFileSettings FileName]
         dict set output_file_settings_dict file_extension [write::getValue OutputFileSettings FileExtension]
         dict set energy_parameters_dict output_file_settings $output_file_settings_dict
