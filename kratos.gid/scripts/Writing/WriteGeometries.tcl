@@ -1,5 +1,5 @@
 
-proc write::writeGeometryConnectivities { group_list } {
+proc write::writeGeometryConnectivities { group_list {merge_by_etype 0}} {
     # Avoid duplicates (groups used twice and intervals!)
     set processed_list_names [list ]
     set processed_list [list ]
@@ -27,8 +27,29 @@ proc write::writeGeometryConnectivities { group_list } {
         # Get the number of nodes and the geometry type
         lassign [getEtype $ov $group_name] etype nnodes
         
-        # Print into the mdpa file
-        write::printGeometryConnectivities $group_name $etype $nnodes
+        if {$merge_by_etype eq 0} {
+            # Print into the mdpa file
+            write::printGeometryConnectivities $group_name $etype $nnodes
+        } else {
+            # Merge by etype
+            set key $etype-$nnodes
+            dict lappend merged_groups $key $group_name
+        }
+    }
+
+    if {$merge_by_etype eq 1} {
+        # Print the merged groups
+        foreach key [dict keys $merged_groups] {
+            
+            set new_group_name "_HIDDEN_GEOM_$key"
+            set group_names [dict get $merged_groups $key]
+            set etype [lindex [split $key -] 0]
+            set nnodes [lindex [split $key -] 1]
+            if {[GiD_Groups exists $new_group_name]} {GiD_Groups delete $new_group_name}
+            spdAux::MergeGroups $new_group_name $group_names
+            write::printGeometryConnectivities $new_group_name $etype $nnodes
+            GiD_Groups delete $new_group_name
+        }
     }
 }
 
