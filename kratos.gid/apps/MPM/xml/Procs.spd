@@ -48,4 +48,22 @@
 	  ]]>
 	</proc>
 
+	<proc n='CheckNodalConditionOutputState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckNodalConditionOutputState $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='CheckNodalConditionOutputStateMPM' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckNodalConditionOutputState $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='ElementOutputState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcElementOutputState $domNode $args]
+	  ]]>
+	</proc>
+
 </container>

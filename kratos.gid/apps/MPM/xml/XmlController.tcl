@@ -4,18 +4,13 @@ namespace eval MPM::xml {
 
 }
 
-
 proc MPM::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::MPM::dir
 
-
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
-    
-    Model::ForgetSolutionStrategies
-    Model::getSolutionStrategies Strategies.xml
 
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies Strategies.xml
@@ -75,24 +70,32 @@ proc ::MPM::xml::ProcGetSolutionStrategiesMPM { domNode args } {
 
 
 proc ::MPM::xml::ProcCheckNodalConditionStateMPM {domNode args} {
-    # Overwritten the base function to add Solution Type restrictions
+    return [MPM::xml::CheckNodalConditionStateById [$domNode @n] $domNode]
+}
+
+proc MPM::xml::CheckNodalConditionStateById {conditionId domNode} {
     set parts_un STParts
     if {[spdAux::getRoute $parts_un] ne ""} {
-        set conditionId [$domNode @n]
         set condition [Model::getNodalConditionbyId $conditionId]
         set cnd_dim [$condition getAttribute WorkingSpaceDimension]
-        if {$cnd_dim ne ""} {
-            if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
+        if {$cnd_dim ne "" && $cnd_dim ne $Model::SpatialDimension} {
+            return "hidden"
         }
         set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
-        set elemnames [list ]
-        foreach elem $elems { lappend elemnames [$elem @v]}
+        set elemnames [list]
+        foreach elem $elems {
+            lappend elemnames [$elem @v]
+        }
         set elemnames [lsort -unique $elemnames]
 
         set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
         set params [list analysis_type $solutionType]
-        if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
-    } {return "normal"}
+        if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {
+            return "normal"
+        }
+        return "hidden"
+    }
+    return "normal"
 }
 
 proc MPM::xml::MultiAppEvent {args} {
@@ -112,7 +115,13 @@ proc MPM::xml::CustomTree { args } {
 #     spdAux::SetValueOnTreeItem values "time" Results OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
     spdAux::SetValueOnTreeItem v No NodalResults REACTION
-    spdAux::SetValueOnTreeItem v No NodalResults PRESSURE
+    spdAux::SetValueOnTreeItem state {[CheckNodalConditionOutputStateMPM DISPLACEMENT]} NodalResults REACTION
+    if {[MPM::xml::UsesMixedUPElements]} {
+        spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
+    } else {
+        spdAux::SetValueOnTreeItem v No NodalResults PRESSURE
+    }
+    spdAux::SetValueOnTreeItem state {[CheckNodalConditionOutputStateMPM DISPLACEMENT]} NodalResults PRESSURE
     spdAux::SetValueOnTreeItem v "LinearSolversApplication.sparse_lu" MPMimplicitlinear_solver_settings Solver
 }
 
@@ -173,4 +182,49 @@ proc MPM::xml::ProcCheckMPTrackingPressureState {domNode args} {
         }
     }
     return "hidden"
+}
+
+proc MPM::xml::UsesMixedUPElements { } {
+    foreach elem [::MPM::write::GetUsedElements Name] {
+        if {$elem in [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D]} {
+            return 1
+        }
+    }
+    return 0
+}
+
+proc MPM::xml::ProcCheckNodalConditionOutputState {domNode args} {
+    set conditionId [lindex $args 0]
+    set outputId [$domNode @n]
+
+    if {![::Model::CheckNodalConditionOutputState $conditionId $outputId]} {
+        return "hidden"
+    }
+
+    if {$outputId eq "PRESSURE"} {
+        if {[MPM::xml::UsesMixedUPElements]} {
+            $domNode setAttribute v Yes
+            return "normal"
+        }
+        return "hidden"
+    }
+
+    if {$outputId eq "REACTION"} {
+        $domNode setAttribute v No
+    }
+
+    return [MPM::xml::CheckNodalConditionStateById $conditionId $domNode]
+}
+
+proc MPM::xml::ProcElementOutputState {domNode args} {
+    set outputId [$domNode @n]
+    if {$outputId eq "MP_PRESSURE"} {
+        if {[MPM::xml::UsesMixedUPElements]} {
+            $domNode setAttribute v Yes
+            return "normal"
+        }
+        return "hidden"
+    }
+
+    return [spdAux::ProcElementOutputState $domNode $args]
 }
