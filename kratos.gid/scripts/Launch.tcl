@@ -25,9 +25,9 @@ proc Kratos::InstallAllPythonDependencies { } {
     set missing_packages [Kratos::GetMissingPipPackages]
     ::GidUtils::SetWarnLine "Installing pip packages $missing_packages"
     if {[llength $missing_packages] > 0} {
-        exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
+        exec $pip -E -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
     }
-    exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$::Kratos::pip_packages_required
+    exec $pip -E -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$::Kratos::pip_packages_required
     ::GidUtils::SetWarnLine "Packages updated"
 }
 
@@ -79,7 +79,7 @@ proc Kratos::pipVersion { {pythonExecutable ""} } {
     set ver 0
 
     catch {
-        set info [exec $pip -m pip --version 2>@1]
+        set info [exec $pip -E -m pip --version 2>@1]
         if {[regexp {pip\s+(\d+\.\d+)} $info --> version]} {
             set ver $version
         }
@@ -95,7 +95,7 @@ proc Kratos::GetMissingPipPackages { } {
     set py [Kratos::GetPythonExeName]
     set python_exe_path [Kratos::ManagePreferences GetValue python_path]
     set pip_packages_installed [list ]
-    set pip_packages_installed_raw [exec $python_exe_path -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec $python_exe_path -E -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
     }
@@ -112,7 +112,7 @@ proc Kratos::GetMissingPipPackagesGiDsPython { } {
 
     set pip_packages_installed [list ]
     set pip_packages_installed_versions [list ]
-    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -E -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
         lappend pip_packages_installed_versions [lindex [split $package "=="] end]
@@ -168,7 +168,7 @@ proc Kratos::ShowErrorsAndActions {errs} {
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on a terminal (note: On Windows systems, use cmd, not PowerShell):"
-            W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $::Kratos::pip_packages_required"
+            W "$python_exe_path -E -m pip install --upgrade --force-reinstall --no-cache-dir $::Kratos::pip_packages_required"
         }
         "MISSING_PIP_PACKAGES_GiDS_PYTHON" {
             W "Kratos package was not found on your system."
