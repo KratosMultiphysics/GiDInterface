@@ -367,8 +367,46 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set output_process mpm_energy_output [list $energy_dict]
     }
 
+    # Height output
+    lassign [write::getValue HeightOutput EnableHeightOutput] height_output
+    if {$height_output eq "Yes"} {
+        set height_dict [dict create ]
+        dict set height_dict python_module mpm_particle_height_output_process
+        dict set height_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set height_dict process_name MPMParticleHeightOutputProcess
+
+        set height_parameters_dict [dict create ]
+        dict set height_parameters_dict model_part_name "MPM_Material"
+        dict set height_parameters_dict background_grid_model_part_name "Background_Grid"
+        dict set height_parameters_dict sensor_positions [MPM::write::GetHeightSensorPositions]
+        lassign [write::getValue HeightOptions MeasuringDirection] dx dy dz
+        dict set height_parameters_dict measuring_direction [list [expr $dx] [expr $dy] [expr $dz]]
+        dict set height_parameters_dict search_radius_factor [expr [write::getValue HeightOptions SearchRadiusFactor]]
+        dict set height_parameters_dict print_format [write::getValue HeightOptions PrintFormat]
+
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict file_name [write::getValue HeightOutputFileSettings FileName]
+        dict set height_parameters_dict output_file_settings $output_file_settings_dict
+
+        dict set height_dict Parameters $height_parameters_dict
+        dict set output_process height_output_process [list $height_dict]
+    }
+
 
     return $output_process
+}
+
+proc ::MPM::write::GetHeightSensorPositions { } {
+    set sensor_positions [list]
+    set number_of_sensors [write::getValue HeightSensors NumberOfSensors]
+    if {$number_of_sensors eq ""} {
+        set number_of_sensors 1
+    }
+    for {set i 1} {$i <= $number_of_sensors} {incr i} {
+        lassign [write::getValue HeightSensors SensorPosition$i] dx dy dz
+        lappend sensor_positions [list [expr $dx] [expr $dy] [expr $dz]]
+    }
+    return $sensor_positions
 }
 
 proc ::MPM::write::GetMixedUPElements { } {

@@ -184,6 +184,18 @@ proc MPM::xml::ProcCheckMPTrackingPressureState {domNode args} {
     return "hidden"
 }
 
+proc MPM::xml::ProcCheckHeightSensorState {domNode args} {
+    set sensor_index [lindex $args 0]
+    set number_of_sensors [write::getValue HeightSensors NumberOfSensors]
+    if {$number_of_sensors eq ""} {
+        set number_of_sensors 1
+    }
+    if {$sensor_index <= $number_of_sensors} {
+        return "normal"
+    }
+    return "hidden"
+}
+
 proc MPM::xml::UsesMixedUPElements { } {
     foreach elem [::MPM::write::GetUsedElements Name] {
         if {$elem in [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D]} {

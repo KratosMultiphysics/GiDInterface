@@ -75,6 +75,34 @@
         </container>
     </container>
 
+    <container n="HeightOutput" pn="Height-Output" un="HeightOutput" state="normal" open="1" open_window="0" icon="results">
+        <value n="EnableHeightOutput" pn="Enable output" v="No" values="Yes,No" un="EnableHeightOutput" help="Writing MPM particle height output" actualize_tree="1">
+            <dependencies value="No" node="../container[@n='HeightOptions']" att1="state" v1="hidden"/>
+            <dependencies value="Yes" node="../container[@n='HeightOptions']" att1="state" v1="normal"/>
+        </value>
+        <container n="HeightOptions" pn="Options" un="HeightOptions" help="MPM particle height output options" open_window="1" icon="options" state="[checkStateByUniqueName EnableHeightOutput Yes]">
+            <container n="SensorPositions" pn="Sensor positions" un="HeightSensors" help="Sensor positions for MPM particle height output" open_window="1" icon="point3d">
+                <value n="NumberOfSensors" pn="Number of sensors" v="1" type="combo" values="1,2,3,4,5,6,7,8,9,10" actualize_tree="1" help="Number of height sensors"/>
+                <value n="SensorPosition1" pn="Sensor 1" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" help="Sensor position"/>
+                <value n="SensorPosition2" pn="Sensor 2" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 2]" help="Sensor position"/>
+                <value n="SensorPosition3" pn="Sensor 3" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 3]" help="Sensor position"/>
+                <value n="SensorPosition4" pn="Sensor 4" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 4]" help="Sensor position"/>
+                <value n="SensorPosition5" pn="Sensor 5" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 5]" help="Sensor position"/>
+                <value n="SensorPosition6" pn="Sensor 6" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 6]" help="Sensor position"/>
+                <value n="SensorPosition7" pn="Sensor 7" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 7]" help="Sensor position"/>
+                <value n="SensorPosition8" pn="Sensor 8" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 8]" help="Sensor position"/>
+                <value n="SensorPosition9" pn="Sensor 9" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 9]" help="Sensor position"/>
+                <value n="SensorPosition10" pn="Sensor 10" v="0.0,0.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" pick_point="1" state="[CheckHeightSensorState 10]" help="Sensor position"/>
+            </container>
+            <value n="MeasuringDirection" pn="Measuring direction" v="0.0,1.0,0.0" fieldtype="vector" dimensions="3" format="%.6g" help="Direction used to measure particle height"/>
+            <value n="SearchRadiusFactor" pn="Search radius factor" v="0.5" help="Search radius factor used by the particle height output process"/>
+            <value n="PrintFormat" pn="Format" v=".8f" help="Format used for height output values"/>
+            <container n="HeightOutputFileSettings" pn="Output file settings" un="HeightOutputFileSettings" open_window="1" icon="options">
+                <value n="FileName" pn="File name" v="particle_height_sensor" help="Height output file name"/>
+            </container>
+        </container>
+    </container>
+
 
     <container n="RestartOutput" pn="Restart-Output" un="RestartOutput" state="normal" open="1" open_window="0" icon="results">
         <value n="EnableRestartOutput" pn="Enable output" v="No" values="Yes,No" un="EnableRestartOutput" help="Writing output for Restart or not" />

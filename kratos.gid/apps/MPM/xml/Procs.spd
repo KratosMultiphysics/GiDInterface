@@ -48,6 +48,12 @@
 	  ]]>
 	</proc>
 
+	<proc n='CheckHeightSensorState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckHeightSensorState $domNode $args]
+	  ]]>
+	</proc>
+
 	<proc n='CheckNodalConditionOutputState' args='args'>
 	  <![CDATA[
 	  return [MPM::xml::ProcCheckNodalConditionOutputState $domNode $args]
