@@ -38,8 +38,8 @@ proc write::writeGeometryConnectivities { group_list {merge_by_etype 0}} {
     }
 
     if {$merge_by_etype eq 1} {
-        # Print the merged groups
-        foreach key [dict keys $merged_groups] {
+        # Print the merged groups in a deterministic order
+        foreach key [lsort [dict keys $merged_groups]] {
             
             set new_group_name "_HIDDEN_GEOM_$key"
             set group_names [dict get $merged_groups $key]
