@@ -2,7 +2,7 @@
 <NodalConditionList>
   <NodalConditionItem n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorVariableProcess" VariableName="ACCELERATION" ImplementedInApplication="MPMApplication" analysis_type="Dynamic" unit_magnitude="Acceleration" units="m/s^2" v="No" App="MPM" Type="Output" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
-  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="VELOCITY" ImplementedInApplication="MPMApplication" analysis_type="Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
+  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="VELOCITY" ImplementedInApplication="MPMApplication" analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
   <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="StructuralMechanicsApplication"
 		      analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="Structural" state="CheckNodalConditionStateStructural" Interval="Total">
