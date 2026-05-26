@@ -77,6 +77,7 @@ proc ::MPM::write::getParametersDict { } {
     set load_process_list [dict get $project_parameters_dict processes loads_process_list]
     foreach load $load_process_list {
         if {[dict get $load python_module] eq "apply_mpm_slip_boundary_process"} {
+            set load [MPM::write::CleanSlipBoundaryProcess $load]
             lappend slip_process_list $load
         } else {
             lappend new_load_process_list $load
@@ -472,6 +473,36 @@ proc ::MPM::write::getModelersParametersList { old_modelers } {
 
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
+}
+
+proc ::MPM::write::CleanSlipBoundaryProcess { slip_process_dict } {
+    if {![dict exists $slip_process_dict Parameters]} {
+        return $slip_process_dict
+    }
+
+    set friction "Off"
+    if {[dict exists $slip_process_dict Parameters Friction]} {
+        set friction [dict get $slip_process_dict Parameters Friction]
+        dict unset slip_process_dict Parameters Friction
+    }
+
+    if {$friction ne "On"} {
+        foreach parameter_name [list friction_coefficient tangential_penalty_factor option] {
+            if {[dict exists $slip_process_dict Parameters $parameter_name]} {
+                dict unset slip_process_dict Parameters $parameter_name
+            }
+        }
+        return $slip_process_dict
+    }
+
+    if {[dict exists $slip_process_dict Parameters option]} {
+        set option [dict get $slip_process_dict Parameters option]
+        if {$option eq "" || $option eq "none"} {
+            dict unset slip_process_dict Parameters option
+        }
+    }
+
+    return $slip_process_dict
 }
 
 proc ::MPM::write::GetBodyAccelerationComponent { } {

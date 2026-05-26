@@ -11,6 +11,11 @@
   <Process n="ApplyMPMSlipBoundaryProcess" pn="ApplyMPMSlipBoundaryProcess" python_module="apply_mpm_slip_boundary_process"
 	   kratos_module="KratosMultiphysics.MPMApplication" help="" >
     <inputs>
+      <parameter n="Friction" pn="Friction" type="combo" v="Off" values="Off,On" help="Activate friction for the slip boundary condition">
+        <parameter parent="On" n="friction_coefficient" pn="Friction coefficient" type="double" v="0.001" />
+        <parameter parent="On" n="tangential_penalty_factor" pn="Tangential penalty factor" type="double" v="1e6" />
+        <parameter parent="On" n="option" pn="Normal option" type="combo" v="flip_normal" values="none,flip_normal" pvalues="None,Flip normal" />
+      </parameter>
     </inputs>
   </Process>
 
@@ -40,4 +45,3 @@
 	</Process>
 
  </ProcessList>
-
