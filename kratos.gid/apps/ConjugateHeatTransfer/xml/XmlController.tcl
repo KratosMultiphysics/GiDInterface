@@ -8,7 +8,7 @@ namespace eval ::ConjugateHeatTransfer::xml {
 proc ConjugateHeatTransfer::xml::Init { } {
     # Namespace variables initialization
     variable dir
-    Model::InitVariables dir $ConjugateHeatTransfer::dir
+    Model::InitVariables dir $::ConjugateHeatTransfer::dir
 
     Model::getConditions Conditions.xml
     Model::getMaterials "../../ConvectionDiffusion/xml/Materials.xml"
