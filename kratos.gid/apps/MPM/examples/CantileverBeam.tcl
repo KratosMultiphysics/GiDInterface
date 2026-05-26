@@ -153,8 +153,8 @@ proc ::MPM::examples::CantileverBeam::TreeAssignation2D {args} {
     # Solution strategy parameters
     spdAux::SetValueOnTreeItem v "0.01" MPTimeParameters DeltaTime
     spdAux::SetValueOnTreeItem v "10" MPTimeParameters EndTime
-    spdAux::SetValueOnTreeItem v "wtep" GiDOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.1" GiDOptions OutputDeltaTime
-    spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.1" VtkOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "step" GiDOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "1" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "step" VtkOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "1" VtkOptions OutputDeltaTime
 }

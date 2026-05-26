@@ -4,12 +4,14 @@
   </NodalConditionItem>
   <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="VELOCITY" ImplementedInApplication="MPMApplication" analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
-  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="StructuralMechanicsApplication"
-		      analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="Structural" state="CheckNodalConditionStateStructural" Interval="Total">
+  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="MPMApplication"
+		      analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="BoundaryCondition" state="CheckNodalConditionStateMPM" Interval="Total">
     <outputs>
       <parameter n="PRESSURE" pn="Pressure" v="No"/>
       <parameter n="REACTION" pn="Reaction" v="No"/>
     </outputs>
   </NodalConditionItem>
-  
+
+
+
 </NodalConditionList>

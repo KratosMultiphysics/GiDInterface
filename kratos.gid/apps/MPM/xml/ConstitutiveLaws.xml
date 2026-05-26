@@ -139,6 +139,30 @@
     <outputs></outputs>
   </CLaw>
 
+  <CLaw n="HenckyMCPlasticPlaneStrainUP2DLaw" pn="Mohr Coulomb " class="HenckyMCPlasticPlaneStrainUP2DLaw" Type="2D" LargeDeformation="True" kratos_module="MPMApplication" help="Mohr Coulomb Plasticity Behaviour in 2D Plane Strain for mixed formulation" Dimension="2D"  App="MPM" FormulationType="Mixed" ImplementedInApplication="MPMApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+   <CLaw n="HenckyMCPlasticUP3DLaw" pn="Mohr Coulomb " class="HenckyMCPlasticUP3DLaw" Type="3D" LargeDeformation="True" kratos_module="MPMApplication" help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D"  App="MPM" FormulationType="Mixed" ImplementedInApplication="MPMApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
   <!-- Mohr Coulomb Strain Softening -->
   <CLaw n="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="MPMApplication" help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Plane Strain" Dimension="2D" App="MPM" FormulationType="Irreducible" ImplementedInApplication="MPMApplication">
 
@@ -242,7 +266,6 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
    <CLaw n="DispNewtonianFluid3DLaw" pn="Newtonian Fluid (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="MPMApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Irreducible" ImplementedInApplication="MPMApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
@@ -251,4 +274,22 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
+  <CLaw n="DispNewtonianFluidPlaneStrainUP2DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="MPMApplication" help="Newtonian Fluid in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="MPMApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+      <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
+      <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="0.01"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+  <CLaw n="DispNewtonianFluidUP3DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="MPMApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="MPMApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+      <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
+      <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="0.01"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
 </ConstitutiveLaws>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="BodyAcceleration" pn="Body Acceleration" un="MPMBodyAcceleration" help="" icon="gravity" open="1" open_window="0">
+	<value n="ActivateBodyAcceleration" pn="Activate Body Acceleration" v="Off" values="On,Off" un="ActivateBodyAcceleration" help="">
+		<dependencies value="On" node="../container[@n='Parameters']" att1="state" v1="normal"/>
+		<dependencies value="Off" node="../container[@n='Parameters']" att1="state" v1="hidden"/>
+	</value>
+	<container n="Parameters" pn="Parameters" help="" open="1" open_window="0" state="hidden">
+		<value n="modulus" pn="Modulus" v="1.0" unit="m/s^2" unit_magnitude="Acceleration" help=""/>
+		<value n="selector_component_X" pn="Component X" v="ByValue" values="ByValue,ByFunction" pvalues="By value,By function" actualize_tree="1" help="">
+			<dependencies value="ByValue" node="../value[@n='value_component_X']" att1="state" v1="normal"/>
+			<dependencies value="ByValue" node="../value[@n='function_component_X']" att1="state" v1="hidden"/>
+			<dependencies value="ByFunction" node="../value[@n='value_component_X']" att1="state" v1="hidden"/>
+			<dependencies value="ByFunction" node="../value[@n='function_component_X']" att1="state" v1="normal"/>
+		</value>
+		<value n="value_component_X" pn="Value X" v="0.0" unit="m/s^2" unit_magnitude="Acceleration" help=""/>
+		<value n="function_component_X" pn="Function X (x,y,z,t)" v="0.0" state="hidden" help=""/>
+		<value n="selector_component_Y" pn="Component Y" v="ByValue" values="ByValue,ByFunction" pvalues="By value,By function" actualize_tree="1" help="">
+			<dependencies value="ByValue" node="../value[@n='value_component_Y']" att1="state" v1="normal"/>
+			<dependencies value="ByValue" node="../value[@n='function_component_Y']" att1="state" v1="hidden"/>
+			<dependencies value="ByFunction" node="../value[@n='value_component_Y']" att1="state" v1="hidden"/>
+			<dependencies value="ByFunction" node="../value[@n='function_component_Y']" att1="state" v1="normal"/>
+		</value>
+		<value n="value_component_Y" pn="Value Y" v="0.0" unit="m/s^2" unit_magnitude="Acceleration" help=""/>
+		<value n="function_component_Y" pn="Function Y (x,y,z,t)" v="0.0" state="hidden" help=""/>
+		<value n="selector_component_Z" pn="Component Z" v="ByValue" values="ByValue,ByFunction" pvalues="By value,By function" actualize_tree="1" help="" state="[CheckDimension 3D]">
+			<dependencies value="ByValue" node="../value[@n='value_component_Z']" att1="state" v1="normal"/>
+			<dependencies value="ByValue" node="../value[@n='function_component_Z']" att1="state" v1="hidden"/>
+			<dependencies value="ByFunction" node="../value[@n='value_component_Z']" att1="state" v1="hidden"/>
+			<dependencies value="ByFunction" node="../value[@n='function_component_Z']" att1="state" v1="normal"/>
+		</value>
+		<value n="value_component_Z" pn="Value Z" v="0.0" unit="m/s^2" unit_magnitude="Acceleration" help="" state="[CheckDimension 3D]"/>
+		<value n="function_component_Z" pn="Function Z (x,y,z,t)" v="0.0" state="hidden" help=""/>
+		<value n="InitialAcceleration" pn="Initial Acceleration" v="On" values="On,Off" help=""/>
+	</container>
+</container>

@@ -36,21 +36,20 @@ proc ::MPM::write::getParametersDict { } {
     }
 
     # Pressure dofs
-    set check_list [list "MPMUpdatedLagrangianUP2D" "MPMUpdatedLagrangianUP3D"]
-    foreach elem $check_list {
+    foreach elem [MPM::write::GetMixedUPElements] {
         if {$elem in [MPM::write::GetUsedElements Name]} {
             dict set project_parameters_dict solver_settings pressure_dofs true
             set active_stab [write::getValue STStratParams ActivateStabilization]
             if {$active_stab eq "Off"} {
                 dict set project_parameters_dict solver_settings stabilization "none"
             } else {
-                dict set project_parameters_dict solver_settings stabilization "ppp"
+                set stab_type [write::getValue STStratParams stabilization]
+                dict set project_parameters_dict solver_settings stabilization $stab_type
             }
             dict unset project_parameters_dict solver_settings ActivateStabilization
             break
         } else {
             dict set project_parameters_dict solver_settings pressure_dofs false
-            dict unset project_parameters_dict solver_settings activate_stabilization
             dict unset project_parameters_dict solver_settings stabilization
         }
     }
@@ -71,13 +70,14 @@ proc ::MPM::write::getParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict MPM] ]
     dict lappend solverSettingsDict auxiliary_variables_list RAYLEIGH_ALPHA
     dict set project_parameters_dict solver_settings $solverSettingsDict
-
+    
     # Move slip to constraints
     set slip_process_list [list ]
     set new_load_process_list [list ]
     set load_process_list [dict get $project_parameters_dict processes loads_process_list]
     foreach load $load_process_list {
         if {[dict get $load python_module] eq "apply_mpm_slip_boundary_process"} {
+            set load [MPM::write::CleanSlipBoundaryProcess $load]
             lappend slip_process_list $load
         } else {
             lappend new_load_process_list $load
@@ -85,6 +85,14 @@ proc ::MPM::write::getParametersDict { } {
     }
     dict set project_parameters_dict processes loads_process_list $new_load_process_list
     dict set project_parameters_dict processes list_other_processes $slip_process_list
+    
+    # Initial Conditions
+    set previous_mpn [write::GetConfigurationAttribute model_part_name]
+    write::SetConfigurationAttribute model_part_name MPM_Material
+    set initial_conditions_list [write::getConditionsParametersDict [GetAttribute initial_conditions_un] "Nodal"]
+    dict set project_parameters_dict processes initial_conditions_processes $initial_conditions_list
+    #dict set project_parameters_dict processes initial_conditions_processes $initial_conditions_list Parameteres model_part_name MPM_Material
+    write::SetConfigurationAttribute model_part_name $previous_mpn
 
     # Gravity
     set activate_gravity [write::getValue ActivateGravity]
@@ -101,6 +109,86 @@ proc ::MPM::write::getParametersDict { } {
         dict set gravity_parameters_dict direction [list [expr $dx] [expr $dy] [expr $dz]]
         dict set gravity_dict Parameters $gravity_parameters_dict
         dict set project_parameters_dict processes gravity [list $gravity_dict]
+    }
+
+    # Body acceleration
+    set activate_body_acceleration [write::getValue ActivateBodyAcceleration]
+    if {$activate_body_acceleration eq "On"} {
+        set body_acceleration_dict [dict create ]
+        dict set body_acceleration_dict python_module assign_body_acceleration_to_material_point_process
+        dict set body_acceleration_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set body_acceleration_dict process_name AssignBodyAccelerationToMaterialPointProcess
+        set body_acceleration_parameters_dict [dict create ]
+        dict set body_acceleration_parameters_dict model_part_name MPM_Material
+        dict set body_acceleration_parameters_dict variable_name MP_VOLUME_ACCELERATION
+        dict set body_acceleration_parameters_dict modulus [write::getValue MPMBodyAcceleration modulus]
+        dict set body_acceleration_parameters_dict component [MPM::write::GetBodyAccelerationComponent]
+        dict set body_acceleration_parameters_dict set_initial_mp_acceleration [MPM::write::GetBodyAccelerationInitialFlag]
+        dict set body_acceleration_dict Parameters $body_acceleration_parameters_dict
+        set list_other_processes [dict get $project_parameters_dict processes list_other_processes]
+        lappend list_other_processes $body_acceleration_dict
+        dict set project_parameters_dict processes list_other_processes $list_other_processes
+    }
+
+    
+    # Tracking of mp points
+    lassign [write::getValue MPTracking ActivateTracking] track
+    if {$track eq "On"} {
+        set tracking_dict [dict create ]
+        dict set tracking_dict python_module mpm_point_output_process
+        dict set tracking_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set tracking_dict process_name MPMPointOutputProcess
+        set tracking_parameters_dict [dict create ]
+        dict set tracking_parameters_dict model_part_name MPM_Material
+        lassign [write::getValue MPTracking position] dx dy dz
+        dict set tracking_parameters_dict position [list [expr $dx] [expr $dy] [expr $dz]]
+        lassign [write::getValue MPTracking interval] t0 tf
+        dict set tracking_parameters_dict interval [list [expr $t0] [expr $tf]]
+        lassign [write::getValue MPTracking output_press] press
+        if {$press eq "Yes" && [MPM::write::UsesMixedUPElements]} {
+            dict set tracking_parameters_dict output_pressure true
+        } else {
+            dict set tracking_parameters_dict output_pressure false
+        }
+        dict set tracking_parameters_dict print_format [write::getValue MPTracking print_format]
+        dict set tracking_parameters_dict write_tracking_output_file true
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict file_name "MP_tracking.dat"
+        dict set tracking_parameters_dict output_file_settings $output_file_settings_dict
+        dict set tracking_dict Parameters $tracking_parameters_dict
+        dict set project_parameters_dict processes mp_tracking [list $tracking_dict]
+    }
+    
+    
+    
+    # Tracking of Grid points
+    lassign [write::getValue GridTracking ActivateTrackingGrid] track
+    if {$track eq "On"} {
+        set tracking_dict [dict create ]
+        dict set tracking_dict python_module point_output_process
+        dict set tracking_dict kratos_module "KratosMultiphysics"
+        dict set tracking_dict process_name PointOutputProcess
+        set tracking_parameters_dict [dict create ]
+        dict set tracking_parameters_dict model_part_name Background_Grid
+        lassign [write::getValue GridTracking positionGrid] dx dy dz
+        dict set tracking_parameters_dict position [list [expr $dx] [expr $dy] [expr $dz]]
+        lassign [write::getValue GridTracking intervalGrid] t0 tf
+        dict set tracking_parameters_dict interval [list [expr $t0] [expr $tf]]
+        
+        dict set tracking_parameters_dict print_format [write::getValue GridTracking print_formatGrid]
+        dict set tracking_parameters_dict entity_type element
+        dict set tracking_parameters_dict search_configuration initial
+        set grid_tracking_output_variables [list "DISPLACEMENT" "VELOCITY"]
+        lassign [write::getValue GridTracking output_pressGrid] press
+        if {$press eq "Yes" && [MPM::write::UsesMixedUPElements]} {
+            lappend grid_tracking_output_variables "PRESSURE"
+        }
+        dict set tracking_parameters_dict output_variables $grid_tracking_output_variables
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict file_name "Grid_point_tracking.dat"
+        dict set tracking_parameters_dict output_file_settings $output_file_settings_dict
+        dict set tracking_dict Parameters $tracking_parameters_dict
+        dict set project_parameters_dict processes grid_point_tracking [list $tracking_dict]
     }
 
     # Output processes
@@ -211,9 +299,18 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict unset project_parameters_dict output_processes vtk_output
         dict unset grid_output_configuration_dict Parameters gauss_point_results
 
-        # Append the fluid and solid output processes to the output processes list
-        lappend vtk_output_processes_list $grid_output_configuration_dict
-        lappend vtk_output_processes_list $body_output_configuration_dict
+        # Append only the VTK output processes selected in Results > Vtk-Output.
+        set vtk_output_processes_list [list]
+        set vtk_print_option [write::getValue VtkOptions PrintOption]
+        if {$vtk_print_option eq ""} {
+            set vtk_print_option "body"
+        }
+        if {$vtk_print_option eq "grid" || $vtk_print_option eq "both"} {
+            lappend vtk_output_processes_list $grid_output_configuration_dict
+        }
+        if {$vtk_print_option eq "body" || $vtk_print_option eq "both"} {
+            lappend vtk_output_processes_list $body_output_configuration_dict
+        }
         dict set output_process vtk_output_processes $vtk_output_processes_list
 
 
@@ -271,8 +368,59 @@ proc ::MPM::write::GetOutputProcessesList { } {
         dict set output_process mpm_energy_output [list $energy_dict]
     }
 
+    # Height output
+    lassign [write::getValue HeightOutput EnableHeightOutput] height_output
+    if {$height_output eq "Yes"} {
+        set height_dict [dict create ]
+        dict set height_dict python_module mpm_particle_height_output_process
+        dict set height_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set height_dict process_name MPMParticleHeightOutputProcess
+
+        set height_parameters_dict [dict create ]
+        dict set height_parameters_dict model_part_name "MPM_Material"
+        dict set height_parameters_dict background_grid_model_part_name "Background_Grid"
+        dict set height_parameters_dict sensor_positions [MPM::write::GetHeightSensorPositions]
+        lassign [write::getValue HeightOptions MeasuringDirection] dx dy dz
+        dict set height_parameters_dict measuring_direction [list [expr $dx] [expr $dy] [expr $dz]]
+        dict set height_parameters_dict search_radius_factor [expr [write::getValue HeightOptions SearchRadiusFactor]]
+        dict set height_parameters_dict print_format [write::getValue HeightOptions PrintFormat]
+
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict file_name [write::getValue HeightOutputFileSettings FileName]
+        dict set height_parameters_dict output_file_settings $output_file_settings_dict
+
+        dict set height_dict Parameters $height_parameters_dict
+        dict set output_process height_output_process [list $height_dict]
+    }
+
 
     return $output_process
+}
+
+proc ::MPM::write::GetHeightSensorPositions { } {
+    set sensor_positions [list]
+    set number_of_sensors [write::getValue HeightSensors NumberOfSensors]
+    if {$number_of_sensors eq ""} {
+        set number_of_sensors 1
+    }
+    for {set i 1} {$i <= $number_of_sensors} {incr i} {
+        lassign [write::getValue HeightSensors SensorPosition$i] dx dy dz
+        lappend sensor_positions [list [expr $dx] [expr $dy] [expr $dz]]
+    }
+    return $sensor_positions
+}
+
+proc ::MPM::write::GetMixedUPElements { } {
+    return [list "MPMUpdatedLagrangianUP2D" "MPMUpdatedLagrangianUP3D"]
+}
+
+proc ::MPM::write::UsesMixedUPElements { } {
+    foreach elem [MPM::write::GetMixedUPElements] {
+        if {$elem in [MPM::write::GetUsedElements Name]} {
+            return true
+        }
+    }
+    return false
 }
 
 proc ::MPM::write::getModelersParametersList { old_modelers } {
@@ -327,5 +475,53 @@ proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
 
+proc ::MPM::write::CleanSlipBoundaryProcess { slip_process_dict } {
+    if {![dict exists $slip_process_dict Parameters]} {
+        return $slip_process_dict
+    }
 
+    set friction "Off"
+    if {[dict exists $slip_process_dict Parameters Friction]} {
+        set friction [dict get $slip_process_dict Parameters Friction]
+        dict unset slip_process_dict Parameters Friction
+    }
 
+    if {$friction ne "On"} {
+        foreach parameter_name [list friction_coefficient tangential_penalty_factor option] {
+            if {[dict exists $slip_process_dict Parameters $parameter_name]} {
+                dict unset slip_process_dict Parameters $parameter_name
+            }
+        }
+        return $slip_process_dict
+    }
+
+    if {[dict exists $slip_process_dict Parameters option]} {
+        set option [dict get $slip_process_dict Parameters option]
+        if {$option eq "" || $option eq "none"} {
+            dict unset slip_process_dict Parameters option
+        }
+    }
+
+    return $slip_process_dict
+}
+
+proc ::MPM::write::GetBodyAccelerationComponent { } {
+    set component [list ]
+    foreach direction [list X Y Z] {
+        set selector [write::getValue MPMBodyAcceleration selector_component_$direction]
+        if {$selector eq "ByFunction"} {
+            lappend component [write::getValue MPMBodyAcceleration function_component_$direction]
+        } else {
+            lappend component [expr [write::getValue MPMBodyAcceleration value_component_$direction]]
+        }
+    }
+    return $component
+}
+
+proc ::MPM::write::GetBodyAccelerationInitialFlag { } {
+    set initial_acceleration [write::getValue MPMBodyAcceleration InitialAcceleration]
+    if {$initial_acceleration eq "On"} {
+        return true
+    }
+    return false
+}

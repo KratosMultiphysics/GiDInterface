@@ -46,17 +46,28 @@ proc MPM::xml::Init { } {
 
 }
 
+proc ::MPM::xml::ProcGetSolutionStrategiesMPM { domNode args } {
+    set names ""
+    set pnames ""
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+    set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
+    set ids [list ]
+    foreach ss $Sols {
+        lappend ids [$ss getName]
+        append names [$ss getName] ","
+        append pnames [$ss getName] "," [$ss getPublicName] ","
+    }
+    set names [string range $names 0 end-1]
+    set pnames [string range $pnames 0 end-1]
 
-proc MPM::xml::MultiAppEvent {args} {
-   if {$args eq "init"} {
-     spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames ST MPM
-   }
+    $domNode setAttribute values $names
+    set dv [lindex $ids 0]
+    if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv}
+    if {[$domNode getAttribute v] ni $ids} {$domNode setAttribute v $dv}
+    #spdAux::RequestRefresh
+    return $pnames
 }
 
-proc MPM::xml::getUniqueName {name} {
-    return MPM${name}
-}
 
 proc ::MPM::xml::ProcCheckNodalConditionStateMPM {domNode args} {
     return [MPM::xml::CheckNodalConditionStateById [$domNode @n] $domNode]
@@ -87,6 +98,17 @@ proc MPM::xml::CheckNodalConditionStateById {conditionId domNode} {
     return "normal"
 }
 
+proc MPM::xml::MultiAppEvent {args} {
+   if {$args eq "init"} {
+     spdAux::parseRoutes
+     spdAux::ConvertAllUniqueNames ST MPM
+   }
+}
+
+proc MPM::xml::getUniqueName {name} {
+    return MPM${name}
+}
+
 proc MPM::xml::CustomTree { args } {
 
 #     spdAux::SetValueOnTreeItem v "time" Results OutputControlType
@@ -114,7 +136,7 @@ proc MPM::xml::ProcCheckGeometry {domNode args} {
 
 proc MPM::xml::ProcCheckActivateStabilizationState {domNode args} {
     set ret "hidden"
-    set up_mixed UpdatedLagrangianUP$::Model::SpatialDimension
+    set up_mixed MPMUpdatedLagrangianUP$::Model::SpatialDimension
     set used_elements [::MPM::write::GetUsedElements Name]
     if {$up_mixed in $used_elements} {
         set ret "normal"
@@ -130,6 +152,48 @@ proc MPM::xml::ProcCheckStabilizationState {domNode args} {
         if {$second_check eq "On"} {set ret "normal"}
     }
     return $ret
+}
+
+proc MPM::xml::ProcCheckGridTrackingPressureState {domNode args} {
+    set tracking_state [write::getValue GridTracking ActivateTrackingGrid]
+    if {$tracking_state ne "On"} {
+        return "hidden"
+    }
+
+    set used_elements [::MPM::write::GetUsedElements Name]
+    foreach up_mixed [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D] {
+        if {$up_mixed in $used_elements} {
+            return "normal"
+        }
+    }
+    return "hidden"
+}
+
+proc MPM::xml::ProcCheckMPTrackingPressureState {domNode args} {
+    set tracking_state [write::getValue MPTracking ActivateTracking]
+    if {$tracking_state ne "On"} {
+        return "hidden"
+    }
+
+    set used_elements [::MPM::write::GetUsedElements Name]
+    foreach up_mixed [list MPMUpdatedLagrangianUP2D MPMUpdatedLagrangianUP3D] {
+        if {$up_mixed in $used_elements} {
+            return "normal"
+        }
+    }
+    return "hidden"
+}
+
+proc MPM::xml::ProcCheckHeightSensorState {domNode args} {
+    set sensor_index [lindex $args 0]
+    set number_of_sensors [write::getValue HeightSensors NumberOfSensors]
+    if {$number_of_sensors eq ""} {
+        set number_of_sensors 1
+    }
+    if {$sensor_index <= $number_of_sensors} {
+        return "normal"
+    }
+    return "hidden"
 }
 
 proc MPM::xml::UsesMixedUPElements { } {
@@ -155,6 +219,10 @@ proc MPM::xml::ProcCheckNodalConditionOutputState {domNode args} {
             return "normal"
         }
         return "hidden"
+    }
+
+    if {$outputId eq "REACTION"} {
+        $domNode setAttribute v No
     }
 
     return [MPM::xml::CheckNodalConditionStateById $conditionId $domNode]
