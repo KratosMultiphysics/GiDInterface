@@ -23,9 +23,9 @@
       <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,25" pvalues="1 (for triangles and quads),3 (for triangles),4 (for triangles and quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for quads),25 (for quads)" help="Number of material points generated for each element. Available options are the following. Triangular: 1,3,4,6,12 and Quadrilateral: 1,4,9,16,25" />
     </inputs>
     <outputs>
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
       <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
       <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" state="hidden"/>
       <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
