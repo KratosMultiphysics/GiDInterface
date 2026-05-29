@@ -7,11 +7,47 @@ from pathlib import Path
 tcl=tohil.import_tcl()
 
 
+def _build_output_mdpa_path(gid_folder_path):
+    gid_folder=Path(gid_folder_path)
+
+    # In GiD, ModelName can arrive without the .gid suffix.
+    if (not gid_folder.is_dir()) and (gid_folder.suffix.lower() != ".gid"):
+        gid_folder_with_suffix=Path(f"{gid_folder}.gid")
+        if gid_folder_with_suffix.is_dir():
+            gid_folder=gid_folder_with_suffix
+
+    case_name=gid_folder.stem
+    return gid_folder / f"{case_name}.mdpa"
+
+
+def _normalize_node_xyzs(node_xyzs_original):
+    node_xyzs_array=objarray_to_nparray(node_xyzs_original)
+    flat=np.asarray(node_xyzs_array, dtype=object).reshape(-1)
+
+    # Sometimes tohil returns a single string with all coordinates.
+    if flat.size == 1 and isinstance(flat[0], str):
+        tokens=flat[0].replace(",", " ").split()
+        flat_numeric=np.asarray(tokens, dtype=float)
+    else:
+        flat_numeric=np.asarray(flat, dtype=float)
+
+    if flat_numeric.size % 3 != 0:
+        raise ValueError(f"Invalid flattened coordinates length: {flat_numeric.size}")
+
+    return flat_numeric.reshape((-1, 3))
+
+
 def my_meshio_write_mesh2(filename):
+    output_mdpa_path=_build_output_mdpa_path(filename)
+    output_mdpa_path.parent.mkdir(parents=True, exist_ok=True)
+
     # Gets the nodes in the GID Mesh
     info_nodes=tuple(tcl.GiD_Info('mesh','nodes','-array2'))
-    node_ids,node_xyzs=info_nodes    
-    #tcl.W(node_xyzs)
+    node_ids_original,node_xyzs=info_nodes
+    node_ids=objarray_to_nparray(node_ids_original)
+    node_xyzs_matrix=_normalize_node_xyzs(node_xyzs)
+    # tcl.W(node_ids)
+    # tcl.W(node_xyzs)
     
     for element_type in ['line','triangle','quadrilateral','tetrahedra','pyramid','prism','hexahedra']:
         info_elements=tuple(tcl.GiD_Info('mesh','elements',element_type,'-array2'))
@@ -20,8 +56,8 @@ def my_meshio_write_mesh2(filename):
             element_type_ret,element_ids_original,connectivities_original,materials=elements_data
             element_ids=objarray_to_nparray(element_ids_original)
             connectivities=objarray_to_nparray(connectivities_original)
-            tcl.W(element_type_ret)
-            tcl.W(element_ids)
+            # tcl.W(element_type_ret)
+            # tcl.W(element_ids)
 
     group_names=tcl.GiD_Groups("list")
     for group_name in group_names:
@@ -32,9 +68,20 @@ def my_meshio_write_mesh2(filename):
         
         # get elements of the group (returns "" when empty, so convert first then check length)
         group_element_ids=objarray_to_nparray(tcl.GiD_EntitiesGroups("get", group_name, "elements"))
+
+    with open(output_mdpa_path, "w", encoding="utf-8") as mdpa_file:
+        mdpa_file.write(f"# Nodes count: {len(node_ids)}\n")
+        mdpa_file.write("Begin Nodes\n")
+        # GiD returns flattened coords: x1 y1 z1 x2 y2 z2 ...
+        for node_id, (x,y,z) in zip(node_ids, node_xyzs_matrix):
+            mdpa_file.write(f"  {node_id} {x} {y} {z}\n")
+        mdpa_file.write("End Nodes\n")
+
+
         
     return 0
 
 # main
 def start(filename):
+    # tcl.W("pollo")
     return my_meshio_write_mesh2(filename)
