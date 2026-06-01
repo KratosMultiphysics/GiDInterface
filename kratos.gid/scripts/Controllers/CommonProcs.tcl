@@ -551,10 +551,7 @@ proc spdAux::ProcShowInWriteMode { domNode args } {
 
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
     set write_mode [apps::ExecuteOnApp $nodeApp GetWriteProperty write_mdpa_mode]
-    set write_geometries_enabled 1
-    if {$write_mode ne "geometries"} {
-        set write_geometries_enabled 0
-    }
+    set write_geometries_enabled [expr {$write_mode eq "geometries"}]
     if {$write_geometries_enabled} {
         if {$kw eq "Geometries" || $kw eq "geometries"} {set response "normal"} {set response "hidden"}
     } else {
