@@ -62,6 +62,45 @@
         </container>
     </container>
 
+    <container n="JsonOutput" pn="Json-Output" un="JsonOutput" state="normal" open="1" open_window="0" icon="results">
+        <container n="BackgroundGridJsonOutput" pn="Background grid output" un="BackgroundGridJsonOutput" help="JSON output options for the background grid" open_window="1" icon="options">
+            <value n="EnableBackgroundGridJsonOutput" pn="Enable output" v="No" values="Yes,No" un="EnableBackgroundGridJsonOutput" help="Writing JSON output for the background grid or not" />
+            <blockdata n="JsonOutput" pn="Json output" name="GridJsonOutput" editable_name="unique" sequence="1" can_delete_last_item="1" icon="results" state="[checkStateByUniqueName EnableBackgroundGridJsonOutput Yes]">
+                <value n="ModelPartName" pn="Model part" v="Background_Grid" values="[GetMPMJsonGridModelParts]" help="Model part used by the JSON output process" />
+                <value n="HistoricalValue" pn="Historical value" v="true" values="true,false" help="Write historical values or non-historical values" />
+                <value n="ResultantSolution" pn="Resultant solution" v="true" values="true,false" help="Write the resultant solution" />
+                <value n="TimeFrequency" pn="Time frequency" v="1.0" help="Time frequency used to write the JSON output" />
+                <container n="OutputFileSettings" pn="Output file settings" un="GridJsonOutputFileSettings" open_window="1" icon="options">
+                    <value n="OutputPath" pn="Output path" v="" help="Folder for the JSON output file. Leave empty for current folder" />
+                    <value n="FileName" pn="File name" v="grid_output" help="JSON output file name" />
+                    <value n="FileExtension" pn="File extension" v="json" help="JSON output file extension" />
+                </container>
+                <container n="OutputVariables" pn="Output variables" un="GridJsonOutputVariables" help="Variables written by the JSON output process" open_window="1" icon="options">
+                    <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
+                </container>
+            </blockdata>
+        </container>
+
+        <container n="MaterialPointJsonOutput" pn="Material point output" un="MaterialPointJsonOutput" help="JSON output options for the material points" open_window="1" icon="options">
+            <value n="EnableMaterialPointJsonOutput" pn="Enable output" v="No" values="Yes,No" un="EnableMaterialPointJsonOutput" help="Writing JSON output for material points or not" />
+            <blockdata n="JsonOutput" pn="Json output" name="MaterialPointJsonOutput" editable_name="unique" sequence="1" can_delete_last_item="1" icon="results" state="[checkStateByUniqueName EnableMaterialPointJsonOutput Yes]">
+                <value n="ModelPartName" pn="Model part" v="MPM_Material" values="[GetMPMJsonMaterialModelParts]" help="Model part used by the JSON output process" />
+                <value n="CheckForFlag" pn="Check for flag" v="" help="Flag used to filter the material points. Leave empty to disable the check" />
+                <value n="TimeFrequency" pn="Time frequency" v="1.0" help="Time frequency used to write the JSON output" />
+                <value n="ResultantSolution" pn="Resultant solution" v="false" values="true,false" help="Write the resultant solution" />
+                <container n="OutputFileSettings" pn="Output file settings" un="MaterialPointJsonOutputFileSettings" open_window="1" icon="options">
+                    <value n="OutputPath" pn="Output path" v="" help="Folder for the JSON output file. Leave empty for current folder" />
+                    <value n="FileName" pn="File name" v="material_point_output" help="JSON output file name" />
+                    <value n="FileExtension" pn="File extension" v="json" help="JSON output file extension" />
+                </container>
+                <container n="GaussPointOutputVariables" pn="Gauss point output variables" un="MaterialPointJsonOutputVariables" help="Gauss point variables written by the JSON output process" open_window="1" icon="options">
+                    <dynamicnode command="spdAux::injectElementOutputs" args=""/>
+                    <dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>
+                </container>
+            </blockdata>
+        </container>
+    </container>
+
     <container n="EnergyOutput" pn="Energy-Output" un="EnergyOutput" state="normal" open="1" open_window="0" icon="results">
         <value n="EnableEnergyOutput" pn="Enable output" v="No" values="Yes,No" un="EnableEnergyOutput" help="Writing energy output for the selected MPM model part" >
             <dependencies value="Off" node="../container[@n='EnergyOptions']" att1="state" v1="hidden"/>

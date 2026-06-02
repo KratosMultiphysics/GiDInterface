@@ -107,6 +107,15 @@ proc ::MPM::write::getParametersDict { } {
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
 
+    set json_output_processes [MPM::write::GetJsonOutputProcessesList]
+    if {[llength $json_output_processes] > 0} {
+        set other_processes_list [dict get $project_parameters_dict processes list_other_processes]
+        foreach json_output_process $json_output_processes {
+            lappend other_processes_list $json_output_process
+        }
+        dict set project_parameters_dict processes list_other_processes $other_processes_list
+    }
+
 
     # REMOVE RAYLEIGH
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
@@ -125,6 +134,114 @@ proc ::MPM::write::getParametersDict { } {
 proc write::GetResultsList { un {cnd ""} } {
     if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
     return [GetResultsByXPathList $xp1]
+}
+
+proc ::MPM::write::GetValueFromBlock { block_node value_name {default ""} } {
+    set value_node [$block_node selectNodes "./value\[@n='$value_name'\]"]
+    if {$value_node eq ""} {
+        return $default
+    }
+    return [write::getValueByNode $value_node]
+}
+
+proc ::MPM::write::GetJsonOutputFileName { block_node } {
+    set output_file_settings_node [$block_node selectNodes "./container\[@n='OutputFileSettings'\]"]
+
+    if {$output_file_settings_node ne ""} {
+        set output_path [MPM::write::GetValueFromBlock $output_file_settings_node OutputPath]
+        set file_name [MPM::write::GetValueFromBlock $output_file_settings_node FileName]
+        set file_extension [MPM::write::GetValueFromBlock $output_file_settings_node FileExtension]
+        if {$file_extension ne ""} {
+            set output_file_name "${file_name}.${file_extension}"
+        } else {
+            set output_file_name $file_name
+        }
+    } else {
+        set output_path [MPM::write::GetValueFromBlock $block_node OutputPath]
+        set output_file_name [MPM::write::GetValueFromBlock $block_node OutputFileName]
+    }
+
+    if {$output_path eq ""} {
+        return $output_file_name
+    }
+    return [file join $output_path $output_file_name]
+}
+
+proc ::MPM::write::GetJsonOutputVariablesList { block_node container_name } {
+    set output_variables [list ]
+    foreach variable_node [$block_node selectNodes "./container\[@n='$container_name'\]/value"] {
+        if {[write::isBooleanTrue [get_domnode_attribute $variable_node v]] && [get_domnode_attribute $variable_node state] ne "hidden"} {
+            lappend output_variables [get_domnode_attribute $variable_node n]
+        }
+    }
+    return $output_variables
+}
+
+proc ::MPM::write::GetJsonOutputProcessesList { } {
+    set json_output_processes [list ]
+
+    set root [customlib::GetBaseRoot]
+    set json_output_route [spdAux::getRoute JsonOutput]
+
+    set enable_grid_json_output [write::getValue EnableBackgroundGridJsonOutput]
+    if {[write::isBooleanTrue $enable_grid_json_output]} {
+        foreach json_output_node [$root selectNodes "$json_output_route/container\[@n='BackgroundGridJsonOutput'\]/blockdata\[@n='JsonOutput'\]"] {
+            lappend json_output_processes [MPM::write::GetBackgroundGridJsonOutputProcess $json_output_node]
+        }
+    }
+
+    set enable_material_json_output [write::getValue EnableMaterialPointJsonOutput]
+    if {[write::isBooleanTrue $enable_material_json_output]} {
+        foreach json_output_node [$root selectNodes "$json_output_route/container\[@n='MaterialPointJsonOutput'\]/blockdata\[@n='JsonOutput'\]"] {
+            lappend json_output_processes [MPM::write::GetMaterialPointJsonOutputProcess $json_output_node]
+        }
+    }
+
+    return $json_output_processes
+}
+
+proc ::MPM::write::GetBackgroundGridJsonOutputProcess { json_output_node } {
+    set json_dict [dict create ]
+    dict set json_dict python_module json_output_process
+    dict set json_dict kratos_module KratosMultiphysics
+    dict set json_dict process_name JsonOutputProcess
+
+    set json_parameters_dict [dict create ]
+    dict set json_parameters_dict model_part_name [MPM::write::GetValueFromBlock $json_output_node ModelPartName Background_Grid]
+    dict set json_parameters_dict output_file_name [MPM::write::GetJsonOutputFileName $json_output_node]
+    dict set json_parameters_dict output_variables [MPM::write::GetJsonOutputVariablesList $json_output_node OutputVariables]
+    dict set json_parameters_dict historical_value [write::getStringBinaryFromValue [MPM::write::GetValueFromBlock $json_output_node HistoricalValue true]]
+    dict set json_parameters_dict resultant_solution [write::getStringBinaryFromValue [MPM::write::GetValueFromBlock $json_output_node ResultantSolution true]]
+    dict set json_parameters_dict time_frequency [MPM::write::GetValueFromBlock $json_output_node TimeFrequency 1.0]
+
+    dict set json_dict Parameters $json_parameters_dict
+    return $json_dict
+}
+
+proc ::MPM::write::GetMaterialPointJsonOutputProcess { json_output_node } {
+    set json_dict [dict create ]
+    dict set json_dict kratos_module KratosMultiphysics.MPMApplication
+    dict set json_dict python_module mpm_json_output_process
+
+    set model_part_name [MPM::write::GetValueFromBlock $json_output_node ModelPartName MPM_Material]
+    set split_model_part_name [split $model_part_name "."]
+    set sub_model_part_name ""
+    if {[llength $split_model_part_name] > 1} {
+        set model_part_name [lindex $split_model_part_name 0]
+        set sub_model_part_name [join [lrange $split_model_part_name 1 end] "."]
+    }
+
+    set json_parameters_dict [dict create ]
+    dict set json_parameters_dict model_part_name $model_part_name
+    dict set json_parameters_dict sub_model_part_name $sub_model_part_name
+    dict set json_parameters_dict output_file_name [MPM::write::GetJsonOutputFileName $json_output_node]
+    dict set json_parameters_dict gauss_points_output_variables [MPM::write::GetJsonOutputVariablesList $json_output_node GaussPointOutputVariables]
+    dict set json_parameters_dict check_for_flag [MPM::write::GetValueFromBlock $json_output_node CheckForFlag]
+    dict set json_parameters_dict time_frequency [MPM::write::GetValueFromBlock $json_output_node TimeFrequency 1.0]
+    dict set json_parameters_dict resultant_solution [write::getStringBinaryFromValue [MPM::write::GetValueFromBlock $json_output_node ResultantSolution false]]
+
+    dict set json_dict Parameters $json_parameters_dict
+    return $json_dict
 }
 
 

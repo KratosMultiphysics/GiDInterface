@@ -172,3 +172,29 @@ proc MPM::xml::ProcElementOutputState {domNode args} {
 
     return [spdAux::ProcElementOutputState $domNode $args]
 }
+
+proc MPM::xml::ProcGetJsonGridModelParts {domNode args} {
+    set model_parts [list Background_Grid]
+
+    foreach group [concat [MPM::write::GetPartsGroupsNames grid] [MPM::write::GetConditionsGroups] [MPM::write::GetNodalConditionsGroups]] {
+        set sub_model_part [write::transformGroupName $group]
+        if {$sub_model_part ne ""} {
+            lappend model_parts Background_Grid.$sub_model_part
+        }
+    }
+
+    return [join [lsort -unique $model_parts] ","]
+}
+
+proc MPM::xml::ProcGetJsonMaterialModelParts {domNode args} {
+    set model_parts [list MPM_Material]
+
+    foreach group [MPM::write::GetPartsGroupsNames Body] {
+        set sub_model_part [write::transformGroupName $group]
+        if {$sub_model_part ne ""} {
+            lappend model_parts MPM_Material.$sub_model_part
+        }
+    }
+
+    return [join [lsort -unique $model_parts] ","]
+}

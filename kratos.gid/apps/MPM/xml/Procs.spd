@@ -60,4 +60,16 @@
 	  ]]>
 	</proc>
 
+	<proc n='GetMPMJsonGridModelParts' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcGetJsonGridModelParts $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='GetMPMJsonMaterialModelParts' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcGetJsonMaterialModelParts $domNode $args]
+	  ]]>
+	</proc>
+
 </container>
