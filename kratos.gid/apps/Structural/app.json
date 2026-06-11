@@ -19,6 +19,7 @@
         "examples/TrussCantilever.tcl",
         "examples/HighRiseBuilding.tcl",
         "examples/IncompressibleCookMembrane.tcl",
+        "examples/SolidContact.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
