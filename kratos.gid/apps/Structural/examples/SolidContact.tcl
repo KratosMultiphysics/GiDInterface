@@ -51,10 +51,10 @@ proc ::Structural::examples::SolidContact::DrawGeometry2D {args} {
     lappend structureLines1 [GiD_Geometry create line append stline Structure1 3 4]
     lappend structureLines1 [GiD_Geometry create line append stline Structure1 4 1]
 
-    lappend structureLines2 [GiD_Geometry create line append stline Structure1 5 6]
-    lappend structureLines2 [GiD_Geometry create line append stline Structure1 6 7]
-    lappend structureLines2 [GiD_Geometry create line append stline Structure1 7 8]
-    lappend structureLines2 [GiD_Geometry create line append stline Structure1 8 5]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure2 5 6]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure2 6 7]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure2 7 8]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure2 8 5]
 
 
     ## Surface ##
