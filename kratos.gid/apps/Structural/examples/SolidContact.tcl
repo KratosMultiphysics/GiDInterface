@@ -94,9 +94,11 @@ proc ::Structural::examples::SolidContact::AssignGroups2D {args} {
 }
 
 proc ::Structural::examples::SolidContact::AssignMeshSizes2D {args} {
-    set structure_mesh_size 5.0
-    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure surfaces] escape
-    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure lines] escape escape escape escape
+    set structure_mesh_size 0.1
+    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure1 surfaces] escape
+    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure2 surfaces] escape
+    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure1 surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure1 lines] escape escape escape escape
+    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure2 surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure2 lines] escape escape escape escape
 }
 
 
