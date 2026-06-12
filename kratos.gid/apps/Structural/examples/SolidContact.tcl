@@ -88,46 +88,6 @@ proc ::Structural::examples::SolidContact::AssignMeshSizes2D {args} {
     GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure lines] escape escape escape escape
 }
 
-# <group n="Solid Auto1" ov="surface" tree_state="close">
-#           <value n="Element" pn="Element" actualize_tree="1" values="SmallDisplacementElement2D,SmallDisplacementBbarElement2D,TotalLagrangianElement2D,UpdatedLagrangianElement2D" dict="[GetElements ElementType Solid]" state="normal" v="SmallDisplacementElement2D" tree_state="close"/>
-#           <value n="ConstitutiveLaw" pn="Constitutive law" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]" state="" v="LinearElasticPlaneStrain2DLaw" tree_state="close"/>
-#           <value n="Material" pn="Material" editable="0" help="Choose a material from the database" values="[GetMaterialsList]" state="disabled" v="Steel" tree_state="close"/>
-#           <value n="DENSITY" pn="Density" unit_magnitude="Density" help="Density" string_is="double" state="[PartParamState]" show_in_window="1" v="7850" units="kg/m^3" tree_state="close"/>
-#           <value n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" help="Young Modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="206.9e9" units="Pa" tree_state="close"/>
-#           <value n="POISSON_RATIO" pn="Poisson Ratio" help="Poisson Ratio" string_is="double" state="[PartParamState]" show_in_window="1" v="0.29" tree_state="close"/>
-#           <value n="THICKNESS" pn="Thickness" unit_magnitude="L" help="Thickness" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0" units="m"/>
-#           <value n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" help="Yield stress" string_is="double" state="[PartParamState]" show_in_window="1" v="5.5e6" units="Pa"/>
-#           <value n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" help="Kinematic hardening modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0"/>
-#           <value n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" help="Isotropic hardening modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="0.12924"/>
-#           <value n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" help="Saturation hardening modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="0.0"/>
-#           <value n="HARDENING_EXPONENT" pn="Hardening exponent" help="Hardening exponent" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0"/>
-#           <value n="CROSS_AREA" pn="Cross area" unit_magnitude="Area" help="Cross area" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0" units="m^2"/>
-#           <value n="TRUSS_PRESTRESS_PK2" pn="Prestress" unit_magnitude="P" help="Prestress" string_is="double" state="[PartParamState]" show_in_window="1" v="0.0" units="Pa"/>
-#           <value n="I33" pn="Inertia 33" unit_magnitude="L^4" help="Inertia 33" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0" units="m^4"/>
-#           <value n="FRACTURE_ENERGY" pn="Fracture energy" unit_magnitude="Energy/L^2" help="Fracture energy" string_is="double" state="[PartParamState]" show_in_window="1" v="100" units="J/m^2"/>
-#           <value n="SOFTENING_TYPE" pn="Softening type" help="Defines the softening type (linear softening=0, exponential softening=1)" string_is="double" state="[PartParamState]" show_in_window="1" v="0"/>
-#         </group>
-#         <group n="Solid Auto2" ov="surface" tree_state="close">
-#           <value n="Element" pn="Element" actualize_tree="1" values="SmallDisplacementElement2D,SmallDisplacementBbarElement2D,TotalLagrangianElement2D,UpdatedLagrangianElement2D" dict="[GetElements ElementType Solid]" state="normal" v="SmallDisplacementElement2D" tree_state="close"/>
-#           <value n="ConstitutiveLaw" pn="Constitutive law" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]" state="" v="LinearElasticPlaneStrain2DLaw" tree_state="close"/>
-#           <value n="Material" pn="Material" editable="0" help="Choose a material from the database" values="[GetMaterialsList]" state="disabled" v="Steel" tree_state="close"/>
-#           <value n="DENSITY" pn="Density" unit_magnitude="Density" help="Density" string_is="double" state="[PartParamState]" show_in_window="1" v="7850" units="kg/m^3" tree_state="close"/>
-#           <value n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" help="Young Modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="206.9e9" units="Pa" tree_state="close"/>
-#           <value n="POISSON_RATIO" pn="Poisson Ratio" help="Poisson Ratio" string_is="double" state="[PartParamState]" show_in_window="1" v="0.29" tree_state="close"/>
-#           <value n="THICKNESS" pn="Thickness" unit_magnitude="L" help="Thickness" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0" units="m"/>
-#           <value n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" help="Yield stress" string_is="double" state="[PartParamState]" show_in_window="1" v="5.5e6" units="Pa"/>
-#           <value n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" help="Kinematic hardening modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0"/>
-#           <value n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" help="Isotropic hardening modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="0.12924"/>
-#           <value n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" help="Saturation hardening modulus" string_is="double" state="[PartParamState]" show_in_window="1" v="0.0"/>
-#           <value n="HARDENING_EXPONENT" pn="Hardening exponent" help="Hardening exponent" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0"/>
-#           <value n="CROSS_AREA" pn="Cross area" unit_magnitude="Area" help="Cross area" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0" units="m^2"/>
-#           <value n="TRUSS_PRESTRESS_PK2" pn="Prestress" unit_magnitude="P" help="Prestress" string_is="double" state="[PartParamState]" show_in_window="1" v="0.0" units="Pa"/>
-#           <value n="I33" pn="Inertia 33" unit_magnitude="L^4" help="Inertia 33" string_is="double" state="[PartParamState]" show_in_window="1" v="1.0" units="m^4"/>
-#           <value n="FRACTURE_ENERGY" pn="Fracture energy" unit_magnitude="Energy/L^2" help="Fracture energy" string_is="double" state="[PartParamState]" show_in_window="1" v="100" units="J/m^2"/>
-#           <value n="SOFTENING_TYPE" pn="Softening type" help="Defines the softening type (linear softening=0, exponential softening=1)" string_is="double" state="[PartParamState]" show_in_window="1" v="0"/>
-#         </group>
-
-
 proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
