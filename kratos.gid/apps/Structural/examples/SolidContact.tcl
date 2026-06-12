@@ -89,7 +89,6 @@ proc ::Structural::examples::SolidContact::AssignGroups2D {args} {
 }
 
 proc ::Structural::examples::SolidContact::AssignMeshSizes2D {args} {
-    set structure_mesh_size 0.1
     GiD_Process Mescape Meshing ElemType Quadrilateral 1 escape
     GiD_Process Mescape Meshing ElemType Quadrilateral 2 escape
     
