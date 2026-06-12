@@ -8,16 +8,16 @@ proc ::Structural::examples::SolidContact::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
-		if { $retval == "cancel" } { return }
+                if { $retval == "cancel" } { return }
     }
 
     Kratos::ResetModel
     DrawGeometry$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
-    if {0} {
-        AssignMeshSizes$::Model::SpatialDimension
-        TreeAssignation$::Model::SpatialDimension
-    }
+    
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
+    
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
@@ -46,21 +46,16 @@ proc ::Structural::examples::SolidContact::DrawGeometry2D {args} {
 
     ## Lines ##
     # join points 1 2 3 4 in a line and 5 6 7 8 in another line
-    set line1Points [lrange $structurePoints1 0 3]
-    set prevpoint [lindex $line1Points 0]
-    foreach point $line1Points {
-        lappend structureLines1 [GiD_Geometry create line append stline Structure1 $prevpoint $point]
-        set prevpoint $point
-    }
-    lappend structureLines1 [GiD_Geometry create line append stline Structure1 $prevpoint [lindex $line1Points 0]]
+    lappend structureLines1 [GiD_Geometry create line append stline Structure1 1 2]
+    lappend structureLines1 [GiD_Geometry create line append stline Structure1 2 3]
+    lappend structureLines1 [GiD_Geometry create line append stline Structure1 3 4]
+    lappend structureLines1 [GiD_Geometry create line append stline Structure1 4 1]
 
-    set line2Points [lrange $structurePoints2 0 3]
-    set prevpoint [lindex $line2Points 0]
-    foreach point $line2Points {
-        lappend structureLines2 [GiD_Geometry create line append stline Structure2 $prevpoint $point]
-        set prevpoint $point
-    }
-    lappend structureLines2 [GiD_Geometry create line append stline Structure2 $prevpoint [lindex $line2Points 0]]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure1 5 6]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure1 6 7]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure1 7 8]
+    lappend structureLines2 [GiD_Geometry create line append stline Structure1 8 5]
+
 
     ## Surface ##
     GiD_Layers edit to_use Structure1
