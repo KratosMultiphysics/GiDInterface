@@ -78,22 +78,26 @@ proc ::Structural::examples::SolidContact::AssignGroups2D {args} {
     GiD_Groups create Ground
     GiD_EntitiesGroups assign Ground lines 2
     GiD_Groups create Top
-    GiD_EntitiesGroups assign Top lines 9
+    GiD_EntitiesGroups assign Top lines 7
 
     # Contact interface
     GiD_Groups create InterfaceStructure1
-    GiD_EntitiesGroups assign InterfaceStructure1 lines 4
+    GiD_EntitiesGroups assign InterfaceStructure1 lines 3
     GiD_Groups create InterfaceStructure2
-    GiD_EntitiesGroups assign InterfaceStructure2 lines 7
+    GiD_EntitiesGroups assign InterfaceStructure2 lines 5
     
 }
 
 proc ::Structural::examples::SolidContact::AssignMeshSizes2D {args} {
     set structure_mesh_size 0.1
-    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure1 surfaces] escape
-    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure2 surfaces] escape
-    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure1 surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure1 lines] escape escape escape escape
-    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure2 surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure2 lines] escape escape escape escape
+    GiD_Process Mescape Meshing ElemType Quadrilateral 1 escape
+    GiD_Process Mescape Meshing ElemType Quadrilateral 2 escape
+    
+
+    GiD_MeshData structured surfaces 2 num_divisions 25 7
+    GiD_MeshData structured surfaces 2 num_divisions 8 8
+    GiD_MeshData structured surfaces 1 num_divisions 23 1
+    GiD_MeshData structured surfaces 1 num_divisions 8 4
 }
 
 proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
@@ -124,21 +128,45 @@ proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
     $structDisplacementNode setAttribute ov line
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
     spdAux::SetValuesOnBaseNode $structDisplacementNode $props
+    
+    GiD_Groups clone Top Total
+    GiD_Groups edit parent Total Top
+    spdAux::AddIntervalGroup Top "Top//Total"
+    GiD_Groups edit state "Top//Total" hidden
+    set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Top//Total"]
+    $structDisplacementNode setAttribute ov line
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByFunction function_component_Y "-5e-3*t" selector_component_Z Not Interval Total]
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
-    # Point load
-    GiD_Groups clone InterfaceStructure Total
-    GiD_Groups edit parent Total InterfaceStructure
-    spdAux::AddIntervalGroup InterfaceStructure "InterfaceStructure//Total"
-    GiD_Groups edit state "InterfaceStructure//Total" hidden
-    set structLoad "container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='LineLoad$nd'\]"
-    set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "InterfaceStructure//Total"]
-    $LoadNode setAttribute ov line
-    set props [list ByFunction No modulus 50 value_direction_X 1 Interval Total]
-    spdAux::SetValuesOnBaseNode $LoadNode $props
+    spdAux::AddIntervalGroup InterfaceStructure1 "InterfaceStructure1"
+    GiD_Groups edit state "InterfaceStructure1" hidden
+    set master_contact "container\[@n='Structural'\]/container\[@n='Boundary Conditions'\]/condition\[@n='CONTACT_SLAVE'\]"
+    set master_node [customlib::AddConditionGroupOnXPath $master_contact "InterfaceStructure1"]
+    $master_node setAttribute ov line
+    set props [list pair 0]
+    spdAux::SetValuesOnBaseNode $master_node $props
+    
+    GiD_Groups clone InterfaceStructure2 Total
+    GiD_Groups edit parent Total InterfaceStructure2
+    spdAux::AddIntervalGroup InterfaceStructure2 "InterfaceStructure2//Total"
+    GiD_Groups edit state "InterfaceStructure2//Total" hidden
+    set master_contact "container\[@n='Structural'\]/container\[@n='Boundary Conditions'\]/condition\[@n='CONTACT'\]"
+    set master_node [customlib::AddConditionGroupOnXPath $master_contact "InterfaceStructure2//Total"]
+    $master_node setAttribute ov line
+    set props [list pair 0 Interval Total]
+    spdAux::SetValuesOnBaseNode $master_node $props
 
     # Structure domain time parameters
-    [$root selectNodes "[spdAux::getRoute STTimeParameters]/value\[@n = 'EndTime'\]"] setAttribute v 25.0
-    [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.05
+    [$root selectNodes "[spdAux::getRoute STTimeParameters]/value\[@n = 'EndTime'\]"] setAttribute v 10
+    [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.1
+
+    # turn off results on nodes for Contact
+    [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"] setAttribute v No
+    [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"] setAttribute v No
+
+    # disable VTK
+    [$root selectNodes "[spdAux::getRoute VtkOutput]/value\[@n = 'EnableVtkOutput'\]"] setAttribute v No
      
     spdAux::RequestRefresh
 }
