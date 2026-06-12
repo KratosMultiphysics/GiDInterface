@@ -13,8 +13,8 @@ proc ::Structural::examples::SolidContact::Init {args} {
 
     Kratos::ResetModel
     DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
     if {0} {
-        AssignGroups$::Model::SpatialDimension
         AssignMeshSizes$::Model::SpatialDimension
         TreeAssignation$::Model::SpatialDimension
     }
@@ -44,8 +44,6 @@ proc ::Structural::examples::SolidContact::DrawGeometry2D {args} {
         lappend structurePoints2 [GiD_Geometry create point append Structure2 $x $y $z]
     }
 
-
-
     ## Lines ##
     # join points 1 2 3 4 in a line and 5 6 7 8 in another line
     set line1Points [lrange $structurePoints1 0 3]
@@ -69,23 +67,38 @@ proc ::Structural::examples::SolidContact::DrawGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface {*}$structureLines1 escape escape
     GiD_Layers edit to_use Structure2
     GiD_Process Mescape Geometry Create NurbsSurface {*}$structureLines2 escape escape
+
 }
 
 proc ::Structural::examples::SolidContact::AssignGroups2D {args} {
     # Group creation
-    GiD_Groups create Structure
-    GiD_Groups create Ground
-    GiD_Groups create InterfaceStructure
+    GiD_Groups create Structure1
+    GiD_Groups create Structure2
+    ## Layers to groups
     
-    GiD_EntitiesGroups assign Structure surfaces 1
-    GiD_EntitiesGroups assign Ground lines 4
-    GiD_EntitiesGroups assign InterfaceStructure lines {1 2 3}
+    GiD_EntitiesGroups assign Structure1 surfaces 1
+    GiD_EntitiesGroups assign Structure2 surfaces 2
+
+    # Displacement boundary conditions
+    GiD_Groups create Ground
+    GiD_EntitiesGroups assign Ground lines 2
+    GiD_Groups create Top
+    GiD_EntitiesGroups assign Top lines 9
+
+    # Contact interface
+    GiD_Groups create InterfaceStructure1
+    GiD_EntitiesGroups assign InterfaceStructure1 lines 4
+    GiD_Groups create InterfaceStructure2
+    GiD_EntitiesGroups assign InterfaceStructure2 lines 7
+    
 }
 
 proc ::Structural::examples::SolidContact::AssignMeshSizes2D {args} {
-    set structure_mesh_size 5.0
-    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure surfaces] escape
-    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure lines] escape escape escape escape
+    set structure_mesh_size 0.1
+    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure1 surfaces] escape
+    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure2 surfaces] escape
+    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure1 surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure1 lines] escape escape escape escape
+    GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure2 surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure2 lines] escape escape escape escape
 }
 
 proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
