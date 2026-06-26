@@ -90,7 +90,7 @@ proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
         W "Download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
     }
     # Check GiD maximum version
-    if { [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
+    if { [info exists kratos_private(MaximumGiDVersion)] && [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(MaximumGiDVersion) or less."
         W "You may experience problems with the python packages"
         W "You can download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
