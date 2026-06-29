@@ -159,7 +159,7 @@
   </ConditionItem>
 
 
-  <ConditionItem n="Dirichlet2DMPM" pn="Non-Conforming Slip/Contact/Fixed" Interval="False"
+  <ConditionItem n="Dirichlet2DMPM" pn="Nonconforming Slip" Interval="False"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMParticleDirichletContitionProcess" help="">
