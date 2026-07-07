@@ -90,7 +90,7 @@ proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
         W "Download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
     }
     # Check GiD maximum version
-    if { [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
+    if { [info exists kratos_private(MaximumGiDVersion)] && [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(MaximumGiDVersion) or less."
         W "You may experience problems with the python packages"
         W "You can download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
@@ -112,7 +112,7 @@ proc Kratos::LoadProblemtypeLibraries {} {
         gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
     }
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
+        set ::gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $::gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
     }
@@ -220,9 +220,9 @@ proc Kratos::LogInitialData { } {
 
     set initial_data [dict create]
     dict set initial_data gid_version [GiD_Info gidversion]
-    dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
-    dict set initial_data problemtype_version $Kratos::kratos_private(Version)
-    # dict set initial_data executable_version $Kratos::kratos_private(exec_version)
+    dict set initial_data problemtype_git_hash $::Kratos::kratos_private(problemtype_git_hash)
+    dict set initial_data problemtype_version $::Kratos::kratos_private(Version)
+    # dict set initial_data executable_version $::Kratos::kratos_private(exec_version)
     dict set initial_data current_platform $::tcl_platform(platform)
 
     Kratos::Log [write::tcl2json $initial_data]
@@ -503,5 +503,22 @@ proc Kratos::CreateLinksRunData { } {
             }
         }
         
+    }
+}
+
+proc Kratos::ExecuteCustomScript {script_name} {
+    variable kratos_private
+    set script_path [file join $kratos_private(Path) scripts Custom ${script_name}.py]
+    if {[file exists $script_path]} {
+        # first version will assume that its for writing meshes in mdpa format
+        # must be python
+        # W "Executing custom script: $script_path"
+        # GiD_Python_Source $script_path
+        GiD_Python_Import_File $script_path
+        GiD_Python_Source $script_path
+        set res [GiD_Python_Call ${script_name}.start "[GiD_Info project ModelName]"]
+        W "Custom script $script_name finished with result: $res"
+    } else {
+        W "Custom script $script_name not found in path $script_path"
     }
 }

@@ -160,6 +160,11 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Write calculation files - No run" ] [incr pos] PRE [list Kratos::WriteCalculationFilesEvent] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Run - No write" ] [incr pos] PRE [list Kratos::ForceRun] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Custom scripts"] [incr pos] PRE "" "" "" replace _
+    foreach custom_script [Kratos::GetCustomScripts] {
+        GiDMenu::InsertOption "Kratos" [list "Custom scripts" "$custom_script"] [incr pos] PRE [list Kratos::ExecuteCustomScript $custom_script] "" "" replace _
+    }
+
     # GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     # GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] [incr pos] PRE [list ] "" "" replace =
     # GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] [incr pos] PRE [list Kratos::SwitchMode] "" "" replace =
@@ -199,6 +204,18 @@ proc Kratos::About {} {
     Splash
 }
 
+proc Kratos::GetCustomScripts { } {
+    # Custom scripts are defined in the folder scipts/Custom/*.py, and they are added to the menu with the name of the file (without extension)
+    variable kratos_private
+    set custom_scripts [list ]
+    if {[file exists [file join $kratos_private(Path) scripts Custom]]} {
+        set files [glob -nocomplain -directory [file join $kratos_private(Path) scripts Custom] *.py]
+        foreach file $files {
+            lappend custom_scripts [file rootname [file tail $file]]
+        }
+    }
+    return $custom_scripts
+}
 
 proc Kratos::Splash { } {
     variable kratos_private
