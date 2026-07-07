@@ -107,6 +107,29 @@ proc Kratos::GetMissingPipPackages { } {
 }
 
 proc Kratos::GetMissingPipPackagesGiDsPython { } {
+    # check if kratos is installed and the version matches the required one
+    # we have for example: KratosMultiphysics[all]==10.4.3
+    # so we are going to check if KratosMultiphysics is installed and the version matches
+    variable pip_packages_required  
+
+    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -E -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed [list ]
+    foreach package $pip_packages_installed_raw {
+        lappend pip_packages_installed [lindex [split $package "=="] 0]
+    }
+
+    if {[lsearch $pip_packages_installed "KratosMultiphysics"] == -1} {
+        return [list $pip_packages_required]
+    } else {
+        set installed_version [lindex [split [lindex $pip_packages_installed_raw [lsearch $pip_packages_installed "KratosMultiphysics"]] "=="] end]
+        set required_version [lindex [split $pip_packages_required "=="] end]
+        if {$installed_version ne $required_version} {
+            return [list $pip_packages_required]
+        }
+    }
+}
+
+proc Kratos::GetMissingPipPackagesGiDsPython_old { } {
     variable pip_packages_required
     set missing_packages [list ]
 
@@ -175,7 +198,7 @@ proc Kratos::ShowErrorsAndActions {errs} {
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on the GiD Command line:"
-            W "-np- W \[GiD_Python_PipInstall \[list $::Kratos::pip_packages_required \] 1 \]"
+            W "-np- W \[GiD_Python_PipInstall { $::Kratos::pip_packages_required } 1 \]"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
