@@ -71,7 +71,7 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
 
     # Laser file into model
     set laser_filename "LaserSettings.json"
-    set laser_filename_origin [file join $PfemMelting::dir examples $laser_filename]
+    set laser_filename_origin [file join $::PfemMelting::dir examples $laser_filename]
     set laser_filename [::FileSelector::_ProcessFile $laser_filename_origin]
     ::spdAux::SaveModelFile $laser_filename
 
@@ -89,7 +89,7 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
 
     # Temperature file into model
     set temp_filename "temperature_dynamicviscosity.csv"
-    set temp_filename_origin [file join $PfemMelting::dir examples $temp_filename]
+    set temp_filename_origin [file join $::PfemMelting::dir examples $temp_filename]
     set temp_filename [::FileSelector::_ProcessFile $temp_filename_origin]
     ::spdAux::SaveModelFile $temp_filename
 

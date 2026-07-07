@@ -453,7 +453,7 @@ proc PfemFluid::xml::getBodyNodalConditionById { id } {
 }
 proc PfemFluid::xml::getBodyNodalConditions { filename } {
     variable bodyNodalCondition
-    dom parse [tDOM::xmlReadFile [file join $PfemFluid::dir xml $filename]] doc
+    dom parse [tDOM::xmlReadFile [file join $::PfemFluid::dir xml $filename]] doc
 
     set NCList [$doc getElementsByTagName NodalConditionItem]
     foreach Node $NCList {

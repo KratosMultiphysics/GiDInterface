@@ -453,11 +453,32 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
     apps::ExecuteOnCurrentApp MeshProgress $total_percent $partial_percents_0 $partial_percents_1 $partial_percents_2 $partial_percents_3 $n_nodes n_elems
 }
 
+proc Kratos::CheckFailMeshAndVolumesNotAssignedToParts {} {
+    set volume_ids [GiD_Geometry list volume]
+    if {  [objarray length $volume_ids] } {
+        set all_volumes_set_no_mesh 1
+        objarray foreach volume_id [GiD_Geometry list volume] {
+            if { [GidUtils::GetMeshData volumes $volume_id Meshing] != "No" }  {
+                set all_volumes_set_no_mesh 0
+                break
+            }
+        }
+        if { $all_volumes_set_no_mesh } {
+            set document [$::gid_groups_conds::doc documentElement]
+            set num_groups_assigned [llength [$document selectNodes  {/Kratos_data//condition[@n='Parts']/group}]]
+            if { $num_groups_assigned ==0 } {
+                W [= "The volumes to be meshed must be assigned to Kratos 'Parts'"]
+            }
+        }
+    }
+}
+
 proc Kratos::Event_AfterMeshGeneration {fail} {
     variable tmp_init_mesh_time
 
     if {$fail} {
         Kratos::Log "Mesh generation failed"
+        Kratos::CheckFailMeshAndVolumesNotAssignedToParts
         return
     }
 
