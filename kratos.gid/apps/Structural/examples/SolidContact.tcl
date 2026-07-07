@@ -139,11 +139,11 @@ proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
     spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     spdAux::AddIntervalGroup InterfaceStructure1 "InterfaceStructure1"
-    set master_contact "container\[@n='Structural'\]/container\[@n='Boundary Conditions'\]/condition\[@n='CONTACT_SLAVE'\]"
-    set master_node [customlib::AddConditionGroupOnXPath $master_contact "InterfaceStructure1"]
-    $master_node setAttribute ov line
+    set slave_contact_xpath "container\[@n='Structural'\]/container\[@n='Boundary Conditions'\]/condition\[@n='CONTACT_SLAVE'\]"
+    set slave_node [customlib::AddConditionGroupOnXPath $slave_contact_xpath "InterfaceStructure1"]
+    $slave_node setAttribute ov line
     set props [list pair 0]
-    spdAux::SetValuesOnBaseNode $master_node $props
+    spdAux::SetValuesOnBaseNode $slave_node $props
     
     GiD_Groups clone InterfaceStructure2 Total
     GiD_Groups edit parent Total InterfaceStructure2
