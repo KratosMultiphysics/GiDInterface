@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="Settings" pn="Settings" un="GEOMSettings" icon="solution" open_window="0">
-    <include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
-</container>
