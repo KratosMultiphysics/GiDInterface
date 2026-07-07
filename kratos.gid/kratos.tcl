@@ -179,6 +179,8 @@ proc Kratos::InitGlobalVariables {dir} {
 
     variable mesh_criteria_forced
     set mesh_criteria_forced [dict create]
+
+    GiD_Set AvoidElementsInBoundary 1
 }
 
 proc Kratos::LoadCommonScripts { } {
