@@ -138,7 +138,6 @@ proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByFunction function_component_Y "-5e-3*t" selector_component_Z Not Interval Total]
     spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
-    spdAux::AddIntervalGroup InterfaceStructure1 "InterfaceStructure1"
     set slave_contact_xpath "container\[@n='Structural'\]/container\[@n='Boundary Conditions'\]/condition\[@n='CONTACT_SLAVE'\]"
     set slave_node [customlib::AddConditionGroupOnXPath $slave_contact_xpath "InterfaceStructure1"]
     $slave_node setAttribute ov line
