@@ -76,7 +76,7 @@ proc ::Structural::examples::SolidContact::AssignGroups2D {args} {
 
     # Displacement boundary conditions
     GiD_Groups create Ground
-    GiD_EntitiesGroups assign Ground lines 2
+    GiD_EntitiesGroups assign Ground lines 1
     GiD_Groups create Top
     GiD_EntitiesGroups assign Top lines 7
 
@@ -139,7 +139,6 @@ proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
     spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     spdAux::AddIntervalGroup InterfaceStructure1 "InterfaceStructure1"
-    GiD_Groups edit state "InterfaceStructure1" hidden
     set master_contact "container\[@n='Structural'\]/container\[@n='Boundary Conditions'\]/condition\[@n='CONTACT_SLAVE'\]"
     set master_node [customlib::AddConditionGroupOnXPath $master_contact "InterfaceStructure1"]
     $master_node setAttribute ov line
@@ -161,8 +160,10 @@ proc ::Structural::examples::SolidContact::TreeAssignation2D {args} {
     [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.1
 
     # turn off results on nodes for Contact
-    [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"] setAttribute v No
-    [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"] setAttribute v No
+    # [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"] setAttribute v No
+    # [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"] setAttribute v No
+    
+    [$root selectNodes "[spdAux::getRoute GiDOptions]/value\[@n = 'GiDWriteConditionsFlag'\]"] setAttribute v WriteElementsOnly
 
     # disable VTK
     [$root selectNodes "[spdAux::getRoute VtkOutput]/value\[@n = 'EnableVtkOutput'\]"] setAttribute v No
