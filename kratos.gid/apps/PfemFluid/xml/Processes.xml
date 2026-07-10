@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+    <Process n="AssignLagrangianInletProcess" pn="Inlet" python_module="assign_lagrangian_inlet_process" kratos_module="KratosMultiphysics.PfemFluidDynamicsApplication">
+        <inputs>
+            <parameter n="value" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+
+        </inputs>
+    </Process>
+
+        <Process n="LagangianRotationProcess" pn="AngularVelocity" python_module="lagrangian_rotation_process" kratos_module="KratosMultiphysics.PfemFluidDynamicsApplication">
+        <inputs>
+            <parameter n="angular_velocity" pn="Angular Velocity Module" type="double"  v="0.0"  has_units="1"/>
+            <parameter n="rotation_axis_initial_point" pn="Rotation Axis First Point (x,y,z)" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"  has_units="1" dimension="3"/>
+            <parameter n="rotation_axis_final_point"  pn="Rotation Axis Second Point (x,y,z)" type="inline_vector" vectorType="double" function="0"  v="0.0,0.0,0.0" has_units="1" dimension="3"/>
+        </inputs>
+    </Process>
+
+</ProcessList>

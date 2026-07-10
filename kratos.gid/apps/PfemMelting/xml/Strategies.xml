@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StrategyList>
+
+
+	<!-- MONOLITHIC STRATEGY -->
+	<StrategyItem n="Monolithic-Transient" pn="Navier Stokes - Monolithic - Transient" Type="monolithic" ImplementedInFile="" ImplementedInApplication="" ImplementedInPythonFile="Monolithic" MinimumKratosVersion="8500" App="PfemMelting" ProductionReady="ProductionReady" help="">
+
+		<!-- list of options to be filled -->
+		<parameter_list>
+			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
+			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
+			<parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="1.0" help=""/>
+			<parameter n="oss_switch" pn="Use orthogonal subscales" type="bool" v="false" help=""/>
+            <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
+			<parameter n="relative_velocity_tolerance" pn="Relative velocity tolerance" v="1E-3" type="double" help="Relative velocity tolerance"/>
+			<parameter n="absolute_velocity_tolerance" pn="Absolute velocity tolerance" v="1E-5" type="double" help="Absolute velocity tolerance"/>
+			<parameter n="relative_pressure_tolerance" pn="Relative pressure tolerance" v="1E-3" type="double" help="Relative pressure tolerance"/>
+			<parameter n="absolute_pressure_tolerance" pn="Absolute pressure tolerance" v="1E-5" type="double" help="Absolute pressure tolerance"/>
+
+			<parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" state="[checkStateByUniqueName CNVDFFAnalysisType non_linear]" help="Switch on/off line search"/>
+            <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,and_criterion,or_criterion"
+                       pvalues ="Residual criterion,Temperature criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
+				<parameter n="solution_relative_tolerance" pn="Temperature relative tolerance" type="double" v="1e-5" parent="displacement_criterion,and_criterion,or_criterion" help="Relative temperature tolerance employed in the nonlinear iteration"/>
+				<parameter n="solution_absolute_tolerance" pn="Temperature absolute tolerance" type="double" v="1e-7" parent="displacement_criterion,and_criterion,or_criterion" help="Absolute temperature tolerance employed in the nonlinear iteration"/>
+				<parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-5" parent="residual_criterion,and_criterion,or_criterion" help="Relative residual tolerance employed in the nonlinear iteration"/>
+				<parameter n="residual_absolute_tolerance" pn="Residual absolute tolerance" type="double" v="1e-7" parent="residual_criterion,and_criterion,or_criterion" help="Absolute residual tolerance employed in the nonlinear iteration"/>
+			</parameter>
+		</parameter_list>
+
+		<!-- linear solver settings -->
+		<linearSolvers>
+			<linearSolverItem n="linear_solver_settings" pn="Linear Solver">
+				<filterFeatures>
+					<filter field="SolverType" value="Standard"/>
+				</filterFeatures>
+				<defaults>
+				</defaults>
+			</linearSolverItem>
+		</linearSolvers>
+
+		<!-- scheme settings -->
+		<schemes>
+			<scheme n="bossak" pn="Bossak" help="Bossak scheme for CFD problems." ProductionReady="ProductionReady">
+				<parameter_list></parameter_list>
+				<element_filters>
+				</element_filters>
+			</scheme>
+		</schemes>
+	</StrategyItem>
+</StrategyList>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StrategyList>
+
+
+	<!-- MONOLITHIC STRATEGY -->
+	<StrategyItem
+		n="MonolithicDEM"
+		pn="Navier Stokes - Monolithic DEM coupled"
+		Type="monolithic"
+		ImplementedInFile="navier_stokes_solver_vms_monolithic_DEMCoupled.py"
+		ImplementedInApplication="SwimmingDEMApplication"
+		ImplementedInPythonFile="MonolithicDEM"
+		MinimumKratosVersion="8500"
+		App="Fluid"
+
+		help="Incompressible Navier-Stokes equations monolithic strategy for fluid-particle interaction.">
+
+		<!-- list of options to be filled -->
+		<parameter_list>
+			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
+			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
+			<parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="1.0" help=""/>
+			<!-- <parameter n="oss_switch" pn="Use orthogonal subscales" type="bool" v="false" help=""/> -->
+			<parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
+			<parameter n="relative_velocity_tolerance" pn="Relative velocity tolerance" v="1E-3" type="double" help="Relative velocity tolerance"/>
+			<parameter n="absolute_velocity_tolerance" pn="Absolute velocity tolerance" v="1E-5" type="double" help="Absolute velocity tolerance"/>
+			<parameter n="relative_pressure_tolerance" pn="Relative pressure tolerance" v="1E-3" type="double" help="Relative pressure tolerance"/>
+			<parameter n="absolute_pressure_tolerance" pn="Absolute pressure tolerance" v="1E-5" type="double" help="Absolute pressure tolerance"/>
+		</parameter_list>
+
+		<!-- linear solver settings -->
+		<linearSolvers>
+			<linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+				<filterFeatures>
+					<filter field="SolverType" value="Standard"/>
+				</filterFeatures>
+				<defaults>
+				</defaults>
+			</linearSolverItem>
+		</linearSolvers>
+
+		<!-- scheme settings -->
+		<schemes>
+			<scheme n="MNDEM" pn="Monolitic generic scheme for DEM coupling" help="FilterElements" >
+				<parameter_list>
+				</parameter_list>
+				<element_filters>
+					<filter field="n" value="QSVMSDEMcoupled2D,QSVMSDEMcoupled3D"/>
+				</element_filters>
+			</scheme>
+		</schemes>
+	</StrategyItem>
+</StrategyList>

@@ -1,0 +1,13 @@
+[
+    {
+        "position": 1,
+        "icon": "geom.png",
+        "command": "GeoMechanics::toolbar::ShowGeom",
+        "help": "Shows the geometry menu"
+    },{
+        "position": 2,
+        "icon": "stages.png",
+        "command": "GeoMechanics::toolbar::ShowStages",
+        "help": "Shows the stages menu"
+    }
+]

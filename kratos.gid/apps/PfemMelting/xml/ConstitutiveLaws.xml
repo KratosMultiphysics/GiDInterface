@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstitutiveLaws>
+    <CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D" OutputMode="Materials">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
+            <!-- <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/> -->
+            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)" units="W/(m*K)" v="0.024"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
+            <parameter n="ARRHENIUS_COEFFICIENT" pn="Arrhenius coefficient" v="0.0" unit_magnitude="1/T" units="1/s"/>
+            <parameter n="ACTIVATION_ENERGY" pn="Activation energy" v="0.0" unit_magnitude="Energy/Amount_of_substance" units="J/mol"/>
+            <parameter n="HEAT_OF_VAPORIZATION" pn="Heat of vaporization" v="0.0" unit_magnitude="Energy/M" units="J/kg"/>
+            <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
+            <parameter n="CONVECTION_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
+            <parameter n="TEMPVISCO" pn="Temperature - Viscosity table" type="tablefile" v=""/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+</ConstitutiveLaws>

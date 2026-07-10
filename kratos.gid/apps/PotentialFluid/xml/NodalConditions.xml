@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodalConditionList>
+  <NodalConditionItem n="VELOCITY_POTENTIAL" pn="Velocity potential" ProcessName="PlaceholderProcess" VariableName="VELOCITY_POTENTIAL" Interval="False"
+					  unit_magnitude="" units="" App="Fluid" ImplementedInApplication="CompressiblePotentialFlowApplication">
+  </NodalConditionItem>
+  <NodalConditionItem n="AUXILIARY_VELOCITY_POTENTIAL" pn="Auxiliary velocity potential" ProcessName="PlaceholderProcess" VariableName="AUXILIARY_VELOCITY_POTENTIAL" Interval="False"
+					  unit_magnitude="" units="" App="Fluid" ImplementedInApplication="CompressiblePotentialFlowApplication">
+  </NodalConditionItem>
+</NodalConditionList>

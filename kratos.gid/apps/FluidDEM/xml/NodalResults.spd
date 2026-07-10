@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="DEMNodalResults"                      pn="Nodal results" un="NodalResults" state="normal" open="1" open_window="0" icon="black1">
+
+    <container n="DEMNodalResults"                      un="DEMNodalResults" pn="DEM nodal results" icon="black1">
+        <value n="VirtualMassForce"                     type="bool" values="true,false" v="false" pn="Added mass force" icon="black1"/>
+        <value n="AngularVelocity"                      type="bool" values="true,false" v="false" pn="Angular velocity" icon="black1"/>
+        <value n="Buoyancy"                             type="bool" values="true,false" v="false" pn="Buoyancy" icon="black1"/>
+        <value n="ContactForces"                        type="bool" values="true,false" v="false" pn="Contact forces" icon="black1"/>
+        <value n="DragForce"                            type="bool" values="true,false" v="false" pn="Drag force" icon="black1"/>
+        <value n="ElasForces"                           type="bool" values="true,false" v="false" pn="Elastic forces" icon="black1"/>
+        <value n="FluidAccelProjected"                  type="bool" values="true,false" v="false" pn="Fluid material acceleration" icon="black1"/>
+        <value n="FluidFractionGradientProjected"       type="bool" values="true,false" v="false" pn="Fluid fraction gradient" icon="black1"/>
+        <value n="FluidFractionProjected"               type="bool" values="true,false" v="false" pn="Fluid fraction" icon="black1"/>
+        <!-- <value n="Pressure"                             type="bool" values="true,false" v="true"  pn="Fluid pressure" icon="black1"/> -->
+        <value n="PressureGradientProj"                 type="bool" values="true,false" v="false" pn="Fluid pressure gradient" icon="black1"/>
+        <value n="FluidVelocityLaplacianProjected"      type="bool" values="true,false" v="false" pn="Fluid velocity laplacian" icon="black1"/>
+        <value n="FluidVelocityLaplacianRateProjected"  type="bool" values="true,false" v="false" pn="Fluid velocity laplacian rate" icon="black1"/>
+        <value n="FluidVelocityProjected"               type="bool" values="true,false" v="true"  pn="Fluid velocity" icon="black1"/>
+        <value n="FluidVelocityProjectedRate"           type="bool" values="true,false" v="false" pn="Fluid velocity rate" icon="black1"/>
+        <value n="FluidViscosityProjected"              type="bool" values="true,false" v="false" pn="Fluid viscosity" icon="black1"/>
+        <value n="BassetForce"                          type="bool" values="true,false" v="false" pn="History force" icon="black1"/>
+        <value n="HydrodynamicForce"                    type="bool" values="true,false" v="false" pn="Hydrodynamic force" icon="black1"/>
+        <value n="HydrodynamicMoment"                   type="bool" values="true,false" v="false" pn="Hydrodynamic moment" icon="black1"/>
+        <value n="ImpactWear"                           type="bool" values="true,false" v="false" pn="Impact wear" icon="black1"/>
+        <value n="LiftForce"                            type="bool" values="true,false" v="false" pn="Lift force" icon="black1"/>
+        <value n="NonDimensionalVolWear"                type="bool" values="true,false" v="false" pn="Non dimensional volume wear" icon="black1"/>
+        <value n="ReynoldsN"                            type="bool" values="true,false" v="false" pn="Particle Reynolds number" icon="black1"/>
+        <value n="Radius"                               type="bool" values="true,false" v="true"  pn="Radius" icon="black1"/>
+        <value n="SlipVelocity"                         type="bool" values="true,false" v="false" pn="Slip velocity" icon="black1"/>
+        <value n="TotalForces"                          type="bool" values="true,false" v="true"  pn="Total interparticle forces" icon="black1"/>
+    </container>
+
+    <container n="FluidNodalResults"        un="FluidNodalResults" pn="Fluid nodal results" icon="black1">
+        <value n="BodyForce"                type="bool" values="true,false" v="false" pn="Body force" icon="black1"/>
+        <value n="DisperseFraction"         type="bool" values="true,false" v="false" pn="Disperse phase volume fraction" icon="black1"/>
+        <value n="Distance"                 type="bool" values="true,false" v="false" pn="Distance function" icon="black1"/>
+        <value n="ParticleVelFiltered"      type="bool" values="true,false" v="false" pn="Filtered disperse phase velocity" icon="black1"/>
+        <value n="FluidFraction"            type="bool" values="true,false" v="false" state="disabled" pn="Fluid fraction" icon="black1"/>
+        <value n="FluidFractionGrad"        type="bool" values="true,false" v="false" state="disabled" pn="Fluid fraction gradient" icon="black1"/>
+        <value n="FluidFractionRate"        type="bool" values="true,false" v="false" state="disabled" pn="Fluid fraction rate" icon="black1"/>
+        <value n="VelocityLaplacian"        type="bool" values="true,false" v="false" pn="Fluid velocity laplacian" icon="black1"/>
+        <value n="VelocityLaplacianRate"    type="bool" values="true,false" v="false" pn="Fluid velocity laplacian rate" icon="black1"/>
+        <value n="HydrodynamicReaction"     type="bool" values="true,false" v="false" pn="Hydrodynamic reaction" icon="black1"/>
+        <value n="MaterialAccel"            type="bool" values="true,false" v="false" pn="Material acceleration" icon="black1"/>
+        <value n="FPressure"                type="bool" values="true,false" v="true"  pn="Pressure" icon="black1"/>
+        <value n="PressureGrad"             type="bool" values="true,false" v="false" pn="Pressure gradient" icon="black1"/>
+        <value n="FVelocity"                type="bool" values="true,false" v="true"  pn="Velocity" icon="black1"/>
+        <value n="VelocityGrad"             type="bool" values="true,false" v="false" state="disabled" pn="Velocity gradient" icon="black1"/>
+        <value n="Viscosity"                type="bool" values="true,false" v="false" pn="Viscosity" icon="black1"/>
+        <value n="Vorticity"                type="bool" values="true,false" v="false" pn="Vorticity" icon="black1"/>
+    </container>
+</container>
