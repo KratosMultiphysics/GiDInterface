@@ -64,7 +64,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
         set lista [::Fluid::xml::GetListOfSubModelParts $base_root]
         
         # Write the geometries
-        set ret [::write::writeGeometryConnectivities $lista]
+        set ret [::write::writeGeometryConnectivities $lista 1]
         
         # Write the submodelparts
         set grouped_conditions [dict create]

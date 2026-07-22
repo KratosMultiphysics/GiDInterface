@@ -90,7 +90,7 @@ proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
         W "Download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
     }
     # Check GiD maximum version
-    if { [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
+    if { [info exists kratos_private(MaximumGiDVersion)] && [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(MaximumGiDVersion) or less."
         W "You may experience problems with the python packages"
         W "You can download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
@@ -409,3 +409,21 @@ if { ![GidUtils::IsTkDisabled] } {
     }
 }
 
+
+
+proc Kratos::ExecuteCustomScript {script_name} {
+    variable kratos_private
+    set script_path [file join $kratos_private(Path) scripts Custom ${script_name}.py]
+    if {[file exists $script_path]} {
+        # first version will assume that its for writing meshes in mdpa format
+        # must be python
+        # W "Executing custom script: $script_path"
+        # GiD_Python_Source $script_path
+        GiD_Python_Import_File $script_path
+        GiD_Python_Source $script_path
+        set res [GiD_Python_Call ${script_name}.start "[GiD_Info project ModelName]"]
+        W "Custom script $script_name finished with result: $res"
+    } else {
+        W "Custom script $script_name not found in path $script_path"
+    }
+}
