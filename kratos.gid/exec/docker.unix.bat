@@ -2,6 +2,7 @@
 # OutputFile: "$2/$1.info"
 # ErrorFile: "$2/$1.err"
 #delete previous result file
+cd "$case_path"
 rm -f "$2/$1*.post.bin"
 rm -f "$2/$1*.post.res"
 rm -f "$2/$1*.post.msh"

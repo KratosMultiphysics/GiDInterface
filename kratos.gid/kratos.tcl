@@ -12,10 +12,12 @@ namespace eval ::Kratos {
     variable namespaces
 
     variable mesh_criteria_forced
+
+    variable pending_postprocess_simulation
 }
 
 proc GiD_Event_InitProblemtype { dir } {
-            Kratos::Event_InitProblemtype $dir
+    Kratos::Event_InitProblemtype $dir
 }
 
 proc Kratos::Events { } {
@@ -52,6 +54,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile Kratos::Event_AfterWriteCalculationFile PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_BeforeRunCalculation Kratos::Event_BeforeRunCalculation PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_SelectGIDBatFile Kratos::Event_SelectGIDBatFile PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterRunCalculation Kratos::Event_AfterRunCalculation PROBLEMTYPE Kratos
 
     # Postprocess
     GiD_RegisterEvent GiD_Event_BeforeInitGIDPostProcess Kratos::BeforeInitGIDPostProcess PROBLEMTYPE Kratos
@@ -180,6 +183,8 @@ proc Kratos::InitGlobalVariables {dir} {
     variable mesh_criteria_forced
     set mesh_criteria_forced [dict create]
 
+    variable pending_postprocess_simulation
+    set pending_postprocess_simulation ""
     GiD_Set AvoidElementsInBoundary 1
 }
 
@@ -205,7 +210,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename.tcl]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow ExamplesWindow CommonProcs PreferencesWindow TreeInjections MdpaImportMesh Drawer ImportFiles} {
+    foreach filename {ApplicationMarketWindow ExamplesWindow CommonProcs PreferencesWindow TreeInjections MdpaImportMesh Drawer ImportFiles RunSimulations RunWindow} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename.tcl]]
     }
     # Model class
@@ -476,7 +481,7 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
         Kratos::CheckFailMeshAndVolumesNotAssignedToParts
         return
     }
-    
+
     # Change the mesh settings depending on the element requirements. Reset previous settings
     # catch {Kratos::ResetMeshCriteria $fail}
 
@@ -515,6 +520,17 @@ proc Kratos::BeforeInitGIDPostProcess {} {
             }
         }
     }
+
+    # Check if there is a pending postprocess request
+    variable pending_postprocess_simulation
+    if {$pending_postprocess_simulation ne ""} {
+        # Open the postprocess of the requested simulation
+
+        # TODO: Ask kike if there is a better way to change to post and return the path of a post.lst file
+        # Instead of writing the post.lst manually
+        
+        set pending_postprocess_simulation ""
+    }
 }
 
 proc Kratos::Event_EndGIDPostProcess {} {
@@ -528,6 +544,16 @@ proc Kratos::Event_EndGIDPostProcess {} {
     }
     # Show the kratos toolbar
     ::Kratos::CreatePreprocessModelTBar
+}
+
+proc Kratos::Event_AfterRunCalculation { basename dir problemtypedir where error errorfilename } {
+    # Refresh tree
+    spdAux::RequestRefresh
+
+    set currrent_simulation [runsimulations::GetCurrentSimulationRunName]
+    set sim_path [file join [GidUtils::GetDirectoryModel] $::runsimulations::folder_name $currrent_simulation]
+    # W "Writing postprocess request for simulation: $sim_path"
+    runsimulations::WritePostprocessRequest $sim_path
 }
 
 proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
@@ -547,6 +573,10 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
     if {[Kratos::CheckDependencies] ne 0} {return [list "-cancel-" "Unable to run. Missing dependencies"]}
 
+    # after 3 seconds
+    after 3000 {
+        Kratos::CreateLinksRunData
+    }
 }
 
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
@@ -580,6 +610,15 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
             set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName]]
         }
     }
+
+    set next_run [runsimulations::GetNextSimulationRunName]
+    # replace next_run whitespaces by underscores. Do not use regsub
+    set next_run [string map {" " "_"} $next_run]
+    
+    set filename [file join [runsimulations::GetSimulationRunPath $next_run] [file tail $filename]]
+    # create the folder if it does not exist
+    file mkdir [file dirname $filename]
+
     # The calculation process may need the files of the file selector entries inside the model folder
     if {$::Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
@@ -595,7 +634,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
     }
-    if {[::write::GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; 
+    if {[::write::GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}];
         W "Nodal coordinates time: [Kratos::Duration $ttime]"
         Kratos::Log "Write calculation files in [Duration $ttime]"
     }

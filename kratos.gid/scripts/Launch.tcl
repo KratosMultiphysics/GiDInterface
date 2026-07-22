@@ -307,6 +307,13 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
         set bat [dict get $mode script]
         set bat_file [file join exec $bat.$os.bat]
     }
+    set next_run [runsimulations::GetCurrentSimulationRunName]
+    # replace next_run whitespaces by underscores. Do not use regsub
+    set next_run [string map {" " "_"} $next_run]
+    # W "Starting simulation run: $next_run"
+    
+    set simulation_case [runsimulations::GetSimulationRunPath $next_run]
+    set ::env(case_path) $simulation_case
     switch [dict get $mode name] {
         Docker {
             set docker_image [Kratos::ManagePreferences GetValue docker_image]
