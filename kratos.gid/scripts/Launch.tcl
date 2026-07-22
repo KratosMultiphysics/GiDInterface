@@ -25,9 +25,9 @@ proc Kratos::InstallAllPythonDependencies { } {
     set missing_packages [Kratos::GetMissingPipPackages]
     ::GidUtils::SetWarnLine "Installing pip packages $missing_packages"
     if {[llength $missing_packages] > 0} {
-        exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
+        exec $pip -E -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
     }
-    exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$::Kratos::pip_packages_required
+    exec $pip -E -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$::Kratos::pip_packages_required
     ::GidUtils::SetWarnLine "Packages updated"
 }
 
@@ -79,7 +79,7 @@ proc Kratos::pipVersion { {pythonExecutable ""} } {
     set ver 0
 
     catch {
-        set info [exec $pip -m pip --version 2>@1]
+        set info [exec $pip -E -m pip --version 2>@1]
         if {[regexp {pip\s+(\d+\.\d+)} $info --> version]} {
             set ver $version
         }
@@ -95,7 +95,7 @@ proc Kratos::GetMissingPipPackages { } {
     set py [Kratos::GetPythonExeName]
     set python_exe_path [Kratos::ManagePreferences GetValue python_path]
     set pip_packages_installed [list ]
-    set pip_packages_installed_raw [exec $python_exe_path -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec $python_exe_path -E -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
     }
@@ -107,12 +107,35 @@ proc Kratos::GetMissingPipPackages { } {
 }
 
 proc Kratos::GetMissingPipPackagesGiDsPython { } {
+    # check if kratos is installed and the version matches the required one
+    # we have for example: KratosMultiphysics[all]==10.4.3
+    # so we are going to check if KratosMultiphysics is installed and the version matches
+    variable pip_packages_required  
+
+    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -E -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed [list ]
+    foreach package $pip_packages_installed_raw {
+        lappend pip_packages_installed [lindex [split $package "=="] 0]
+    }
+
+    if {[lsearch $pip_packages_installed "KratosMultiphysics"] == -1} {
+        return [list $pip_packages_required]
+    } else {
+        set installed_version [lindex [split [lindex $pip_packages_installed_raw [lsearch $pip_packages_installed "KratosMultiphysics"]] "=="] end]
+        set required_version [lindex [split $pip_packages_required "=="] end]
+        if {$installed_version ne $required_version} {
+            return [list $pip_packages_required]
+        }
+    }
+}
+
+proc Kratos::GetMissingPipPackagesGiDsPython_old { } {
     variable pip_packages_required
     set missing_packages [list ]
 
     set pip_packages_installed [list ]
     set pip_packages_installed_versions [list ]
-    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -E -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
         lappend pip_packages_installed_versions [lindex [split $package "=="] end]
@@ -168,14 +191,14 @@ proc Kratos::ShowErrorsAndActions {errs} {
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on a terminal (note: On Windows systems, use cmd, not PowerShell):"
-            W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $::Kratos::pip_packages_required"
+            W "$python_exe_path -E -m pip install --upgrade --force-reinstall --no-cache-dir $::Kratos::pip_packages_required"
         }
         "MISSING_PIP_PACKAGES_GiDS_PYTHON" {
             W "Kratos package was not found on your system."
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on the GiD Command line:"
-            W "-np- W \[GiD_Python_PipInstall \[list $::Kratos::pip_packages_required \] 1 \]"
+            W "-np- W \[GiD_Python_PipInstall { $::Kratos::pip_packages_required } 1 \]"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."

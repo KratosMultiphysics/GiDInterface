@@ -397,7 +397,7 @@ proc write::isquadratic {} {
 }
 
 proc write::GetWriteMode {} {
-    return [::write::GetAttribute write_mdpa_mode]
+    return [::write::GetConfigurationAttribute write_mdpa_mode]
 }
 
 proc write::GetNodesFromElementFace {elem_id face_id} {

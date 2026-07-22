@@ -1,34 +1,17 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>10.3.0</Version>
+    <Version>10.4.3</Version>
     <Production>0</Production>
     <ExecutableVersion />
     <MinimumGiDVersion>16.1.10d</MinimumGiDVersion>
-    <MaximumGiDVersion>17.99.99d</MaximumGiDVersion>
+    
     <CustomLibAutomatic>0</CustomLibAutomatic>
     <CustomLibNativeGroups>1</CustomLibNativeGroups>
     <ImageFileBrowser>images/ImageFileBrowser.gif</ImageFileBrowser>
     <PythonPackages>
-      <Package Name="KratosMultiphysics" Version="10.3.0" />
-      <Package Name="KratosFluidDynamicsApplication" Version="10.3.0" />
-      <Package Name="KratosConstitutiveLawsApplication" Version="10.3.0" />
-      <Package Name="KratosContactStructuralMechanicsApplication" Version="10.3.0" />
-      <Package Name="KratosConvectionDiffusionApplication" Version="10.3.0" />
-      <Package Name="KratosCoSimulationApplication" Version="10.3.0" />
-      <Package Name="KratosDamApplication" Version="10.3.0" />
-      <Package Name="KratosDEMApplication" Version="10.3.0" />
-      <Package Name="KratosFluidDynamicsApplication" Version="10.3.0" />
-      <Package Name="KratosFSIApplication" Version="10.3.0" />
-      <Package Name="KratosGeoMechanicsApplication" Version="10.3.0" />
-      <Package Name="KratosLinearSolversApplication" Version="10.3.0" />
-      <Package Name="KratosMappingApplication" Version="10.3.0" />
-      <Package Name="KratosMeshingApplication" Version="10.3.0" />
-      <Package Name="KratosMeshMovingApplication" Version="10.3.0" />
-      <Package Name="KratosMPMApplication" Version="10.3.0" />
-      <Package Name="KratosPoromechanicsApplication" Version="10.3.0" />
-      <Package Name="KratosShallowWaterApplication" Version="10.3.0" />
-      <Package Name="KratosStructuralMechanicsApplication" Version="10.3.0" />
+      <Package Name="KratosMultiphysics[all]" Version="10.4.3" />
+      
     </PythonPackages>
     <ShortDescription>Kratos - Kratos is a framework for building multi-disciplinary finite element programs. It provides several tools for easy implementation of finite element applications and a common platform for natural interaction of the same in different ways.</ShortDescription>
     <Description>* What is Kratos?
