@@ -99,6 +99,8 @@ proc RunWindow::InitRunWindow { } {
     
     grid columnconfigure $frame_main 1 -weight 1
 
+    # // TODO: Add parallel run option, with a spinbox for the number of processes
+
 }
 
 proc RunWindow::ToggleOutput { variable_name un } {
