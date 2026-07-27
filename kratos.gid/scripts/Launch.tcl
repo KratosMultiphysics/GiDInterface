@@ -313,6 +313,7 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
     # W "Starting simulation run: $next_run"
     
     set simulation_case [runsimulations::GetSimulationRunPath $next_run]
+    GidUtils::SetWarnLine "Creating simulation case: $simulation_case"
     set ::env(case_path) $simulation_case
     switch [dict get $mode name] {
         Docker {

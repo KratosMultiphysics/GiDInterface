@@ -5,14 +5,14 @@
 cd "$case_path"
 
 #delete previous result file
-rm -f "./$1*.post.bin"
-rm -f "./$1*.post.res"
-rm -f "./$1*.post.msh"
-rm -f "./$1.info"
-rm -f "./$1.err"
-rm -f "./$1.flavia.dat"
-rm -fr "./gid_output"
-rm -fr "./vtk_output"
+rm -f "$case_path/$1*.post.bin"
+rm -f "$case_path/$1*.post.res"
+rm -f "$case_path/$1*.post.msh"
+rm -f "$case_path/$1.info"
+rm -f "$case_path/$1.err"
+rm -f "$case_path/$1.flavia.dat"
+rm -fr "$case_path/gid_output"
+rm -fr "$case_path/vtk_output"
 
 # include .bashrc if it exists
 if [ -f "$HOME/.bashrc" ]; then
@@ -40,4 +40,4 @@ export PYTHONHOME=$python_home
 KERNEL_NAME="linux"
 
 # Run Python using the script MainKratos.py
-$python_path MainKratos.py > "./$1.info" 2> "./$1.err"
+$python_path MainKratos.py > "$case_path/$1.info" 2> "$case_path/$1.err"

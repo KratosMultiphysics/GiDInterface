@@ -28,4 +28,4 @@ set PYTHONHOME=%python_home%
 
 
 REM Run Python using the script MainKratos.py
-%python_path% MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+%python_path% MainKratos.py > "%case_path%\\%1.info" 2> "%case_path%\\%1.err"

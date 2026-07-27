@@ -3,15 +3,15 @@
 # ErrorFile: "$2/$1.err"
 cd "$case_path"
 #delete previous result file
-rm -f "./$1*.post.bin"
-rm -f "./$1*.post.res"
-rm -f "./$1*.post.msh"
-rm -f "./$1.info"
-rm -f "./$1.err"
-rm -f "./$1.flavia.dat"
+rm -f "$case_path/$1*.post.bin"
+rm -f "$case_path/$1*.post.res"
+rm -f "$case_path/$1*.post.msh"
+rm -f "$case_path/$1.info"
+rm -f "$case_path/$1.err"
+rm -f "$case_path/$1.flavia.dat"
 
 export PYTHONPATH=%python_home%
 export PYTHONHOME=%python_home%
 
 # Run Python using the script MainKratos.py
-$python_home/python3 MainKratos.py > "./$1.info" 2> "./$1.err"
+$python_home/python3 MainKratos.py > "$case_path/$1.info" 2> "$case_path/$1.err"
