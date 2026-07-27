@@ -626,8 +626,8 @@ proc spdAux::GetNextSimulationRunName {  } {
 }
 
 proc spdAux::DeleteSimulationRun { sim_path } {
-    set path [spdAux::MakeRunAbsolutePath $args]
-    runsimulations::DeleteSimulationRun $sim_path
+    set path [spdAux::MakeRunAbsolutePath $sim_path]
+    runsimulations::DeleteSimulationRun $path
     spdAux::RequestRefresh
 }
 

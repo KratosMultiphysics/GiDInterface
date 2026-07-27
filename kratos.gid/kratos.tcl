@@ -611,7 +611,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         }
     }
 
-    set next_run [runsimulations::GetNextSimulationRunName]
+    set next_run [runsimulations::GetCurrentSimulationRunName]
     # replace next_run whitespaces by underscores. Do not use regsub
     set next_run [string map {" " "_"} $next_run]
     

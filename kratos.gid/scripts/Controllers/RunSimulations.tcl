@@ -62,6 +62,7 @@ proc runsimulations::GetNextSimulationRunName {  } {
     }
     return $run_name
 }
+
 proc runsimulations::GetCurrentSimulationRunName {  } {
     set dir [GidUtils::GetDirectoryModel]
     variable folder_name
@@ -103,6 +104,7 @@ proc runsimulations::DeleteAllSimulationRuns {  } {
 }
 
 proc runsimulations::DeleteSimulationRun { sim_path } {
+    ::GidUtils::SetWarnLine "Deleting simulation run: $sim_path"
     # delete the folder and all its contents
     if {[file isdirectory $sim_path]} {
         file delete -force $sim_path
@@ -122,6 +124,20 @@ proc runsimulations::GoToPostprocess { sim_path } {
     # W "Changing to Postprocess... $sim_path"
     runsimulations::WritePostprocessRequest $sim_path
     GiD_Process MEscape Postprocess MEscape
+}
+
+proc runsimulations::RunSimulation { run_name } {
+    set dir [GidUtils::GetDirectoryModel]
+    variable folder_name
+    set simulations_dir [file join $dir $folder_name]
+    set run_path [file join $simulations_dir $run_name]
+
+    # create the folder if it does not exist
+    if {![file isdirectory $run_path]} {
+        file mkdir $run_path
+    }
+
+    GiD_Process Mescape Utilities Calculate Mescape
 }
 
 # TODO: Ask kike if there is a better way to change to post and return the path of a post.lst file

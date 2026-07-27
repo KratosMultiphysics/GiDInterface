@@ -59,6 +59,9 @@ proc RunWindow::InitRunWindow { } {
     ttk::labelframe $frame_main.name_frame -text [_ "Simulation Run"] -padding {10 5}
     grid $frame_main.name_frame -row 0 -column 0 -columnspan 3 -sticky ew -pady {0 15}
     
+    # Label must be on the previous line, attached to the left margin
+    ttk::label $frame_main.name_frame.run_name_label -text [_ "Run name"] -width 15 -anchor w
+    pack $frame_main.name_frame.run_name_label
     ttk::entry $frame_main.name_frame.run_name_entry -width 50
     pack $frame_main.name_frame.run_name_entry -fill x
     set default_run_name [runsimulations::GetNextSimulationRunName]
