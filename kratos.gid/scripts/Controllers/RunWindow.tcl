@@ -8,6 +8,8 @@ namespace eval ::RunWindow {
     variable gid_output
     variable vtk_output
     variable show_dialog_again
+
+    variable num_threads
 }
 
 proc RunWindow::Init { } {
@@ -24,6 +26,11 @@ proc RunWindow::Init { } {
         set ::Kratos::kratos_private(run_window) 1
     }
     set show_dialog_again $::Kratos::kratos_private(run_window)
+
+    variable num_processes
+    if {![info exists ::Kratos::kratos_private(num_processes)]} {
+        set ::Kratos::kratos_private(num_processes) 1
+    }
 }
 
 proc RunWindow::ShowRunWindow { } {
@@ -88,7 +95,26 @@ proc RunWindow::InitRunWindow { } {
     
     pack $frame_main.name_frame.gid_output_check -side left -padx {0 20}
     pack $frame_main.name_frame.vtk_output_check -side left
+
     
+    # // TODO: Add parallel run option, with a spinbox for the number of processes
+    set current_threads [write::getValue Parallelization OpenMPNumberOfThreads]
+    if {$current_threads eq ""} {
+        set current_threads 1
+    }
+    # place the spinbox in its own row below the run name frame
+    ttk::frame $frame_main.parallel_frame
+    grid $frame_main.parallel_frame -row 1 -column 0 -columnspan 3 -sticky w -pady {0 15}
+    ttk::label $frame_main.parallel_frame.parallel_label -text [_ "Number of OMP Threads"] -width 20 -anchor w
+    pack $frame_main.parallel_frame.parallel_label -side left -padx {0 10}
+
+    # ttk scale
+    ttk::scale $frame_main.parallel_frame.parallel_scale -from 1 -to 32 -variable ::RunWindow::num_threads -command "RunWindow::OnNumThreadsChanged"
+    pack $frame_main.parallel_frame.parallel_scale -side left
+    ttk::entry $frame_main.parallel_frame.parallel_value_entry -textvariable ::RunWindow::num_threads -width 5
+    pack $frame_main.parallel_frame.parallel_value_entry -side left -padx {10 0}
+    set ::RunWindow::num_threads $current_threads
+
     # Row 2: Bottom row with checkbox and button
     ttk::checkbutton $frame_main.show_again_check -text [_ "Show this dialog again"] -variable ::RunWindow::show_dialog_again -onvalue 1 -offvalue 0 -command RunWindow::ToggleShowAgain
     ttk::button $frame_main.run_button -text [_ "Run Simulation"] -command RunWindow::OnRunSimulationButtonPressed -width 15
@@ -99,8 +125,12 @@ proc RunWindow::InitRunWindow { } {
     
     grid columnconfigure $frame_main 1 -weight 1
 
-    # // TODO: Add parallel run option, with a spinbox for the number of processes
 
+}
+
+proc RunWindow::OnNumThreadsChanged { value } {
+    variable num_threads
+    set num_threads [expr {int($value)}]
 }
 
 proc RunWindow::ToggleOutput { variable_name un } {
@@ -135,9 +165,25 @@ proc RunWindow::OnRunSimulationButtonPressed { } {
 
     # check that the name is not empty
     if {[string length $run_name] == 0} {
-        Kratos::ShowErrorMessage [_ "Error"] [_ "The simulation run name cannot be empty."]
+        W [_ "The simulation run name cannot be empty."]
         return
     }
+
+    # Check that the name is valid (no special characters, only letters, numbers, underscores and hyphens)
+    if {[regexp {[^a-zA-Z0-9_-]} $run_name]} {
+        W [_ "The simulation run name can only contain letters, numbers, underscores and hyphens."]
+        return
+    }
+    # Check that the name is not already used
+    set simulation_case [runsimulations::GetSimulationRunPath $run_name]
+    if {[file exists $simulation_case]} {
+        W [_ "The simulation run name is already used."]
+        return
+    }
+
+    # Set the number of processes in the tree
+    variable num_threads  
+    spdAux::SetValueOnTreeItem v $num_threads Parallelization OpenMPNumberOfThreads
 
     # TODO: Store the next name, run and close the window
     # proceed to run the simulation
