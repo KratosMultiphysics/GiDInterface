@@ -117,10 +117,18 @@ proc RunWindow::InitRunWindow { } {
 
     # Row 2: Bottom row with checkbox and button
     ttk::checkbutton $frame_main.show_again_check -text [_ "Show this dialog again"] -variable ::RunWindow::show_dialog_again -onvalue 1 -offvalue 0 -command RunWindow::ToggleShowAgain
+    set settings_path [file nativename [file join $::Kratos::kratos_private(Path) images "settings24.png"]]
+    set settings_img [gid_themes::GetImage $settings_path Kratos]
+    if {[GidUtils::VersionCmp "14.1.4d"] <0} {
+        set preferences_cmd [list ChangeVariables kratos_preferences]
+    } else {
+        set preferences_cmd [list PreferencesWindow kratos_preferences]
+    }
+    ttk::button $frame_main.preferences_button -image $settings_img -command $preferences_cmd -width 2
     ttk::button $frame_main.run_button -text [_ "Run Simulation"] -command RunWindow::OnRunSimulationButtonPressed -width 15
     grid $frame_main.show_again_check -row 2 -column 0 -sticky w
-    
 
+    grid $frame_main.preferences_button -row 2 -column 1 -sticky e -padx {0 8}
     grid $frame_main.run_button -row 2 -column 2 -sticky e
     
     grid columnconfigure $frame_main 1 -weight 1
