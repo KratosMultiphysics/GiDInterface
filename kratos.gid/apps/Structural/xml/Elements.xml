@@ -692,7 +692,7 @@
   <ElementItem n="TrussLinearElement3D" pn="Truss small displacements" ov="line" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="TrussLinearElement3D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="LinearTrussElement3D2N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -716,7 +716,7 @@
   <ElementItem n="TrussElement3D" pn="Truss large displacements" ov="line" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="TotalLagrangianTrussElement3D2N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
