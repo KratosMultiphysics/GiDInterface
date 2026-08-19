@@ -137,7 +137,7 @@
     </CLaw>
 
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic"  Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="ReissnerMindlinShellElasticConstitutiveLaw" pn="Linear Elastic"  Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
       help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
