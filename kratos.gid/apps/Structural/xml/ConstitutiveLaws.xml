@@ -137,7 +137,7 @@
     </CLaw>
 
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic"  Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="ReissnerMindlinShellElasticConstitutiveLaw" pn="Linear Elastic"  Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
       help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
@@ -174,7 +174,7 @@
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam"  Type="Beam2D" Behaviour="Elastic"
+    <CLaw n="TimoshenkoBeamConstitutiveLaw2D" KratosName="TimoshenkoBeamElasticConstitutiveLaw" pn="Linear elastic beam"  Type="Beam2D" Behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
@@ -183,11 +183,12 @@
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
             <parameter n="CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
             <parameter n="I33" pn="Inertia 33" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+            <parameter n="AREA_EFFECTIVE_Y" pn="Shear area" type="double" v="0.8" unit_magnitude="L^2" units="m^2" />
         </inputs>
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam"  Type="Beam3D" Behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw3D" KratosName="TimoshenkoBeamElasticConstitutiveLaw3D" pn="Linear elastic beam"  Type="Beam3D" Behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
@@ -195,9 +196,11 @@
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
             <parameter n="CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
-            <parameter n="TORSIONAL_INERTIA" pn="Torsional inertia" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+            <parameter n="IT" pn="Torsional inertia" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
             <parameter n="I22" pn="Inertia 22" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
             <parameter n="I33" pn="Inertia 33" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+            <parameter n="AREA_EFFECTIVE_Y" pn="Shear area" type="double" v="0.8" unit_magnitude="L^2" units="m^2" />
+            <parameter n="AREA_EFFECTIVE_Z" pn="Shear area" type="double" v="0.8" unit_magnitude="L^2" units="m^2" />
         </inputs>
         <outputs></outputs>
     </CLaw>
