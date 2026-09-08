@@ -104,8 +104,8 @@ proc RunWindow::InitRunWindow { } {
     }
     # place the spinbox in its own row below the run name frame
     ttk::frame $frame_main.parallel_frame
-    grid $frame_main.parallel_frame -row 1 -column 0 -columnspan 3 -sticky w -pady {0 15}
-    ttk::label $frame_main.parallel_frame.parallel_label -text [_ "Number of OMP Threads"] -width 20 -anchor w
+    grid $frame_main.parallel_frame -row 1 -column 0 -columnspan 3 -sticky ew -pady {0 15}
+    ttk::label $frame_main.parallel_frame.parallel_label -text [_ "Number of OMP Threads"] -anchor w
     pack $frame_main.parallel_frame.parallel_label -side left -padx {0 10}
 
     # ttk scale
