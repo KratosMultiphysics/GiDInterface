@@ -24,7 +24,7 @@ proc ::PfemFluid::Init { app } {
 proc ::PfemFluid::CustomToolbarItems { } {
     variable dir
     # Reset the left toolbar
-    set Kratos::kratos_private(MenuItems) [dict create]
+    set ::Kratos::kratos_private(MenuItems) [dict create]
     set img_dir [file join $dir images]
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set img_dir [file join $img_dir Black]

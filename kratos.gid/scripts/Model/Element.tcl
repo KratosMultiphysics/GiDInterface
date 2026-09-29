@@ -434,6 +434,11 @@ proc Model::CheckElementsNodalCondition {conditionId elemnames {restrictions "" 
         foreach eid $elemnames {
             if {$eid ne ""} {
                 set elem [getElement $eid]
+                if { $elem == "" } {
+                    # kike: It is happening in tester case D5E101BC834E1E5F284E3FA4F027EE67 , must raise an error? by now try to continue
+                    W "Model::CheckElementsNodalCondition elem $eid empty"
+                    continue
+                }
                 foreach elemNCNode [$elem getNodalConditions] {
                     set elemNC [$elemNCNode getName]
                     if {$elemNC eq $conditionId} {

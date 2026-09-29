@@ -7,7 +7,14 @@ namespace eval ::MdpaGenerator {
 
     proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
     proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
-    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
+    # if name is write_mdpa_mode, return ::MdpaGenerator::xml::GetCurrentWriteMode
+    proc GetWriteProperty {name} {
+        variable _app;
+        if {$name eq "write_mdpa_mode"} {
+            return [::MdpaGenerator::xml::GetCurrentWriteMode]
+        }
+        return [$_app getWriteProperty $name]
+     }
 }
 
 proc ::MdpaGenerator::Init { app } {

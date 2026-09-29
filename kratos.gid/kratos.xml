@@ -1,14 +1,18 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>10.3.0</Version>
+    <Version>10.4.3</Version>
     <Production>0</Production>
     <ExecutableVersion />
     <MinimumGiDVersion>16.1.10d</MinimumGiDVersion>
-    <MaximumGiDVersion>17.99.99d</MaximumGiDVersion>
+    
     <CustomLibAutomatic>0</CustomLibAutomatic>
     <CustomLibNativeGroups>1</CustomLibNativeGroups>
     <ImageFileBrowser>images/ImageFileBrowser.gif</ImageFileBrowser>
+    <PythonPackages>
+      <Package Name="KratosMultiphysics[all]" Version="10.4.3" />
+      
+    </PythonPackages>
     <ShortDescription>Kratos - Kratos is a framework for building multi-disciplinary finite element programs. It provides several tools for easy implementation of finite element applications and a common platform for natural interaction of the same in different ways.</ShortDescription>
     <Description>* What is Kratos?
 

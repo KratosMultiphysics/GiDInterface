@@ -31,14 +31,14 @@ proc EmbeddedFluid::write::writeDistances { } {
         set length [objarray length $nodes_list]
         if {$length eq "0"} {W "Warning: No distances detected! Check Preferences > Meshing > General > Mesh type > Embedded"}
         write::WriteString "Begin NodalData DISTANCE"
-        incr write::current_mdpa_indent_level
+        incr ::write::current_mdpa_indent_level
         set s [write::mdpaIndent]
         for {set i 0} {$i < $length} {incr i } {
             set node_id [objarray get $nodes_list $i]
             set distance [objarray get $distances_list $i]
             write::WriteString "$s$node_id 0 $distance"
         }
-        incr write::current_mdpa_indent_level -1
+        incr ::write::current_mdpa_indent_level -1
         write::WriteString "End NodalData"
     }
 }

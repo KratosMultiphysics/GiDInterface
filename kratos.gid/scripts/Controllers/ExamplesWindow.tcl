@@ -70,7 +70,7 @@ proc Examples::StartWindow { {filter ""} } {
     AddToScrolledCanvas $examples_window.center $fcenter
     grid $examples_window.center -row 0 -column 0 -sticky nsew
 
-    set Examples::filter_entry $filter
+    set ::Examples::filter_entry $filter
     set filter_txt [ttk::label $fcenter.filter_text -text [_ "Search an example:"]]
     set filter_ent [ttk::entry $fcenter.filter_entry -textvariable Examples::filter_entry]
     set filter_btn [ttk::button $fcenter.filter_button -text "Filter" -command [list Examples::PrintGroups]]
@@ -220,7 +220,7 @@ proc Examples::LaunchExample {example_app example_dim example_cmd} {
     Kratos::ResetModel
     Model::DestroyEverything
     set ::problemtype_current(CustomLibAutomatic) 1
-    gid_common_problemtype_init_customlib_automatic $Kratos::kratos_private(Path)
+    gid_common_problemtype_init_customlib_automatic $::Kratos::kratos_private(Path)
     set ::problemtype_current(CustomLibAutomatic) 0
     spdAux::SetSpatialDimmension $example_dim
     apps::setActiveApp $example_app

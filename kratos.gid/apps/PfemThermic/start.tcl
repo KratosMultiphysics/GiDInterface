@@ -25,7 +25,7 @@ proc ::PfemThermic::Init { app } {
 proc ::PfemThermic::CustomToolbarItems { } {
     variable dir
     # Reset the left toolbar
-    set Kratos::kratos_private(MenuItems) [dict create]
+    set ::Kratos::kratos_private(MenuItems) [dict create]
     set img_dir [file join $dir images]
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set img_dir [file join $img_dir Black]
@@ -36,7 +36,7 @@ proc ::PfemThermic::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Stop"                 [file join $img_dir "cancelProcess.png"]   {Utilities CancelProcess}                          [= "Cancel process"]
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow         [apps::getActiveAppId]]                            [= "Examples window"]
     Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
-    if {[info exists Kratos::kratos_private(UseFiles)] && $Kratos::kratos_private(UseFiles) == 1} {
+    if {[info exists ::Kratos::kratos_private(UseFiles)] && $::Kratos::kratos_private(UseFiles) == 1} {
         Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]
     }
 }

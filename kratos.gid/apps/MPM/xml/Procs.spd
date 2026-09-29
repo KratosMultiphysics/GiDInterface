@@ -5,6 +5,12 @@
 	  <![CDATA[
 	  return [Structural::xml::ProcCheckNodalConditionStateStructural $domNode $args]
 	  ]]>
+	</proc>
+
+    <proc n='CheckNodalConditionStateMPM' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckNodalConditionStateMPM $domNode $args]
+	  ]]>
 	</proc>		
 	
 	<proc n='CheckGeometrySolid' args='args'>
@@ -33,6 +39,24 @@
 	<proc n='CheckStabilizationState' args='args'>
 	  <![CDATA[
 	  return [MPM::xml::ProcCheckStabilizationState $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='CheckNodalConditionOutputState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckNodalConditionOutputState $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='CheckNodalConditionOutputStateMPM' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckNodalConditionOutputState $domNode $args]
+	  ]]>
+	</proc>
+
+	<proc n='ElementOutputState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcElementOutputState $domNode $args]
 	  ]]>
 	</proc>
 

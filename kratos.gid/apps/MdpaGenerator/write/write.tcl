@@ -88,13 +88,13 @@ proc ::MdpaGenerator::write::writeGeometries { } {
     # Write the submodelparts
     # We do not use the filtered  list so we can preserve the order. Inefficient but ordered. Mental peace
     foreach group $lista {
-        set what "nodal"
+        set write_geometries 0
         if {[write::isBooleanTrue [write::getValueByNode [$group selectNodes ".//value\[@n='WriteGeometries']"] ]]} {
-            set what "nodal&Geometries"
+            set write_geometries 1
         }
-        ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what
+
+        write::writeGroupSubModelPartAsGeometry [$group @n] $write_geometries
     }
-    
 }
 
 # MDPA Blocks

@@ -121,6 +121,7 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Total Stress" v="false" />
       <parameter n="VON_MISES_STRESS" pn="Von Mises stress" v="false" />
       <parameter n="LOCAL_STRESS_VECTOR" pn="Local stress on joints" v="false" />
+      <parameter n="CONTACT_STRESS_VECTOR" pn="Contact stress on joints" v="false" />
 
     </outputs>
   </ElementItem>
@@ -161,6 +162,7 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Total Stress" v="false" />
       <parameter n="VON_MISES_STRESS" pn="Von Mises stress" v="false" />
       <parameter n="LOCAL_STRESS_VECTOR" pn="Local stress on joints" v="false" />
+      <parameter n="CONTACT_STRESS_VECTOR" pn="Contact stress on joints" v="false" />
     </outputs>
   </ElementItem>
 

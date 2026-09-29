@@ -56,6 +56,8 @@ proc write::tcl2json { value } {
                 # Tcl has *no* null value at all; empty strings are semantically
                 # different and absent variables aren't values. So cheat!
                 return $value
+            } elseif {$value eq "dictnull"} {
+                return null
             } elseif {[string is integer -strict $value]} {
                 return [expr {$value}]
             } elseif {[string is double -strict $value]} {
@@ -107,6 +109,8 @@ proc write::tcl2jsonstrings { value } {
                 # Tcl has *no* null value at all; empty strings are semantically
                 # different and absent variables aren't values. So cheat!
                 return $value
+            } elseif {$value eq "dictnull"} {
+                return null
             } elseif {[string is integer -strict $value]} {
                 return [json::write string $value]
             } elseif {[string is double -strict $value]} {

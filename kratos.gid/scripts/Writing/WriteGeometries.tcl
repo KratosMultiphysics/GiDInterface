@@ -1,5 +1,5 @@
 
-proc write::writeGeometryConnectivities { group_list } {
+proc write::writeGeometryConnectivities { group_list {merge_by_etype 0}} {
     # Avoid duplicates (groups used twice and intervals!)
     set processed_list_names [list ]
     set processed_list [list ]
@@ -27,8 +27,29 @@ proc write::writeGeometryConnectivities { group_list } {
         # Get the number of nodes and the geometry type
         lassign [getEtype $ov $group_name] etype nnodes
         
-        # Print into the mdpa file
-        write::printGeometryConnectivities $group_name $etype $nnodes
+        if {$merge_by_etype eq 0} {
+            # Print into the mdpa file
+            write::printGeometryConnectivities $group_name $etype $nnodes
+        } else {
+            # Merge by etype
+            set key $etype-$nnodes
+            dict lappend merged_groups $key $group_name
+        }
+    }
+
+    if {$merge_by_etype eq 1} {
+        # Print the merged groups in a deterministic order
+        foreach key [lsort [dict keys $merged_groups]] {
+            
+            set new_group_name "_HIDDEN_GEOM_$key"
+            set group_names [dict get $merged_groups $key]
+            set etype [lindex [split $key -] 0]
+            set nnodes [lindex [split $key -] 1]
+            if {[GiD_Groups exists $new_group_name]} {GiD_Groups delete $new_group_name}
+            spdAux::MergeGroups $new_group_name $group_names
+            write::printGeometryConnectivities $new_group_name $etype $nnodes
+            GiD_Groups delete $new_group_name
+        }
     }
 }
 
@@ -40,7 +61,7 @@ proc write::printGeometryConnectivities {group etype nnodes} {
     # Prepare the indent
     set s [mdpaIndent]
     set nDim $::Model::SpatialDimension
-    set geometry_name ${etype}${nDim}${nnodes}
+    set geometry_name [GetGeometryName $etype $nDim $nnodes] 
 
     # Prepare the formats dict
     set formats [GetFormatDict $group "" $nnodes]
@@ -63,6 +84,32 @@ proc write::printGeometryConnectivities {group etype nnodes} {
         if {$etype == "Sphere" || $etype == "Circle"} {
             write::writeSphereRadiusOnGroup $group
         }
+    } else {
+        # Trick: GiD < 17.3.x return 0 if elements are of type Point
+        set elems [GiD_EntitiesGroups get $group elements -element_type point]
+        set num_elems [objarray length $elems]
+        if {$num_elems > 0} {
+            # Write header
+            WriteString "${s}Begin Geometries $geometry_name // GUI group identifier: $group"
+            # increase indent (allows folding in text editor)
+            incr ::write::current_mdpa_indent_level
+            # Write the connectivities
+            set s1 [mdpaIndent]
+            objarray foreach elem $elems {
+                set node_id [GiD_Mesh get element $elem connectivities]
+                GiD_WriteCalculationFile puts "${s1}$elem $node_id"
+            }
+            # decrease indent
+            incr ::write::current_mdpa_indent_level -1
+            # Write footer
+            WriteString "${s}End Geometries"
+            WriteString ""
+
+            # Write the radius if it is a sphere or a circle
+            if {$etype == "Sphere" || $etype == "Circle"} {
+                write::writeSphereRadiusOnGroup $group
+            }
+        }
     }
     if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "printGeometryConnectivities $geometry_name time: [Kratos::Duration $ttime]"}
 }
@@ -73,4 +120,12 @@ proc write::writeSphereRadiusOnGroup { groupid } {
     GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
     write::WriteString "End NodalData"
     write::WriteString ""
+}
+
+proc write::GetGeometryName { etype nDim nnodes } {
+    if {$etype == "Point"} {
+        return "${etype}${nDim}"
+    } else {
+        return "${etype}${nDim}${nnodes}"
+    }
 }

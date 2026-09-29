@@ -10,7 +10,8 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
-    if {[write::getSubModelPartId $cid $group] eq 0} {
+    set mid [write::getSubModelPartId $cid $group]
+    if {$mid eq 0} {
         # Add the submodelpart to the catalog
         set mid [write::AddSubmodelpart $cid $group]
         # Prepare the print formats

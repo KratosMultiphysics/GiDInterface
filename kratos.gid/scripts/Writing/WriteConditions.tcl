@@ -2,14 +2,7 @@
 proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
     set dictGroupsIterators [dict create]
 
-    set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $baseUN $domNode]/condition/group"
-    set groupNodes [$root selectNodes $xp1]
-    if {[llength $groupNodes] < 1} {
-        set xp1 "[spdAux::getRoute $baseUN $domNode]/group"
-        set groupNodes [$root selectNodes $xp1]
-    }
+    set groupNodes [::write::GetGroupsAssignedIn $baseUN $domNode]
     foreach groupNode $groupNodes {
         set condid [[$groupNode parent] @n]
         set groupid [get_domnode_attribute $groupNode n]
@@ -22,6 +15,31 @@ proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
         }
     }
     return $dictGroupsIterators
+}
+
+proc ::write::GetGroupsAssignedIn {baseUN {domNode ""}} {
+    
+    set root [customlib::GetBaseRoot]
+
+    set xp1 "[spdAux::getRoute $baseUN $domNode]/condition/group"
+    set groupNodes [$root selectNodes $xp1]
+    if {[llength $groupNodes] < 1} {
+        set xp1 "[spdAux::getRoute $baseUN $domNode]/group"
+        set groupNodes [$root selectNodes $xp1]
+    }
+    return $groupNodes
+}
+
+proc ::write::GetGroupsNamesAssignedIn {baseUN {domNode ""}} {
+    set groups [list ]
+    foreach gNode [::write::GetGroupsAssignedIn $baseUN $domNode] {
+        set group_name [get_domnode_attribute $gNode n]
+        set good_group_name [write::GetWriteGroupName $group_name]
+        if {$good_group_name ne $groups} {
+            lappend groups $good_group_name
+        }    
+    }
+    return $groups
 }
 
 proc ::write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {

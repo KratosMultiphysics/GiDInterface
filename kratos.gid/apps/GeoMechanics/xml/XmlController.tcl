@@ -129,7 +129,7 @@ proc ::GeoMechanics::xml::ProcCheckNodalConditionStateGeoMechanics {domNode args
         set condition [Model::getNodalConditionbyId $conditionId]
         set cnd_dim [$condition getAttribute WorkingSpaceDimension]
         if {$cnd_dim ne ""} {
-            if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
+            if {$cnd_dim ne $::Model::SpatialDimension} {return "hidden"}
         }
         set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
         set elemnames [list ]

@@ -187,13 +187,40 @@ proc ::Structural::write::GetContactConditionsDict { {stage ""} } {
     set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
     set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
 
-    # Get the groups
-    set master_group [$root selectNodes $xp_master]
-    set slave_group [$root selectNodes $xp_slave]
+    # Build the contact mapping if it is not already populated by writeContacts
+    set contact_groups_dict [dict create]
+    foreach slave_group [$root selectNodes $xp_slave] {
+        if {$slave_group ne ""} {
+            set slave_groupid_raw [$slave_group @n]
+            set slave_group_pair_id [write::getValueByNode [$slave_group selectNodes "./value\[@n='pair'\]"] ]
+            set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+            set slave_submodelpart [write::GetSubModelPartName CONTACT $slave_groupid]
+            set prev [list ]
+            if {[dict exists $contact_groups_dict Slaves $slave_group_pair_id]} {set prev [dict get $contact_groups_dict Slaves $slave_group_pair_id]}
+            dict set contact_groups_dict Slaves $slave_group_pair_id [lappend prev $slave_submodelpart]
+        }
+    }
+    foreach master_group [$root selectNodes $xp_master] {
+        if {$master_group ne ""} {
+            set master_groupid_raw [$master_group @n]
+            set master_groupid [write::GetWriteGroupName $master_groupid_raw]
+            set master_group_pair_id [write::getValueByNode [$master_group selectNodes "./value\[@n='pair'\]"] ]
+            set master_submodelpart [write::GetSubModelPartName CONTACT $master_groupid]
+            set prev [list ]
+            if {[dict exists $contact_groups_dict Masters $master_group_pair_id]} {
+                set prev [dict get $contact_groups_dict Masters $master_group_pair_id]
+            }
+            dict set contact_groups_dict Masters $master_group_pair_id [lappend prev $master_submodelpart]
+        }
+    }
 
-    set contacts [list ]
+    if {[dict exists $ContactsDict Masters]} {
+        set contact_groups_dict [dict merge $contact_groups_dict $ContactsDict]
+    }
 
-    #if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+    if {![dict exists $contact_groups_dict Masters]} {
+        return [list ]
+    }
 
     set contact_process_dict [dict create ]
     dict set contact_process_dict python_module alm_contact_process
@@ -205,17 +232,20 @@ proc ::Structural::write::GetContactConditionsDict { {stage ""} } {
     dict set contact_parameters_dict model_part_name $model_part_name
 
     set print_contact [dict create]
-    foreach pair [dict keys [dict get $ContactsDict Masters]] {
+    foreach pair [dict keys [dict get $contact_groups_dict Masters]] {
         set merge [list ]
-        if {[dict exists $ContactsDict Slaves $pair]} {
-            set merge [dict get $ContactsDict Slaves $pair]
+        if {[dict exists $contact_groups_dict Slaves $pair]} {
+            set merge [dict get $contact_groups_dict Slaves $pair]
         }
-        lappend merge {*}[dict get $ContactsDict Masters $pair]
+        lappend merge {*}[dict get $contact_groups_dict Masters $pair]
         dict set print_contact $pair $merge
     }
     dict set contact_parameters_dict contact_model_part $print_contact
 
-    set val [dict get $ContactsDict Slaves]
+    set val [list ]
+    if {[dict exists $contact_groups_dict Slaves]} {
+        set val [dict get $contact_groups_dict Slaves]
+    }
     dict set contact_parameters_dict assume_master_slave $val
 
     dict set contact_parameters_dict contact_type [write::getValue STContactParams contact_type]

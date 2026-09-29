@@ -96,7 +96,7 @@ proc spdAux::CreateInitialApplicationsWindow {} {
 
     # Information panel
     ttk::labelframe $w.info -text " Information " -relief ridge 
-    ttk::label $w.info.text -textvariable spdAux::info_main_window_text
+    ttk::label $w.info.text -textvariable ::spdAux::info_main_window_text
     grid $w.info.text
 
     # Settings
@@ -161,9 +161,9 @@ proc spdAux::CreateLauncherWindow { current_launcher available_apps {window_text
         grid $w.applications
 
         # Information panel
-        set spdAux::info_main_window_text ""
+        set ::spdAux::info_main_window_text ""
         ttk::labelframe $w.info -text " Information " -relief ridge 
-        ttk::label $w.info.text -textvariable spdAux::info_main_window_text
+        ttk::label $w.info.text -textvariable ::spdAux::info_main_window_text
         grid $w.info.text
         grid $w.info -sticky we
     }

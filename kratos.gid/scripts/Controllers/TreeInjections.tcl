@@ -787,8 +787,7 @@ proc spdAux::injectConstitutiveLawOutputs { tempnode  args} {
 proc spdAux::injectProcs { basenode  args} {
     set appId [apps::getActiveAppId]
     if {$appId ne ""} {
-        set f "::$appId"
-        append f "::dir"
+        set f "::${appId}::dir"
         set nf [file join [subst $$f] xml Procs.spd]
         set xml [tDOM::xmlReadFile $nf]
         set newnode [dom parse [string trim $xml]]

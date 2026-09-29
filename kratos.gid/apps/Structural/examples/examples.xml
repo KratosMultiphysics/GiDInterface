@@ -16,4 +16,7 @@
     <Example id="IncompressibleCookMembrane3D" app="Structural" logo="IncompressibleCookMembrane3D.png" name="Incompressible cook\nmembrane 3D" dim="3D" cmd="::Structural::examples::IncompressibleCookMembrane::Init">
         <Description></Description>
     </Example>
+    <Example id="SolidContact2D" app="Structural" logo="Contact2D.png" name="Solid contact 2D" dim="2D" cmd="::Structural::examples::SolidContact::Init">
+        <Description></Description>
+    </Example>
 </Group>
