@@ -16,3 +16,4 @@ dist
 null
 __pycache__
 *.whl
+.freebuff
