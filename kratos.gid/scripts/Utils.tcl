@@ -522,3 +522,31 @@ proc Kratos::ExecuteCustomScript {script_name} {
         W "Custom script $script_name not found in path $script_path"
     }
 }
+
+
+proc Kratos::GetNumCores {} {
+    global tcl_platform env
+    set cores 1
+    
+    switch -exact -- $tcl_platform(platform) {
+        "windows" {
+            if {[info exists env(NUMBER_OF_PROCESSORS)]} {
+                set cores $env(NUMBER_OF_PROCESSORS)
+            }
+        }
+        "unix" {
+            if {![catch {open "/proc/cpuinfo"} f]} {
+                set data [read $f]
+                close $f
+                set count [regexp -all -line {^processor\s} $data]
+                if {$count > 0} { set cores $count }
+            }
+        }
+        "Darwin" {
+            if {![catch {exec sysctl -n hw.ncpu} count]} {
+                set cores $count
+            }
+        }
+    }
+    return $cores
+}

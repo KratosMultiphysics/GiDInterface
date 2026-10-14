@@ -109,7 +109,8 @@ proc RunWindow::InitRunWindow { } {
     pack $frame_main.parallel_frame.parallel_label -side left -padx {0 10}
 
     # ttk scale
-    ttk::scale $frame_main.parallel_frame.parallel_scale -from 1 -to 32 -variable ::RunWindow::num_threads -command "RunWindow::OnNumThreadsChanged"
+    set max_num_threads [expr {[::Kratos::GetNumCores]}]
+    ttk::scale $frame_main.parallel_frame.parallel_scale -from 1 -to $max_num_threads -variable ::RunWindow::num_threads -command "RunWindow::OnNumThreadsChanged"
     pack $frame_main.parallel_frame.parallel_scale -side left
     ttk::entry $frame_main.parallel_frame.parallel_value_entry -textvariable ::RunWindow::num_threads -width 5
     pack $frame_main.parallel_frame.parallel_value_entry -side left -padx {10 0}
