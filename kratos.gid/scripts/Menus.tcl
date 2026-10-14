@@ -39,7 +39,7 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     Kratos::EndCreatePreprocessTBar
     Kratos::ToolbarAddItem "Model" "propstree.png" [list -np- gid_groups_conds::open_conditions menu] [= "Define the model properties"]
     Kratos::ToolbarAddItem "Spacer" "" "" ""
-    Kratos::ToolbarAddItem "Run" "run.png" {Utilities Calculate} [= "Run the simulation"]
+    Kratos::ToolbarAddItem "Run" "run.png" [list -np- RunWindow::ShowRunWindow] [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" "output.png" [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" "stop.png"  [list -np- Kratos::StopCalculation] [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
@@ -101,6 +101,18 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
 
         AddNewToolbar [= "Kratos toolbar"] ${prefix}${name}WindowGeom $procname
     }
+}
+
+proc Kratos::RocketButton { } {
+    variable kratos_private
+
+    # if run_window is disabled, do nothing
+    if {[write::isBooleanFalse $kratos_private(run_window)]} {
+        GiD_Process Mescape Utilities Calculate Mescape
+    } else {
+        RunWindow::ShowRunWindow
+    }
+
 }
 
 proc Kratos::ToolbarDependenciesRefresh { } {
