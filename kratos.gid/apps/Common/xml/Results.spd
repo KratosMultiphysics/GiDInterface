@@ -24,7 +24,7 @@
             <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" />
             <value n="NodeOutput" pn="Node output" v="No" values="Yes,No" help="The nodes are printed as a separate layer" />
             <value n="SkinOutput" pn="Skin output" v="No" values="Yes,No" help="" />
-            <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" help="GiD result file format" />
+            <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped,GiD_PostHDF5" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped,GiD_PostHDF5,HDF5" help="GiD result file format" />
             <value n="GiDWriteMeshFlag" pn="Write deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" help="Write the GiD deformed or undeformed mesh"/>
             <value n="GiDWriteConditionsFlag" pn="Write conditions" v="WriteConditions" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" help="Write the conditions or only element to the GiD result file"/>
             <value n="GiDMultiFileFlag" pn="Result file" v="SingleFile" values="SingleFile,MultipleFiles" dict="SingleFile,Single,MultipleFiles,Multiple" help="Write one GiD result file or multiple files"/>
