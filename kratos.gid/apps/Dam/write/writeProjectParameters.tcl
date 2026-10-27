@@ -714,20 +714,18 @@ proc ::Dam::write::GetVTKOutputPath { } {
     if {$outputPath eq ""} {set outputPath "VTK_Output"}
 
     if {[Dam::write::IsUnsafeVTKOutputPath $outputPath]} {
-        set rawComponents [Dam::write::GetVTKOutputComponents $outputPath]
-        set cleanedPath ""
-        if {[llength $rawComponents] > 0} {
-            set cleanedPath [file join {*}$rawComponents]
+        if {[Dam::write::IsUnsafeVTKOutputPath "VTK_Output"]} {
+            set rawComponents [Dam::write::GetVTKOutputComponents $outputPath]
+            set cleanedPath ""
+            if {[llength $rawComponents] > 0} {
+                set cleanedPath [file join {*}$rawComponents]
+            }
+            if {$cleanedPath eq "VTK_Output"} {
+                error "Dam VTK output: the output directory 'VTK_Output' is unsafe (for example, a symbolic link, a reserved folder, or a path outside the project directory). Remove or rename it, or configure a different safe relative output directory."
+            }
+            error "Dam VTK output: the configured output directory '$outputPath' is unsafe and the fallback directory 'VTK_Output' is also unsafe. Remove or rename the unsafe VTK_Output entry, or configure a different safe relative output directory."
         }
-
-        if {$cleanedPath eq "VTK_Output"} {
-            W "Dam VTK output: output directory '$outputPath' is not a safe dedicated relative folder (absolute paths, parent traversal, symbolic links, reserved folders and paths outside the project directory are not allowed). The default 'VTK_Output' also failed validation; review or remove that folder before running."
-        } else {
-            W "Dam VTK output: output directory '$outputPath' is not a safe dedicated relative folder (absolute paths, parent traversal, symbolic links, reserved folders and paths outside the project directory are not allowed). Using 'VTK_Output' instead."
-        }
-        # Do not re-run the check on the fallback. A final symlink named
-        # VTK_Output is refused by the standard process' rmtree; Windows
-        # junctions remain a residual platform risk.
+        W "Dam VTK output: output directory '$outputPath' is not a safe dedicated relative folder (absolute paths, parent traversal, symbolic links, reserved folders and paths outside the project directory are not allowed). Using 'VTK_Output' instead."
         return "VTK_Output"
     }
 
