@@ -4,10 +4,20 @@
     "script_files": [
         "start.tcl"
     ],
-    "start_script":"::FluidLauncher::Init",
-    "requirements":{
-        "display_apps":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM", "CompressibleFluid", "FreeSurface"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::FluidLauncher::Init",
+    "requirements": {
+        "display_apps": [
+            "Fluid",
+            "EmbeddedFluid",
+            "PotentialFluid",
+            "Buoyancy",
+            "ConjugateHeatTransfer",
+            "FluidDEM",
+            "CompressibleFluid",
+            "FreeSurface",
+            "FluidBiomedical"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": false,
