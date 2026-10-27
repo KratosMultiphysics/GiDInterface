@@ -17,7 +17,14 @@ proc ::Dam::write::getParametersDict { } {
     dict set projectParametersDict solver_settings [Dam::write::GetSolverSettingsDict]
 
     ### Output data
-    dict set projectParametersDict output_configuration [Dam::write::GetOutputDict]
+    # GiD output keeps using the legacy output_configuration block. VTK output
+    # uses the standard output_processes block supported by DamAnalysis.
+    if {[Dam::write::GetOutputGiDFlag]} {
+        dict set projectParametersDict output_configuration [Dam::write::GetOutputDict]
+    }
+    if {[Dam::write::GetOutputVTKFlag]} {
+        dict set projectParametersDict output_processes vtk_output [list [Dam::write::GetVTKOutputProcessDict]]
+    }
 
     ### Constraints processes
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid [::write::getConditionsParametersDict DamNodalConditions "Nodal"]]
@@ -460,6 +467,325 @@ proc ::Dam::write::GetOutputDict { {appid ""} } {
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [write::GetEmptyList]
     return $outputDict
+}
+
+# Safely reads an option by unique name (and optional child name). Missing or
+# empty nodes fall back to the supplied default, which keeps older projects
+# working when newly added XML nodes are absent from the stored project tree.
+proc ::Dam::write::GetOptionValue { uniqueName {default ""} {childName ""} } {
+    set value ""
+    if {$childName eq ""} {
+        catch {set value [write::getValue $uniqueName]}
+    } else {
+        catch {set value [write::getValue $uniqueName $childName]}
+    }
+    set value [string trim $value]
+    if {$value eq ""} {return $default}
+    return $value
+}
+
+# Returns whether the legacy GiD output must be written. Missing values (older
+# projects) fall back to the historical behavior: GiD output enabled.
+proc ::Dam::write::GetOutputGiDFlag { } {
+    return [write::isBooleanTrue [Dam::write::GetOptionValue DamOutputGiD "Yes"]]
+}
+
+# Returns whether the standard VTK output process must be written.
+# Missing values (older projects) default to VTK output disabled.
+proc ::Dam::write::GetOutputVTKFlag { } {
+    return [write::isBooleanTrue [Dam::write::GetOptionValue DamOutputVTK "No"]]
+}
+
+# Builds the standard VtkOutputProcess configuration. Only parameters accepted
+# by the standard Kratos process are written here.
+proc ::Dam::write::GetVTKOutputProcessDict { } {
+
+    Dam::write::WarnAboutVTKGaussPointResults
+    Dam::write::WarnAboutVTKScheduling
+
+    set parametersDict [dict create]
+    dict set parametersDict model_part_name [Dam::write::GetVTKModelPartName]
+    dict set parametersDict file_format [Dam::write::GetVTKFileFormat]
+    dict set parametersDict output_precision [Dam::write::GetVTKOutputPrecision]
+    dict set parametersDict output_path [Dam::write::GetVTKOutputPath]
+    dict set parametersDict save_output_files_in_folder true
+    dict set parametersDict write_deformed_configuration [Dam::write::GetVTKWriteDeformedConfiguration]
+    dict set parametersDict output_control_type "time"
+    dict set parametersDict output_interval [Dam::write::GetVTKOutputIntervalInSeconds]
+    dict set parametersDict nodal_solution_step_data_variables [Dam::write::GetVTKNodalResultsList]
+
+    set vtkProcessDict [dict create]
+    dict set vtkProcessDict python_module "vtk_output_process"
+    dict set vtkProcessDict kratos_module "KratosMultiphysics"
+    dict set vtkProcessDict process_name "VtkOutputProcess"
+    dict set vtkProcessDict Parameters $parametersDict
+    return $vtkProcessDict
+}
+
+# Returns the full name of the model part used by the VtkOutputProcess. All
+# mechanical solvers share "mechanical_computing_domain"; the acoustic solver
+# computes on the root model part.
+proc ::Dam::write::GetVTKModelPartName { } {
+    set rootModelPart [string trim [Dam::write::GetAttribute model_part_name]]
+    if {$rootModelPart eq ""} {set rootModelPart "MainModelPart"}
+
+    set damTypeofProblem [Dam::write::GetOptionValue DamTypeofProblem "Mechanical"]
+    if {$damTypeofProblem eq "Acoustic"} {return $rootModelPart}
+    return "${rootModelPart}.mechanical_computing_domain"
+}
+
+proc ::Dam::write::GetVTKFileFormat { } {
+    set fileFormat [string trim [Dam::write::GetOptionValue DamVTKFileFormat "binary"]]
+    if {$fileFormat ni [list "binary" "ascii"]} {
+        W "Dam VTK output: unknown file format '$fileFormat'. Using 'binary'."
+        set fileFormat "binary"
+    }
+    return $fileFormat
+}
+
+proc ::Dam::write::GetVTKOutputPrecision { } {
+    set precision [string trim [Dam::write::GetOptionValue DamVTKOutputPrecision "7"]]
+    if {![string is integer -strict $precision] || $precision < 1} {
+        W "Dam VTK output: invalid output precision '$precision'. Using 7."
+        return 7
+    }
+    return [expr {int($precision)}]
+}
+
+proc ::Dam::write::GetVTKWriteDeformedConfiguration { } {
+    set value [Dam::write::GetOptionValue DamVTKWriteDeformedConfiguration "Yes"]
+    if {[write::isBooleanTrue $value]} {return true}
+    return false
+}
+
+# Converts the shared Dam output frequency to the seconds-based interval used
+# by the standard VtkOutputProcess ("output_control_type": "time").
+proc ::Dam::write::GetVTKOutputIntervalInSeconds { } {
+    set outputCT [Dam::write::GetOptionValue DamOutputControlType "time_d"]
+
+    if {$outputCT eq "time_s"} {
+        set factor 1.0
+        set delta [Dam::write::GetOptionValue Results "1.0" OutputDeltaTime_s]
+    } elseif {$outputCT eq "time_h"} {
+        set factor 3600.0
+        set delta [Dam::write::GetOptionValue Results "1.0" OutputDeltaTime_h]
+    } elseif {$outputCT eq "time_d"} {
+        set factor 86400.0
+        set delta [Dam::write::GetOptionValue Results "1.0" OutputDeltaTime_d]
+    } elseif {$outputCT eq "time_w"} {
+        set factor 604800.0
+        set delta [Dam::write::GetOptionValue Results "1.0" OutputDeltaTime_w]
+    } else {
+        W "Dam VTK output: unknown output control type '$outputCT'. Using seconds."
+        set factor 1.0
+        set delta [Dam::write::GetOptionValue Results "1.0" OutputDeltaTime_s]
+    }
+
+    if {![string is double -strict $delta] || $delta <= 0.0} {
+        W "Dam VTK output: invalid output interval '$delta'. Using 1.0 second."
+        set delta 1.0
+    }
+
+    return [expr {double($delta) * $factor}]
+}
+
+# Returns the resolved GiD project directory, which is the working directory
+# used by the generated launch configuration. Validation is therefore done
+# against that directory. If a user launches Kratos manually from a different
+# directory, relative output paths resolve elsewhere and this check cannot
+# guarantee containment.
+proc ::Dam::write::GetVTKOutputBaseDir { } {
+    set baseDir ""
+    catch {set baseDir [write::GetConfigurationAttribute dir]}
+    if {$baseDir eq ""} {catch {set baseDir [pwd]}}
+    if {$baseDir eq "" || ![file isdirectory $baseDir]} {return ""}
+
+    # file normalize does not resolve the final path component when it is a
+    # symbolic link. Normalizing a child and taking its dirname does.
+    if {[catch {
+        set resolvedBase [file dirname [file normalize [file join $baseDir "__dam_vtk_output_probe__"]]]
+    }]} {
+        return ""
+    }
+    return $resolvedBase
+}
+
+# Returns the normalized relative components of a VTK output path, or an empty
+# list for absolute, home-relative, Windows drive/UNC, or parent-traversal paths.
+proc ::Dam::write::GetVTKOutputComponents { outputPath } {
+    set path [string trim $outputPath]
+    if {$path eq ""} {return [list]}
+
+    # Absolute Unix paths, home-relative paths, Windows drives and UNC paths.
+    if {[string index $path 0] eq "/" || [string index $path 0] eq "~"} {return [list]}
+    if {[regexp {^[A-Za-z]:} $path] || [regexp {^\\\\} $path]} {return [list]}
+
+    # Normalize separators so parent traversal is detected on any platform.
+    # Windows strips trailing spaces and trailing dots, so treat "." as a
+    # current-directory alias and reject any other all-dot/all-space component.
+    set components [list]
+    foreach component [split [string map {"\\" "/"} $path] "/"] {
+        if {$component eq ""} {continue}
+        if {[regexp {^[. ]+$} $component]} {
+            if {$component eq "."} {continue}
+            return [list]
+        }
+        if {[regexp {^[A-Za-z]:} [string trimright $component ". "]]} {return [list]}
+        lappend components $component
+    }
+    return $components
+}
+
+proc ::Dam::write::PathsEqual { pathA pathB } {
+    if {$::tcl_platform(platform) eq "windows"} {
+        return [expr {[string tolower $pathA] eq [string tolower $pathB]}]
+    }
+    return [expr {$pathA eq $pathB}]
+}
+
+proc ::Dam::write::IsPathInside { path parent } {
+    if {[catch {
+        set pathParts [file split [file normalize $path]]
+        set parentParts [file split [file normalize $parent]]
+    }]} {
+        return 0
+    }
+    if {[llength $pathParts] <= [llength $parentParts]} {return 0}
+
+    set pathPrefix [join [lrange $pathParts 0 [expr {[llength $parentParts]-1}]] "/"]
+    set parentPath [join $parentParts "/"]
+    return [Dam::write::PathsEqual $pathPrefix $parentPath]
+}
+
+proc ::Dam::write::IsUnsafeVTKOutputPath { outputPath } {
+    set raw [string trim $outputPath]
+    if {$raw eq ""} {return 1}
+
+    set components [Dam::write::GetVTKOutputComponents $raw]
+    if {[llength $components] == 0} {return 1}
+
+    set baseDir [Dam::write::GetVTKOutputBaseDir]
+    if {$baseDir eq ""} {return 1}
+
+    # Windows strips trailing dots and spaces, so account for them when
+    # comparing against reserved interface-owned folders. Reject the folder
+    # itself and anything below it.
+    set normalizedComponents [list]
+    foreach component $components {
+        lappend normalizedComponents [string trimright $component ". "]
+    }
+    set effectivePath [string tolower [join $normalizedComponents "/"]]
+    if {$effectivePath eq "monitoringdevices" ||
+        [string first "monitoringdevices/" $effectivePath] == 0} {
+        return 1
+    }
+
+    # Reject symbolic-link components. Tcl reports broken links as "link" too.
+    # Windows junctions/reparse points are not always reported as links, so
+    # full containment cannot be guaranteed on every platform.
+    set nextPath $baseDir
+    foreach component $components {
+        set nextPath [file join $nextPath $component]
+        if {![catch {set nodeType [file type $nextPath]}] && $nodeType eq "link"} {return 1}
+    }
+
+    # Resolve the final path and require strict containment in the project dir.
+    if {[catch {
+        set resolvedPath [file normalize [file join $baseDir {*}$components]]
+    }]} {
+        return 1
+    }
+    if {![Dam::write::IsPathInside $resolvedPath $baseDir]} {return 1}
+
+    # A symlink may resolve a differently named path into the reserved folder.
+    set reservedPath [file normalize [file join $baseDir "MonitoringDevices"]]
+    if {[Dam::write::PathsEqual $resolvedPath $reservedPath] ||
+        [Dam::write::IsPathInside $resolvedPath $reservedPath]} {
+        return 1
+    }
+
+    return 0
+}
+
+# Returns a dedicated relative output folder, rejecting paths that could make
+# the standard VtkOutputProcess delete unrelated contents.
+proc ::Dam::write::GetVTKOutputPath { } {
+    set outputPath [string trim [Dam::write::GetOptionValue DamVTKOutputPath "VTK_Output"]]
+    if {$outputPath eq ""} {set outputPath "VTK_Output"}
+
+    if {[Dam::write::IsUnsafeVTKOutputPath $outputPath]} {
+        if {[Dam::write::IsUnsafeVTKOutputPath "VTK_Output"]} {
+            set rawComponents [Dam::write::GetVTKOutputComponents $outputPath]
+            set cleanedPath ""
+            if {[llength $rawComponents] > 0} {
+                set cleanedPath [file join {*}$rawComponents]
+            }
+            if {$cleanedPath eq "VTK_Output"} {
+                error "Dam VTK output: the output directory 'VTK_Output' is unsafe (for example, a symbolic link, a reserved folder, or a path outside the project directory). Remove or rename it, or configure a different safe relative output directory."
+            }
+            error "Dam VTK output: the configured output directory '$outputPath' is unsafe and the fallback directory 'VTK_Output' is also unsafe. Remove or rename the unsafe VTK_Output entry, or configure a different safe relative output directory."
+        }
+        W "Dam VTK output: output directory '$outputPath' is not a safe dedicated relative folder (absolute paths, parent traversal, symbolic links, reserved folders and paths outside the project directory are not allowed). Using 'VTK_Output' instead."
+        return "VTK_Output"
+    }
+
+    return [file join {*}[Dam::write::GetVTKOutputComponents $outputPath]]
+}
+
+# Returns a short note explaining whether omitted results remain available
+# through the legacy GiD output.
+proc ::Dam::write::GetVTKGidAvailabilityNote { {plural 0} } {
+    if {[Dam::write::GetOutputGiDFlag]} {
+        if {$plural} {return "These results remain available in the GiD output."}
+        return "This result remains available in the GiD output."
+    }
+    if {$plural} {return "GiD output is disabled, so these results will not be written."}
+    return "GiD output is disabled, so this result will not be written."
+}
+
+# Reuses the existing GiD nodal result selection, keeping only variables that
+# are safe for the standard VTK writer.
+proc ::Dam::write::GetVTKNodalResultsList { } {
+    set supportedVariables [list \
+        DISPLACEMENT REACTION VELOCITY ACCELERATION PRESSURE TEMPERATURE \
+        NODAL_REFERENCE_TEMPERATURE HEAT_FLUX FACE_HEAT_FLUX VOLUME_ACCELERATION \
+        POSITIVE_FACE_PRESSURE NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
+
+    set gidNote [Dam::write::GetVTKGidAvailabilityNote 0]
+    set vtkResults [list]
+    foreach result [write::GetResultsList Results OnNodes] {
+        if {[lsearch -exact $supportedVariables $result] >= 0} {
+            lappend vtkResults $result
+        } else {
+            W "Dam VTK output: nodal result '$result' is not available for VTK output and will be omitted. $gidNote"
+        }
+    }
+    return $vtkResults
+}
+
+# Warnings comparing GiD and VTK schedules are only relevant when both formats
+# are enabled. General VTK scheduling behavior is documented in the VTK options.
+proc ::Dam::write::WarnAboutVTKScheduling { } {
+    if {![Dam::write::GetOutputGiDFlag]} {return}
+
+    set startOutput [Dam::write::GetOptionValue DamStartOutputResults "0"]
+    if {[string is double -strict $startOutput] && $startOutput > 0.0} {
+        W "Dam VTK output: GiD has a delayed output start ('Start output results' = $startOutput), which the standard VTK process does not support. VTK frames follow the standard Kratos time controller and may differ from GiD frames."
+        return
+    }
+
+    set startTime [Dam::write::GetOptionValue DamTimeParameters "0" StartTime]
+    if {$startTime ne "" && [string is double -strict $startTime] && $startTime > 0.0} {
+        W "Dam VTK output: the simulation starts at a nonzero time. VTK frames follow the standard Kratos time controller (absolute output interval boundaries, no initial frame), so they may differ from GiD frames."
+    }
+}
+
+proc ::Dam::write::WarnAboutVTKGaussPointResults { } {
+    set gaussPointResults [write::GetResultsList Results OnElement]
+    if {[llength $gaussPointResults] > 0} {
+        set gidNote [Dam::write::GetVTKGidAvailabilityNote 1]
+        W "Dam VTK output: Gauss-point results selected in 'On element' ([join $gaussPointResults {, }]) are not available for VTK output and will be omitted. $gidNote"
+    }
 }
 
 
