@@ -9,11 +9,11 @@
     <value n="OutputDeltaTime_h" pn="Time between outputs (h)" v="1.0" help="Output will be printed in intervals of hours" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time_h]"/>
     <value n="OutputDeltaTime_d" pn="Time between outputs (d)" v="1.0" help="Output will be printed in intervals of days" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time_d]"/>
     <value n="OutputDeltaTime_w" pn="Time between outputs (w)" v="1.0" help="Output will be printed in intervals of weeks" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time_w]"/>
-    <value n="StartOutputResults" pn="Start output results" un="DamStartOutputResults" v="0" type="double" help="GiD output will start at this time. The standard VTK output does not support a delayed start and uses the Kratos output scheduling" state="[checkStateByUniqueName DamOutputGiD Yes]"/>
-    <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" state="[checkStateByUniqueName DamOutputGiD Yes]" />
-    <value n="NodeOutput" pn="Node output" v="No" values="Yes,No" help="The nodes are printed as a separate layer" state="[checkStateByUniqueName DamOutputGiD Yes]" />
-    <value n="SkinOutput" pn="Skin output" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamOutputGiD Yes]" />
-    <container n="OnElement" pn="On element" un="ElementResults" state="[ActiveIfAnyPartState]" open_window="0">
+    <value n="StartOutputResults" pn="Start output results" un="DamStartOutputResults" v="0" type="double" help="GiD output will start at this time. VTK output does not support a delayed start and follows the standard Kratos time controller" state="[HideIfUniqueName DamOutputGiD No]"/>
+    <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" state="[HideIfUniqueName DamOutputGiD No]" />
+    <value n="NodeOutput" pn="Node output" v="No" values="Yes,No" help="The nodes are printed as a separate layer" state="[HideIfUniqueName DamOutputGiD No]" />
+    <value n="SkinOutput" pn="Skin output" v="No" values="Yes,No" help="" state="[HideIfUniqueName DamOutputGiD No]" />
+    <container n="OnElement" pn="On element" un="ElementResults" help="GiD-only Gauss-point results. VTK writes nodal results selected in 'On nodes'." state="[ActiveIfAnyPartState]" open_window="0">
         <dynamicnode command="spdAux::injectElementOutputs" args=""/>
         <dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>
     </container>
@@ -35,16 +35,16 @@
         <value n="Viii_POSITIVE" pn="Compression Principal Stress Vector" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
         <value n="NODAL_YOUNG_MODULUS" pn="Nodal Young Modulus" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
     </container>
-    <container n="GiDOptions" pn="GiD options" help="GiD postprocess options" state="[checkStateByUniqueName DamOutputGiD Yes]" open_window="0">
+    <container n="GiDOptions" pn="GiD options" help="GiD postprocess options" state="[HideIfUniqueName DamOutputGiD No]" open_window="0">
         <value n="GiDPostMode" pn="Result format" v="GiD_PostAscii" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" help="GiD result file format" />
         <value n="GiDWriteMeshFlag" pn="Write deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" help="Write the GiD deformed or undeformed mesh"/>
         <value n="GiDWriteConditionsFlag" pn="Write conditions" v="WriteElementsOnly" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" help="Write the conditions or only element to the GiD result file"/>
         <value n="GiDMultiFileFlag" pn="Result file" v="SingleFile" values="SingleFile,MultipleFiles" help="Write one GiD result file or multiple files"/>
         <value n="EchoLevel" pn="Verbosity of terminal output" v="0" values="0,1,2,3" help="Verbosity on screen output during process. \n0 -> Low verbosity \n3 -> High verbosity"/>
     </container>
-    <container n="VTKOptions" pn="VTK options" un="DamVTKOptions" help="VTK output options. Nodal results selected in 'On nodes' are written. Unsupported nodal variables and all Gauss-point results selected in 'On element' are skipped with a warning." state="[checkStateByUniqueName DamOutputVTK Yes]" open_window="0">
+    <container n="VTKOptions" pn="VTK options" un="DamVTKOptions" help="VTK output uses the standard Kratos time controller: no initial frame at the simulation start, no delayed start, and scheduling may differ from GiD when the simulation starts at a nonzero time. Nodal results selected in 'On nodes' are written; unsupported nodal variables and all Gauss-point results selected in 'On element' are omitted with a warning." state="[checkStateByUniqueName DamOutputVTK Yes]" open_window="0">
         <value n="VTKFileFormat" pn="Result format" un="DamVTKFileFormat" v="binary" values="binary,ascii" dict="binary,Binary,ascii,Ascii" help="VTK result file format" />
-        <value n="VTKOutputPath" pn="Output directory" un="DamVTKOutputPath" v="VTK_Output" help="Dedicated relative folder for VTK results. Existing contents of this folder are removed at the start of a run. Absolute paths, the working-directory root and paths containing '..' are not accepted" />
+        <value n="VTKOutputPath" pn="Output directory" un="DamVTKOutputPath" v="VTK_Output" help="Dedicated relative folder inside the GiD project directory for VTK results. Existing contents of this folder are removed at the start of a run. Absolute paths, the working-directory root, paths containing '..', symbolic links and paths resolving outside the project directory are not accepted" />
         <value n="VTKOutputPrecision" pn="Output precision" un="DamVTKOutputPrecision" type="integer" v="7" help="Number of significant digits written to the VTK file" />
         <value n="VTKWriteDeformedConfiguration" pn="Write deformed configuration" un="DamVTKWriteDeformedConfiguration" v="Yes" values="Yes,No" help="Write the deformed or the reference configuration" />
     </container>
