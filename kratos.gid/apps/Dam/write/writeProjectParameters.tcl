@@ -461,7 +461,19 @@ proc ::Dam::write::GetOutputDict { {appid ""} } {
 
     dict set resultDict plane_output [write::GetCutPlanesList Results]
 
-    dict set resultDict nodal_results [write::GetResultsList Results OnNodes]
+    # NODAL_YOUNG_MODULUS is the retained XML compatibility key. The actual
+    # historical output variable is YOUNG_MODULUS.
+    set historicalNodalResults [list]
+    foreach result [write::GetResultsList Results OnNodes] {
+        set outputResult $result
+        if {$result eq "NODAL_YOUNG_MODULUS"} {
+            set outputResult "YOUNG_MODULUS"
+        }
+        if {[lsearch -exact $historicalNodalResults $outputResult] < 0} {
+            lappend historicalNodalResults $outputResult
+        }
+    }
+    dict set resultDict nodal_results $historicalNodalResults
     dict set resultDict gauss_point_results [write::GetResultsList Results OnElement]
 
     dict set outputDict "result_file_configuration" $resultDict
@@ -744,18 +756,25 @@ proc ::Dam::write::GetVTKGidAvailabilityNote { {plural 0} } {
 }
 
 # Reuses the existing GiD nodal result selection, keeping only variables that
-# are safe for the standard VTK writer.
+# are safe for the standard VTK writer. NODAL_YOUNG_MODULUS is the retained XML
+# compatibility key and is written as historical YOUNG_MODULUS.
 proc ::Dam::write::GetVTKNodalResultsList { } {
     set supportedVariables [list \
         DISPLACEMENT REACTION VELOCITY ACCELERATION PRESSURE TEMPERATURE \
         NODAL_REFERENCE_TEMPERATURE HEAT_FLUX FACE_HEAT_FLUX VOLUME_ACCELERATION \
-        POSITIVE_FACE_PRESSURE NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
+        POSITIVE_FACE_PRESSURE NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE YOUNG_MODULUS]
 
     set gidNote [Dam::write::GetVTKGidAvailabilityNote 0]
     set vtkResults [list]
     foreach result [write::GetResultsList Results OnNodes] {
-        if {[lsearch -exact $supportedVariables $result] >= 0} {
-            lappend vtkResults $result
+        set outputResult $result
+        if {$result eq "NODAL_YOUNG_MODULUS"} {
+            set outputResult "YOUNG_MODULUS"
+        }
+        if {[lsearch -exact $supportedVariables $outputResult] >= 0} {
+            if {[lsearch -exact $vtkResults $outputResult] < 0} {
+                lappend vtkResults $outputResult
+            }
         } else {
             W "Dam VTK output: nodal result '$result' is not available for VTK output and will be omitted. $gidNote"
         }
