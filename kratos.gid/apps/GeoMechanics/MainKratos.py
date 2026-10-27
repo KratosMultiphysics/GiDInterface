@@ -33,7 +33,7 @@ if __name__ == "__main__":
     with open("ProjectParameters.json", 'r') as parameter_file:
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
-    analysis_stage_module_name = parameters["stages"]["Stage 1"]["analysis_stage"].GetString()
+    analysis_stage_module_name = parameters["stages"]["Stage 1"]["stage_settings"]["analysis_stage"].GetString()
     analysis_stage_class_name = analysis_stage_module_name.split('.')[-1]
     analysis_stage_class_name = ''.join(x.title() for x in analysis_stage_class_name.split('_'))
 
