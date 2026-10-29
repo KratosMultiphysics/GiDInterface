@@ -55,16 +55,6 @@ proc ::Dam::write::writeParametersEvent { } {
 
     set projectParametersDict [Dam::write::getParametersDict]
     write::WriteJSON $projectParametersDict
-
-    set damSelfweight [write::getValue DamSelfweight ConsiderSelfweight]
-    if {$damSelfweight eq "Yes" } {
-
-        write::OpenFile "[file tail ProjectParametersSelfWeight].json"
-        set projectParametersDictSelfWeight [getParametersSelfWeight]
-        write::WriteString [write::tcl2json $projectParametersDictSelfWeight]
-        write::CloseFile
-
-    }
 }
 
 proc ::Dam::write::GetProblemDataDict { } {
@@ -95,13 +85,6 @@ proc ::Dam::write::GetProblemDataDict { } {
         dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
         dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
         dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
-
-        set consider_self_weight [write::getValue DamSelfweight ConsiderSelfweight]
-        if {$consider_self_weight eq "Yes"} {
-            dict set problemDataDict consider_selfweight true
-        } else {
-            dict set problemDataDict consider_selfweight false
-        }
 
         set consider_construction [write::getValue DamConstructionProcess Activate_construction]
         if {$consider_construction eq "Yes"} {
@@ -1045,105 +1028,6 @@ proc ::Dam::write::GetTransferResultsDict { } {
     return $transfer_results_dict
 }
 
-
-# This process writes a dictionary for creating new projectparameters exclusively for solving selfweight problem
-proc ::Dam::write::getParametersSelfWeight { } {
-
-    set projectParametersDictSelfWeight [dict create]
-    set solversettingsDict [dict create]
-    dict set solversettingsDict solver_type "dam_selfweight_solver"
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set modelDict input_filename $model_name
-    dict set modelDict input_file_label 0
-    dict set solversettingsDict model_import_settings $modelDict
-    dict set solversettingsDict echo_level 1
-    dict set solversettingsDict buffer_size 2
-
-    # We are only interested in Displacements
-    set nodal_part_names [write::getSubModelPartNames "DamNodalConditions" "DamSelfweight"]
-    set nodal_names [list ]
-    foreach name $nodal_part_names {
-        if {[string first DISPLACEMENT $name] != -1} {
-            lappend nodal_names $name
-        }
-        if {[string first SelfWeight $name] != -1} {
-            lappend nodal_names $name
-        }
-    }
-    dict set solversettingsDict processes_sub_model_part_list $nodal_names
-
-    set mechanicalSolverSettingsDict [dict create]
-    # Adding predefined values for selfweight problem
-    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::predefinedParametersSelfWeight] ]
-    # Adding domain definitions
-    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
-    # Combination in solversetting dict
-    dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
-    # Adding solver_settings to global dict
-    dict set projectParametersDictSelfWeight solver_settings $solversettingsDict
-
-    # Adding constrains dict
-    set nodal_process_list [::write::getConditionsParametersDict DamNodalConditions "Nodal"]
-    set nodal_process_list_table_number [Dam::write::ChangeFileNameforTableid $nodal_process_list]
-    dict set projectParametersDictSelfWeight constraints_process_list [Dam::write::filteringConstraints $nodal_process_list_table_number]
-
-    # Adding selfweight loads dict
-    set selfweight_process_list [::write::getConditionsParametersDict DamSelfweight]
-    set selfweight_process_list_table_number [Dam::write::ChangeFileNameforTableid $selfweight_process_list]
-    dict set projectParametersDictSelfWeight loads_process_list $selfweight_process_list_table_number
-
-    return $projectParametersDictSelfWeight
-}
-
-# Predefined solver values for selfweight problem
-proc ::Dam::write::predefinedParametersSelfWeight { } {
-
-    set solverSelfParametersDict [dict create]
-    dict set solverSelfParametersDict solution_type "Quasi-Static"
-    dict set solverSelfParametersDict strategy_type "Newton-Raphson"
-    dict set solverSelfParametersDict scheme_type "Newmark"
-    dict set solverSelfParametersDict convergence_criterion "And_criterion"
-    dict set solverSelfParametersDict displacement_relative_tolerance 0.0001
-    dict set solverSelfParametersDict displacement_absolute_tolerance 1e-9
-    dict set solverSelfParametersDict residual_relative_tolerance 0.0001
-    dict set solverSelfParametersDict residual_absolute_tolerance 1e-9
-    dict set solverSelfParametersDict max_iteration 10
-    dict set solverSelfParametersDict echo_level 1
-    dict set solverSelfParametersDict buffer_size 2
-    dict set solverSelfParametersDict compute_reactions false
-    dict set solverSelfParametersDict reform_dofs_at_each_step false
-    dict set solverSelfParametersDict move_mesh_flag true
-    dict set solverSelfParametersDict block_builder true
-    dict set solverSelfParametersDict clear_storage false
-    dict set solverSelfParametersDict rayleigh_m 0.0
-    dict set solverSelfParametersDict rayleigh_k 0.0
-    dict set solverSelfParametersDict nonlocal_damage false
-
-    set linearSolverSettingsDict [dict create]
-    dict set linearSolverSettingsDict solver_type "bicgstab"
-    dict set linearSolverSettingsDict max_iteration 200
-    dict set linearSolverSettingsDict tolerance 1e-7
-    dict set linearSolverSettingsDict preconditioner_type "ilu0"
-    dict set linearSolverSettingsDict scaling false
-    dict set solverSelfParametersDict linear_solver_settings $linearSolverSettingsDict
-
-    return $solverSelfParametersDict
-}
-
-# This process filters Nodal constraints for selfweight problem
-proc ::Dam::write::filteringConstraints { processList} {
-
-    set returnList [list ]
-    foreach nodalProcess $processList {
-        set processName [dict get $nodalProcess process_name]
-        if {[string first Constraint $processName] != -1} {
-            lappend returnList $nodalProcess
-        }
-    }
-    return $returnList
-}
 
 proc ::Dam::write::DevicesOutput { } {
 

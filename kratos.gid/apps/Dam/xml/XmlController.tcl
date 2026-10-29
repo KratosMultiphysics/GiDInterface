@@ -271,14 +271,6 @@ proc ::Dam::xml::ProcCheckConditionState {domNode args} {
         if {$TypeofProblem ni [dict get [[Model::getCondition $cond_id] getAttributes ] TypeofProblem]} {set resp 0}
     }
 
-    # Active part for ConsiderSelfweight if it is activated 'Yes'
-    if {$resp} {
-        if {$cond_id in [list "SelfWeight3D" "SelfWeight2D"]} {
-            set ConsiderSelfweight [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamConsiderSelfweight]] v]
-            if {$ConsiderSelfweight ni [dict get [[Model::getCondition $cond_id] getAttributes ] ConsiderSelfweight]} {set resp 0}
-        }
-    }
-
     # Active part for define Grouting model parts if DamActivateConstruction is activated 'Yes'
     if {$resp} {
         if {$cond_id in [list "GroutingTime2D" "GroutingTime3D"]} {

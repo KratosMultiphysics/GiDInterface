@@ -109,9 +109,6 @@ proc ::Dam::write::writeConditions { } {
 
     set ThermalConditionGroups [::write::writeConditions [GetAttribute thermal_conditions_un] $index]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $ThermalConditionGroups]
-
-    set SelfweightConditionGroups [::write::writeConditions "DamSelfweight" $index]
-    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $SelfweightConditionGroups]
 }
 
 proc ::Dam::write::writeMeshes { } {
@@ -269,7 +266,7 @@ proc ::Dam::write::GetPrinTables {} {
     set tableid_list [list ]
     set files_list [list ]
     set num 0
-    set origins [list [GetAttribute conditions_un] [GetAttribute thermal_conditions_un] [GetAttribute nodal_conditions_un] "DamSelfweight"]
+    set origins [list [GetAttribute conditions_un] [GetAttribute thermal_conditions_un] [GetAttribute nodal_conditions_un]]
     foreach unique_name $origins {
         set xpathCond "[spdAux::getRoute $unique_name]/condition/group/value\[@type='tablefile'\]"
         foreach node [$root selectNodes $xpathCond] {
