@@ -262,37 +262,6 @@
 
   <!---  MECHANICAL CONDITIONS -->
 
-   <!---  Conditions: SELF WEIGHT -->
-  <ConditionItem n="SelfWeight3D" pn="Self Weight" ImplementedInFile="process_factory" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" ConsiderSelfweight="Yes" ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" TypeofCondition="Selfweight" WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
-	ElementType="Volume" ProcessName="ApplyLoadVectorDamProcess" VariableName="VOLUME_ACCELERATION"
-    help="Self weight application by means of the ApplyLoadVectorDamProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
-    <TopologyFeatures>
-    </TopologyFeatures>
-    <inputs>
-    </inputs>
-    <DefaultValues>
-	  <value n="modulus" pn="Modulus" v="9.8" />
-	  <value n="direction" v="0.0,0.0,-1.0" />
-    </DefaultValues>
-    <outputs>
-      <parameter n="FORCE" pn="External Load" v="false"/>
-    </outputs>
-  </ConditionItem>
-
-  <ConditionItem n="SelfWeight2D" pn="Self Weight" ImplementedInFile="process_factory" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" TypeofCondition="Selfweight" ConsiderSelfweight="Yes" WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Surface" ProcessName="ApplyLoadVectorDamProcess" VariableName="VOLUME_ACCELERATION" help="Self weight application by means of the ApplyLoadVectorDamProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
-    <TopologyFeatures>
-    </TopologyFeatures>
-    <inputs>
-    </inputs>
-    <DefaultValues>
-	  <value n="modulus" pn="Modulus" v="9.8" />
-	  <value n="direction" v="0.0,-1.0,0.0" />
-    </DefaultValues>
-    <outputs>
-      <parameter n="FORCE" pn="External Load" v="false"/>
-    </outputs>
-  </ConditionItem>
-
   <ConditionItem n="BodyAcceleration3D" pn="Body Acceleration" ImplementedInFile="process_factory" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"

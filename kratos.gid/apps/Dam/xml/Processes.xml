@@ -162,7 +162,7 @@
   </Process>
 
 <!--- CONDITION PROCESSES -->
-<!---  Point Loads Selfweight -->
+<!---  Point Loads -->
   <Process n="ApplyLoadVectorDamProcess" pn="Constant vector value" python_module="apply_load_vector_dam_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a vector variable value over a condition" check="DirectorVectorNonZero direction">
     <inputs>
@@ -171,7 +171,7 @@
     </inputs>
   </Process>
 
-<!---  Line Loads & Surface Loads Selfweight -->
+<!---  Line Loads & Surface Loads -->
   <Process n="ApplyLoadVectorDamProcess" pn="Constant vector value" python_module="apply_load_vector_dam_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a vector variable value over a condition" check="DirectorVectorNonZero direction">
     <inputs>
