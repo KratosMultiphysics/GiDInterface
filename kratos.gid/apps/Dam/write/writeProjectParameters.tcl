@@ -86,6 +86,11 @@ proc ::Dam::write::GetProblemDataDict { } {
         dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
         dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
 
+        # Deprecated compatibility flag. Released DamApplication versions still
+        # require this key, while current versions only accept it when false.
+        # The legacy SelfWeight workflow is no longer available in the interface.
+        dict set problemDataDict consider_selfweight false
+
         set consider_construction [write::getValue DamConstructionProcess Activate_construction]
         if {$consider_construction eq "Yes"} {
             dict set problemDataDict consider_construction true
