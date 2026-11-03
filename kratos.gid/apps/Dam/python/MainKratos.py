@@ -168,11 +168,11 @@ class Solution(object):
         # The initial-state import must be the only mechanism that assigns each
         # imported field. Multiple JSON imports are allowed for disjoint parts;
         # their overlap is validated globally before any ExecuteBeforeSolutionLoop.
-        self.json_import_processes = [
+        self.initial_state_import_processes = [
             process for process in self.list_of_processes
             if hasattr(process, "PrevalidateInitialState")]
 
-        if any(getattr(process, "transfers_reference_temperature", False)
+        if any(getattr(process, "imports_reference_temperature", False)
                for process in self.list_of_processes):
             reference_process_classes = (
                 "ImposeNodalReferenceTemperatureProcess",
@@ -190,11 +190,7 @@ class Solution(object):
                     "that assigns it is active. Remove or disable the "
                     "reference-temperature process for this analysis.")
 
-        if self.add_previous_results and any(
-                getattr(process, "transfers_initial_stress", False) or
-                getattr(process, "transfers_initial_temperature", False) or
-                getattr(process, "transfers_reference_temperature", False)
-                for process in self.list_of_processes):
+        if self.add_previous_results and self.initial_state_import_processes:
             raise RuntimeError(
                 "An initial-state transfer process cannot be combined with "
                 "'transfer_results_process.add_previous_results'. Use only one "
@@ -276,10 +272,10 @@ class Solution(object):
             self.construction_utilities.BeforeSolutionLoop()
 
         # Validate all configured imports before any process applies fields.
-        if self.json_import_processes:
+        if self.initial_state_import_processes:
             from KratosMultiphysics.DamApplication import dam_initial_state_file
             dam_initial_state_file.ValidateCombinedImports(
-                self.json_import_processes)
+                self.initial_state_import_processes)
 
         # ExecuteBeforeSolutionLoop
         for self.process in self.list_of_processes:

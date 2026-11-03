@@ -957,10 +957,8 @@ proc ::Dam::write::GetInitialStateValue { name { it "" } } {
 
 # True when any of the initial-state transfer mechanisms is enabled.
 proc ::Dam::write::IsInitialStateTransferEnabled { } {
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialState]]} {return 1}
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamLoadInitialState]]} {return 1}
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamEnableAdditionalSave]]} {return 1}
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamEnableAdditionalLoad]]} {return 1}
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamExportFinalState]]} {return 1}
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamImportInitialState]]} {return 1}
     return 0
 }
 
@@ -992,35 +990,32 @@ proc ::Dam::write::GetBlockValue { node name { default "" } } {
     return [write::getValueByNode $valueNode force]
 }
 
-proc ::Dam::write::GetAdditionalSaveInitialStateEntries { } {
+proc ::Dam::write::GetExportFinalStateEntries { } {
     set entries [list]
-    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamEnableAdditionalSave]]} {
+    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamExportFinalState]]} {
         return $entries
     }
     set root [customlib::GetBaseRoot]
-    set xp "[spdAux::getRoute DamAdditionalSaveEntries]/blockdata\[@n='SavePart'\]"
+    set xp "[spdAux::getRoute DamExportFinalStateParts]/blockdata\[@n='ExportPart'\]"
     foreach node [$root selectNodes $xp] {
-        set stressSource [Dam::write::GetBlockValue $node StressSource]
-        if {$stressSource eq ""} {set stressSource "current_cauchy"}
         lappend entries [dict create \
             name [$node @name] \
             group [Dam::write::GetBlockValue $node Part] \
-            stresses [write::isBooleanTrue [Dam::write::GetBlockValue $node SaveInitialStresses]] \
-            temperature [write::isBooleanTrue [Dam::write::GetBlockValue $node SaveInitialTemperature]] \
-            reference [write::isBooleanTrue [Dam::write::GetBlockValue $node SaveReferenceTemperature]] \
-            source $stressSource \
+            stresses [write::isBooleanTrue [Dam::write::GetBlockValue $node ExportStresses]] \
+            temperature [write::isBooleanTrue [Dam::write::GetBlockValue $node ExportTemperature]] \
+            reference [write::isBooleanTrue [Dam::write::GetBlockValue $node ExportReferenceTemperature]] \
             output [string trim [Dam::write::GetBlockValue $node OutputFile]]]
     }
     return $entries
 }
 
-proc ::Dam::write::GetAdditionalLoadInitialStateEntries { } {
+proc ::Dam::write::GetImportInitialStateEntries { } {
     set entries [list]
-    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamEnableAdditionalLoad]]} {
+    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamImportInitialState]]} {
         return $entries
     }
     set root [customlib::GetBaseRoot]
-    set xp "[spdAux::getRoute DamAdditionalLoadEntries]/blockdata\[@n='LoadPart'\]"
+    set xp "[spdAux::getRoute DamImportInitialStateParts]/blockdata\[@n='ImportPart'\]"
     foreach node [$root selectNodes $xp] {
         set policy [Dam::write::GetBlockValue $node ReferenceTemperaturePolicy]
         if {$policy eq ""} {set policy "preserve"}
@@ -1028,115 +1023,54 @@ proc ::Dam::write::GetAdditionalLoadInitialStateEntries { } {
             name [$node @name] \
             group [Dam::write::GetBlockValue $node Part] \
             input [string trim [Dam::write::GetBlockValue $node InputFile]] \
-            stresses [write::isBooleanTrue [Dam::write::GetBlockValue $node TransferInitialStresses]] \
-            temperature [write::isBooleanTrue [Dam::write::GetBlockValue $node TransferInitialTemperature]] \
-            reference [write::isBooleanTrue [Dam::write::GetBlockValue $node TransferReferenceTemperature]] \
+            stresses [write::isBooleanTrue [Dam::write::GetBlockValue $node ImportStresses]] \
+            temperature [write::isBooleanTrue [Dam::write::GetBlockValue $node ImportTemperature]] \
+            reference [write::isBooleanTrue [Dam::write::GetBlockValue $node ImportReferenceTemperature]] \
             policy $policy]
     }
     return $entries
 }
 
-proc ::Dam::write::GetSaveInitialStateEntries { } {
-    set entries [list]
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialState]]} {
-        set stressSource [Dam::write::GetInitialStateValue DamInitialStateStressSource]
-        if {$stressSource eq ""} {set stressSource "current_cauchy"}
-        lappend entries [dict create \
-            name "single save entry" \
-            group [Dam::write::GetInitialStateValue DamSaveInitialStatePart] \
-            stresses [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialStresses]] \
-            temperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialTemperature]] \
-            reference [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialReferenceTemperature]] \
-            source $stressSource \
-            output [string trim [Dam::write::GetInitialStateValue DamInitialStateOutputFile]]]
-    }
-    lappend entries {*}[Dam::write::GetAdditionalSaveInitialStateEntries]
-    return $entries
-}
-
-proc ::Dam::write::GetLoadInitialStateEntries { } {
-    set entries [list]
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamLoadInitialState]]} {
-        set policy [Dam::write::GetInitialStateValue DamReferenceTemperaturePolicy]
-        if {$policy eq ""} {set policy "preserve"}
-        lappend entries [dict create \
-            name "single load entry" \
-            group [Dam::write::GetInitialStateValue DamLoadInitialStatePart] \
-            input [string trim [Dam::write::GetInitialStateValue DamLoadInitialStateFile]] \
-            stresses [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialStresses]] \
-            temperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialTemperature]] \
-            reference [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialReferenceTemperature]] \
-            policy $policy]
-    }
-    lappend entries {*}[Dam::write::GetAdditionalLoadInitialStateEntries]
-    return $entries
-}
-
-proc ::Dam::write::GetSaveInitialStateProcessDictFor { entry } {
+proc ::Dam::write::GetExportFinalStateProcessDictFor { entry } {
     set parametersDict [dict create]
     dict set parametersDict model_part_name [Dam::write::GetInitialStateModelPartName [dict get $entry group]]
-    if {[dict get $entry stresses]} {
-        dict set parametersDict save_initial_stresses true
-    } else {
-        dict set parametersDict save_initial_stresses false
-    }
-    if {[dict get $entry temperature]} {
-        dict set parametersDict save_initial_temperature true
-    } else {
-        dict set parametersDict save_initial_temperature false
-    }
-    if {[dict get $entry reference]} {
-        dict set parametersDict save_reference_temperature true
-    } else {
-        dict set parametersDict save_reference_temperature false
-    }
-    dict set parametersDict stress_source [dict get $entry source]
+    dict set parametersDict export_stresses [expr {[dict get $entry stresses] ? "true" : "false"}]
+    dict set parametersDict export_temperature [expr {[dict get $entry temperature] ? "true" : "false"}]
+    dict set parametersDict export_reference_temperature [expr {[dict get $entry reference] ? "true" : "false"}]
     dict set parametersDict output_file_name [dict get $entry output]
 
     set processDict [dict create]
-    dict set processDict python_module "save_dam_initial_state_process"
+    dict set processDict python_module "export_dam_final_state_process"
     dict set processDict kratos_module "KratosMultiphysics.DamApplication"
     dict set processDict Parameters $parametersDict
     return $processDict
 }
 
-proc ::Dam::write::GetLoadInitialStateProcessDictFor { entry } {
+proc ::Dam::write::GetImportInitialStateProcessDictFor { entry } {
     set parametersDict [dict create]
     dict set parametersDict model_part_name [Dam::write::GetInitialStateModelPartName [dict get $entry group]]
     dict set parametersDict input_file_name [dict get $entry input]
-    if {[dict get $entry stresses]} {
-        dict set parametersDict transfer_initial_stresses true
-    } else {
-        dict set parametersDict transfer_initial_stresses false
-    }
-    if {[dict get $entry temperature]} {
-        dict set parametersDict transfer_initial_temperature true
-    } else {
-        dict set parametersDict transfer_initial_temperature false
-    }
-    if {[dict get $entry reference]} {
-        dict set parametersDict transfer_reference_temperature true
-    } else {
-        dict set parametersDict transfer_reference_temperature false
-    }
+    dict set parametersDict import_stresses [expr {[dict get $entry stresses] ? "true" : "false"}]
+    dict set parametersDict import_temperature [expr {[dict get $entry temperature] ? "true" : "false"}]
+    dict set parametersDict import_reference_temperature [expr {[dict get $entry reference] ? "true" : "false"}]
     dict set parametersDict reference_temperature_policy [dict get $entry policy]
 
     set processDict [dict create]
-    dict set processDict python_module "load_dam_initial_state_process"
+    dict set processDict python_module "import_dam_initial_state_process"
     dict set processDict kratos_module "KratosMultiphysics.DamApplication"
     dict set processDict Parameters $parametersDict
     return $processDict
 }
 
-# The load processes run before the first solution step and the save processes at
-# finalization, so they can coexist in the same calculation.
+# Import processes run before the first solution step and export processes at
+# finalization, so both can coexist in the same calculation.
 proc ::Dam::write::GetInitialStateProcessList { } {
     set processList [list]
-    foreach entry [Dam::write::GetLoadInitialStateEntries] {
-        lappend processList [Dam::write::GetLoadInitialStateProcessDictFor $entry]
+    foreach entry [Dam::write::GetImportInitialStateEntries] {
+        lappend processList [Dam::write::GetImportInitialStateProcessDictFor $entry]
     }
-    foreach entry [Dam::write::GetSaveInitialStateEntries] {
-        lappend processList [Dam::write::GetSaveInitialStateProcessDictFor $entry]
+    foreach entry [Dam::write::GetExportFinalStateEntries] {
+        lappend processList [Dam::write::GetExportFinalStateProcessDictFor $entry]
     }
     return $processList
 }
@@ -1166,145 +1100,145 @@ proc ::Dam::write::writeValidateEvent { } {
     set damTypeofProblem [write::getValue DamTypeofProblem]
     set hasThermalFields [expr {$damTypeofProblem in [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]}]
 
-    set additionalSaveEntries [Dam::write::GetAdditionalSaveInitialStateEntries]
-    set additionalLoadEntries [Dam::write::GetAdditionalLoadInitialStateEntries]
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamEnableAdditionalSave]] &&
-            [llength $additionalSaveEntries] == 0} {
+    set exportEntries [Dam::write::GetExportFinalStateEntries]
+    set importEntries [Dam::write::GetImportInitialStateEntries]
+    set exportEnabled [expr {[llength $exportEntries] > 0}]
+    set importEnabled [expr {[llength $importEntries] > 0}]
+
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamExportFinalState]] &&
+            !$exportEnabled} {
         incr problem
-        lappend messages "Additional save entries: the section is enabled but no entries are defined. Add an entry or disable it."
+        lappend messages "Export final state: the section is enabled but no parts are defined. Add a part or disable it."
     }
-    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamEnableAdditionalLoad]] &&
-            [llength $additionalLoadEntries] == 0} {
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamImportInitialState]] &&
+            !$importEnabled} {
         incr problem
-        lappend messages "Additional load entries: the section is enabled but no entries are defined. Add an entry or disable it."
+        lappend messages "Import initial state: the section is enabled but no parts are defined. Add a part or disable it."
     }
 
-    set saveEntries [Dam::write::GetSaveInitialStateEntries]
-    set loadEntries [Dam::write::GetLoadInitialStateEntries]
-    set saveEnabled [expr {[llength $saveEntries] > 0}]
-    set loadEnabled [expr {[llength $loadEntries] > 0}]
-
-    set saveOutputs [list]
-    foreach entry $saveEntries {
+    set exportOutputs [list]
+    set exportParts [list]
+    foreach entry $exportEntries {
         set entryName [dict get $entry name]
         set group [dict get $entry group]
-        set saveStresses [dict get $entry stresses]
-        set saveTemperature [dict get $entry temperature]
-        set saveReferenceTemperature [dict get $entry reference]
-        set stressSource [dict get $entry source]
+        set exportStresses [dict get $entry stresses]
+        set exportTemperature [dict get $entry temperature]
+        set exportReferenceTemperature [dict get $entry reference]
         set outputFile [string trim [dict get $entry output]]
 
         if {$group eq ""} {
             incr problem
-            lappend messages "Save initial state ($entryName): select the target part."
-        }
-        if {!$saveStresses && !$saveTemperature && !$saveReferenceTemperature} {
+            lappend messages "Export final state ($entryName): select the structural part."
+        } elseif {$group in $exportParts} {
             incr problem
-            lappend messages "Save initial state ($entryName): select at least one field to save (initial stresses, initial temperature or reference temperature)."
+            lappend messages "Export final state ($entryName): structural part '$group' is selected more than once. Use one export entry per part."
+        } else {
+            lappend exportParts $group
         }
-        if {$saveStresses} {
-            if {$stressSource ni [list "current_cauchy" "stored_initial_stress"]} {
-                incr problem
-                lappend messages "Save initial state ($entryName): unsupported stress source '$stressSource'. Select 'Current Cauchy stress' or 'Stored initial stress'."
-            } elseif {$legacyMapping && $stressSource eq "stored_initial_stress"} {
-                incr problem
-                lappend messages "Save initial state ($entryName): 'Stored initial stress' cannot be combined with the legacy result mapping ('Add previous results'), because the legacy mapping does not populate the constitutive InitialState. Use 'Current Cauchy stress' or disable the legacy mapping."
-            }
+        if {!$exportStresses && !$exportTemperature && !$exportReferenceTemperature} {
+            incr problem
+            lappend messages "Export final state ($entryName): select at least one field to export."
         }
         if {!$hasThermalFields} {
-            if {$saveTemperature} {
+            if {$exportTemperature} {
                 incr problem
-                lappend messages "Save initial state ($entryName): the analysis type '$damTypeofProblem' does not define nodal TEMPERATURE. Disable 'Save initial temperature' or use a thermo-mechanical analysis."
+                lappend messages "Export final state ($entryName): the analysis type '$damTypeofProblem' does not define nodal TEMPERATURE. Disable 'Export temperature' or use a thermo-mechanical analysis."
             }
-            if {$saveReferenceTemperature} {
+            if {$exportReferenceTemperature} {
                 incr problem
-                lappend messages "Save initial state ($entryName): the analysis type '$damTypeofProblem' does not define nodal NODAL_REFERENCE_TEMPERATURE. Disable 'Save reference temperature' or use a thermo-mechanical analysis."
+                lappend messages "Export final state ($entryName): the analysis type '$damTypeofProblem' does not define nodal NODAL_REFERENCE_TEMPERATURE. Disable 'Export reference temperature' or use a thermo-mechanical analysis."
             }
         }
 
         if {$outputFile eq ""} {
             incr problem
-            lappend messages "Save initial state ($entryName): the output file is empty."
+            lappend messages "Export final state ($entryName): the output file is empty."
         } elseif {![regexp {\.json(\.gz)?$} $outputFile]} {
             incr problem
-            lappend messages "Save initial state ($entryName): the output file '$outputFile' must end with '.json' or '.json.gz'."
+            lappend messages "Export final state ($entryName): the output file '$outputFile' must end with '.json' or '.json.gz'."
         } elseif {[file isdirectory [Dam::write::ResolveInitialStatePath $outputFile]]} {
             incr problem
-            lappend messages "Save initial state ($entryName): the output path '$outputFile' is an existing directory; provide a file name."
+            lappend messages "Export final state ($entryName): the output path '$outputFile' is an existing directory; provide a file name."
         } else {
             set resolvedOutput [Dam::write::ResolveInitialStatePath $outputFile]
             catch {set resolvedOutput [file normalize $resolvedOutput]}
-            foreach previous $saveOutputs {
+            foreach previous $exportOutputs {
                 if {[Dam::write::PathsEqual $resolvedOutput [lindex $previous 0]]} {
                     incr problem
-                    lappend messages "Save initial state ($entryName): the output file '$outputFile' is also used by entry '[lindex $previous 1]'. Each save entry must write a distinct file."
+                    lappend messages "Export final state ($entryName): the output file '$outputFile' is also used by entry '[lindex $previous 1]'. Each export entry must write a distinct file."
                     break
                 }
             }
-            lappend saveOutputs [list $resolvedOutput $entryName]
+            lappend exportOutputs [list $resolvedOutput $entryName]
         }
     }
 
-    foreach entry $loadEntries {
+    set importParts [list]
+    foreach entry $importEntries {
         set entryName [dict get $entry name]
         set group [dict get $entry group]
-        set transferStresses [dict get $entry stresses]
-        set transferTemperature [dict get $entry temperature]
-        set transferReferenceTemperature [dict get $entry reference]
+        set importStresses [dict get $entry stresses]
+        set importTemperature [dict get $entry temperature]
+        set importReferenceTemperature [dict get $entry reference]
         set referencePolicy [dict get $entry policy]
         set inputFile [string trim [dict get $entry input]]
 
         if {$group eq ""} {
             incr problem
-            lappend messages "Load initial state ($entryName): select the target part."
-        }
-        if {!$transferStresses && !$transferTemperature && !$transferReferenceTemperature} {
+            lappend messages "Import initial state ($entryName): select the structural part."
+        } elseif {$group in $importParts} {
             incr problem
-            lappend messages "Load initial state ($entryName): select at least one field to transfer (initial stresses, initial temperature or reference temperature)."
+            lappend messages "Import initial state ($entryName): structural part '$group' is selected more than once. Use one import entry per part."
+        } else {
+            lappend importParts $group
+        }
+        if {!$importStresses && !$importTemperature && !$importReferenceTemperature} {
+            incr problem
+            lappend messages "Import initial state ($entryName): select at least one field to import."
         }
         if {!$hasThermalFields} {
-            if {$transferTemperature} {
+            if {$importTemperature} {
                 incr problem
-                lappend messages "Load initial state ($entryName): the analysis type '$damTypeofProblem' does not define nodal TEMPERATURE. Disable 'Transfer initial temperature' or use a thermo-mechanical analysis."
+                lappend messages "Import initial state ($entryName): the analysis type '$damTypeofProblem' does not define nodal TEMPERATURE. Disable 'Import temperature' or use a thermo-mechanical analysis."
             }
-            if {$transferReferenceTemperature} {
+            if {$importReferenceTemperature} {
                 incr problem
-                lappend messages "Load initial state ($entryName): the analysis type '$damTypeofProblem' does not define nodal NODAL_REFERENCE_TEMPERATURE. Disable 'Transfer reference temperature' or use a thermo-mechanical analysis."
+                lappend messages "Import initial state ($entryName): the analysis type '$damTypeofProblem' does not define nodal NODAL_REFERENCE_TEMPERATURE. Disable 'Import reference temperature' or use a thermo-mechanical analysis."
             }
         }
 
         if {[Dam::write::IsNoInitialStateFile $inputFile]} {
             incr problem
-            lappend messages "Load initial state ($entryName): select an input .json or .json.gz file."
+            lappend messages "Import initial state ($entryName): select an input .json or .json.gz file."
         } else {
             set resolvedInput [Dam::write::ResolveInitialStatePath $inputFile]
             if {![file isfile $resolvedInput]} {
                 incr problem
-                lappend messages "Load initial state ($entryName): the input file '$inputFile' does not exist (resolved to '$resolvedInput'). Select it with the File handler toolbar or use a valid path."
+                lappend messages "Import initial state ($entryName): the input file '$inputFile' does not exist (resolved to '$resolvedInput'). Select it with the File handler toolbar or use a valid path."
             } elseif {![regexp {\.json(\.gz)?$} $resolvedInput]} {
                 incr problem
-                lappend messages "Load initial state ($entryName): the input file '$inputFile' must end with '.json' or '.json.gz'."
+                lappend messages "Import initial state ($entryName): the input file '$inputFile' must end with '.json' or '.json.gz'."
             }
         }
 
         if {$referencePolicy ni [list "preserve" "initial_temperature"]} {
             incr problem
-            lappend messages "Load initial state ($entryName): unsupported reference temperature policy '$referencePolicy'."
+            lappend messages "Import initial state ($entryName): unsupported reference temperature policy '$referencePolicy'."
         }
         if {$referencePolicy eq "initial_temperature"} {
-            if {!$transferTemperature} {
+            if {!$importTemperature} {
                 incr problem
-                lappend messages "Load initial state ($entryName): the policy 'Use initial temperature as reference' requires transferring the initial temperature."
+                lappend messages "Import initial state ($entryName): the policy 'Use initial temperature as reference' requires importing the initial temperature."
             }
-            if {$transferReferenceTemperature} {
+            if {$importReferenceTemperature} {
                 incr problem
-                lappend messages "Load initial state ($entryName): 'Transfer reference temperature' and the policy 'Use initial temperature as reference' cannot be enabled at the same time. Disable one of them."
+                lappend messages "Import initial state ($entryName): 'Import reference temperature' and the policy 'Use initial temperature as reference' cannot be enabled at the same time. Disable one of them."
             }
         }
     }
 
     set referenceImportingEntries [list]
-    foreach entry $loadEntries {
+    foreach entry $importEntries {
         if {[dict get $entry reference] || [dict get $entry policy] eq "initial_temperature"} {
             lappend referenceImportingEntries [dict get $entry name]
         }
@@ -1313,20 +1247,20 @@ proc ::Dam::write::writeValidateEvent { } {
         set referenceConditions [Dam::write::GetActiveReferenceTemperatureConditions]
         if {[llength $referenceConditions] > 0} {
             incr problem
-            lappend messages "Load initial state: the imported NODAL_REFERENCE_TEMPERATURE would be overwritten by the active reference-temperature condition(s): [join $referenceConditions {, }]. Disable or remove those conditions, or disable the reference-temperature transfer/policy for entries: [join $referenceImportingEntries {, }]. The interface does not remove them automatically."
+            lappend messages "Import initial state: the imported NODAL_REFERENCE_TEMPERATURE would be overwritten by the active reference-temperature condition(s): [join $referenceConditions {, }]. Disable or remove those conditions, or disable the reference-temperature import/policy for entries: [join $referenceImportingEntries {, }]. The interface does not remove them automatically."
         }
     }
 
-    if {$loadEnabled && $legacyMapping} {
+    if {$importEnabled && $legacyMapping} {
         incr problem
-        lappend messages "Load initial state: the legacy result mapping ('Add previous results') cannot be combined with 'Load initial state'. Disable one of the two mechanisms. The legacy mapping transfers nodal fields and is not equivalent to the constitutive initial-state transfer."
+        lappend messages "Import initial state: the legacy result mapping ('Add previous results') cannot be combined with 'Import initial state'. Disable one of the two mechanisms. The legacy mapping transfers nodal fields and is not equivalent to the constitutive initial-state transfer."
     }
 
     # Warn when the configured entries do not cover all structural parts. Each
     # process/file covers one part; uncovered parts keep their own state, so the
     # global model is not necessarily equilibrated even when the covered parts
-    # are imported exactly.
-    if {$saveEnabled || $loadEnabled} {
+    # are transferred exactly.
+    if {$exportEnabled || $importEnabled} {
         set allParts [list]
         catch {
             set partsNode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute DamParts]]
@@ -1335,26 +1269,26 @@ proc ::Dam::write::writeValidateEvent { } {
             }
         }
         set allParts [lsort -unique $allParts]
-        if {$loadEnabled} {
+        if {$importEnabled} {
             set covered [list]
-            foreach entry $loadEntries {lappend covered [dict get $entry group]}
+            foreach entry $importEntries {lappend covered [dict get $entry group]}
             set missing [list]
             foreach part $allParts {
                 if {$part ni $covered} {lappend missing $part}
             }
             if {[llength $missing] > 0} {
-                W "Initial-state load entries do not cover structural part(s): [join $missing {, }]. Those parts keep their own stress/temperature state, so the global model may not be in initial equilibrium."
+                W "Import initial state entries do not cover structural part(s): [join $missing {, }]. Those parts keep their own stress/temperature state, so the global model may not be in initial equilibrium."
             }
         }
-        if {$saveEnabled} {
+        if {$exportEnabled} {
             set covered [list]
-            foreach entry $saveEntries {lappend covered [dict get $entry group]}
+            foreach entry $exportEntries {lappend covered [dict get $entry group]}
             set missing [list]
             foreach part $allParts {
                 if {$part ni $covered} {lappend missing $part}
             }
             if {[llength $missing] > 0} {
-                W "Initial-state save entries do not cover structural part(s): [join $missing {, }]. The exported initial-state set is partial."
+                W "Export final state entries do not cover structural part(s): [join $missing {, }]. The exported state set is partial."
             }
         }
     }
