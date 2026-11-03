@@ -49,7 +49,7 @@
         <container n="SaveInitialState" pn="Save initial state" un="DamSaveInitialStateContainer" help="Write a Dam initial-state file at the end of the analysis with the selected Gauss-point stresses and nodal temperatures. It can be enabled together with 'Load initial state'." actualize_tree="1" open_window="0">
             <value n="SaveInitialState" pn="Save initial state" un="DamSaveInitialState" v="No" values="Yes,No" actualize_tree="1" help="Write the selected initial-state fields when the analysis finishes"/>
             <container n="SaveInitialStateOptions" pn="Initial state to save" un="DamSaveInitialStateOptions" state="[HideIfUniqueName DamSaveInitialState No]" actualize_tree="1" open_window="0">
-                <value n="Part" pn="Target part" un="DamSaveInitialStatePart" v="" values="[GetParts]" help="Structural part whose constitutive initial state is written. Only one Dam part is stored per initial-state file."/>
+                <value n="Part" pn="Target part" un="DamSaveInitialStatePart" v="" values="[GetParts]" help="Structural part whose constitutive initial state is written. Only one Dam part is stored per initial-state file; other parts are not included."/>
                 <value n="SaveInitialStresses" pn="Save initial stresses" un="DamSaveInitialStresses" v="Yes" values="Yes,No" actualize_tree="1" help="Save the initial stress state at the element Gauss points"/>
                 <container n="InitialStressesOptions" pn="Initial stresses" un="DamSaveInitialStressesOptions" state="[HideIfUniqueName DamSaveInitialStresses No]" actualize_tree="1" open_window="0">
                     <value n="StressSource" pn="Stress source" un="DamInitialStateStressSource" v="current_cauchy" values="current_cauchy,stored_initial_stress" dict="current_cauchy,Current Cauchy stress,stored_initial_stress,Stored initial stress" help="Current Cauchy stress exports the current total Gauss-point Cauchy stresses (they may include gravity, thermal and other contributions). Stored initial stress exports the constitutive initial stresses currently stored in InitialState, which preserves previously imported stresses independently of later loading."/>
@@ -60,11 +60,25 @@
             </container>
         </container>
 
+        <container n="AdditionalSaveInitialState" pn="Additional save entries" un="DamAdditionalSaveInitialState" help="Add one entry per additional structural part. The single 'Save initial state' section above is the first part; these entries are independent and may use different fields and output files." actualize_tree="1" open_window="0">
+            <value n="Enable" pn="Define additional save entries" un="DamEnableAdditionalSave" v="No" values="Yes,No" actualize_tree="1" help="Enable repeatable save entries for additional structural parts"/>
+            <container n="Entries" pn="Save entries" un="DamAdditionalSaveEntries" state="[HideIfUniqueName DamEnableAdditionalSave No]" actualize_tree="1" open_window="0">
+                <blockdata n="SavePart" pn="Save part" name="Save part 1" sequence="1" editable_name="unique" can_delete_last_item="1">
+                    <value n="Part" pn="Target part" values="[GetParts]" v=""/>
+                    <value n="SaveInitialStresses" pn="Save initial stresses" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="StressSource" pn="Stress source" v="current_cauchy" values="current_cauchy,stored_initial_stress" dict="current_cauchy,Current Cauchy stress,stored_initial_stress,Stored initial stress" state="[getStateFromXPathValue {string(../value[@n='SaveInitialStresses']/@v)} Yes]"/>
+                    <value n="SaveInitialTemperature" pn="Save initial temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="SaveReferenceTemperature" pn="Save reference temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="OutputFile" pn="Output file" v="additional_initial_state.json.gz" help="Unique output path for this part. Use .json or .json.gz. Different entries must not share the same output file."/>
+                </blockdata>
+            </container>
+        </container>
+
         <container n="LoadInitialState" pn="Load initial state" un="DamLoadInitialStateContainer" help="Read selected fields from a Dam initial-state file before the first solution step. It can be enabled together with 'Save initial state'." actualize_tree="1" open_window="0">
             <value n="LoadInitialState" pn="Load initial state" un="DamLoadInitialState" v="No" values="Yes,No" actualize_tree="1" help="Apply the selected initial-state fields before the first solution step"/>
             <container n="LoadInitialStateOptions" pn="Initial state to load" un="DamLoadInitialStateOptions" state="[HideIfUniqueName DamLoadInitialState No]" actualize_tree="1" open_window="0">
                 <value n="InputFile" pn="Input file" un="DamLoadInitialStateFile" type="file" v="- No file - (add files using File handler toolbar)" values="[GetTransferFileValues]" update_proc="AddFile" help="Initial-state file to read. Use the File handler toolbar to select an existing .json or .json.gz file, including files from other GiD projects. Selected files are copied into this project directory. An absolute path or a path relative to the GiD project directory can also be typed directly."/>
-                <value n="Part" pn="Target part" un="DamLoadInitialStatePart" v="" values="[GetParts]" help="Structural part that receives the initial state. Its mesh, elements and materials must match the source file."/>
+                <value n="Part" pn="Target part" un="DamLoadInitialStatePart" v="" values="[GetParts]" help="Structural part that receives the initial state. Its mesh, elements and materials must match the source file. Only this part is imported; other structural parts keep their own stress and temperature state, so a multi-part model may not be in global initial equilibrium."/>
                 <value n="TransferInitialStresses" pn="Transfer initial stresses" un="DamTransferInitialStresses" v="Yes" values="Yes,No" actualize_tree="1" help="Assign the Gauss-point constitutive initial stresses stored in the file"/>
                 <value n="TransferInitialTemperature" pn="Transfer initial temperature" un="DamTransferInitialTemperature" v="Yes" values="Yes,No" actualize_tree="1" help="Assign the nodal TEMPERATURE field stored in the file"/>
                 <value n="TransferReferenceTemperature" pn="Transfer reference temperature" un="DamTransferInitialReferenceTemperature" v="Yes" values="Yes,No" actualize_tree="1" help="Assign the nodal NODAL_REFERENCE_TEMPERATURE field stored in the file. Cannot be combined with a reference-temperature condition that would overwrite it."/>
@@ -72,11 +86,25 @@
             </container>
         </container>
 
+        <container n="AdditionalLoadInitialState" pn="Additional load entries" un="DamAdditionalLoadInitialState" help="Add one entry per additional structural part. The single 'Load initial state' section above is the first part; these entries are independent and may use different fields and input files." actualize_tree="1" open_window="0">
+            <value n="Enable" pn="Define additional load entries" un="DamEnableAdditionalLoad" v="No" values="Yes,No" actualize_tree="1" help="Enable repeatable load entries for additional structural parts"/>
+            <container n="Entries" pn="Load entries" un="DamAdditionalLoadEntries" state="[HideIfUniqueName DamEnableAdditionalLoad No]" actualize_tree="1" open_window="0">
+                <blockdata n="LoadPart" pn="Load part" name="Load part 1" sequence="1" editable_name="unique" can_delete_last_item="1">
+                    <value n="Part" pn="Target part" values="[GetParts]" v=""/>
+                    <value n="InputFile" pn="Input file" type="file" v="- No file - (add files using File handler toolbar)" values="[GetTransferFileValues]" update_proc="AddFile" help="Initial-state file for this part. Select a .json or .json.gz file with the File handler toolbar, or type an absolute/relative path."/>
+                    <value n="TransferInitialStresses" pn="Transfer initial stresses" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="TransferInitialTemperature" pn="Transfer initial temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="TransferReferenceTemperature" pn="Transfer reference temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="ReferenceTemperaturePolicy" pn="Reference temperature policy" v="preserve" values="preserve,initial_temperature" dict="preserve,Preserve,initial_temperature,Use initial temperature as reference"/>
+                </blockdata>
+            </container>
+        </container>
+
         <container n="RestartInitialStresses" pn="Restart initial stresses (checkpoint)" un="DamRestartInitialStressesContainer" help="Transfer Gauss-point initial stresses from a previous Kratos restart checkpoint (.rest) with the existing selective_initial_stress_process. This route transfers stresses only: it never transfers displacements, time, step counters, loads, TEMPERATURE or NODAL_REFERENCE_TEMPERATURE. Source and destination must use the same mesh, integration rule and validated constitutive laws. For thermoelastic laws, T must equal T_ref at the moment of import, so the reference field must already be assigned (for example by an active Nodal Reference Temperature condition)." actualize_tree="1" open_window="0">
             <value n="RestartInitialStresses" pn="Transfer stresses from restart checkpoint" un="DamRestartInitialStresses" v="No" values="Yes,No" actualize_tree="1" help="Enable the stress-only transfer from an existing Kratos .rest checkpoint"/>
             <container n="RestartInitialStressesOptions" pn="Restart stress transfer options" un="DamRestartInitialStressesOptions" state="[HideIfUniqueName DamRestartInitialStresses No]" actualize_tree="1" open_window="0">
                 <value n="CheckpointFile" pn="Checkpoint file (.rest)" un="DamRestartInitialStressFile" type="file" v="- No file - (add files using File handler toolbar)" values="[GetTransferFileValues]" update_proc="AddFile" help="Select a Kratos restart file named &lt;model_part&gt;_&lt;label&gt;.rest, for example MainModelPart_1.0.rest. The file label is read from the file name. Files from other GiD projects can be selected with the File handler toolbar or referenced by an absolute/relative path."/>
-                <value n="Part" pn="Target part" un="DamRestartInitialStressPart" v="" values="[GetParts]" help="Structural part that receives the checkpoint stresses. The source checkpoint must contain a matching part with the same mesh, integration rule and material."/>
+                <value n="Part" pn="Target part" un="DamRestartInitialStressPart" v="" values="[GetParts]" help="Structural part that receives the checkpoint stresses. The source checkpoint must contain a matching part with the same mesh, integration rule and material, and 2D checkpoints must define THICKNESS. Only this part is transferred; other structural parts keep their own state."/>
                 <value n="SourcePart" pn="Source part name" un="DamRestartInitialStressSourcePart" v="" help="Optional sub-model-part name inside the checkpoint (for example Parts_Concrete). Leave empty to use the target part name. The checkpoint root model part is expected to be MainModelPart."/>
             </container>
         </container>
