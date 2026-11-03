@@ -81,9 +81,9 @@
 	  ]]>
 	</proc>
 
-	<proc n='GetInitialStateFileValues' args='args'>
+	<proc n='GetTransferFileValues' args='args'>
 	  <![CDATA[
-	  return [Dam::xml::ProcGetInitialStateFileValues $domNode $args]
+	  return [Dam::xml::ProcGetTransferFileValues $domNode $args]
 	  ]]>
 	</proc>
 

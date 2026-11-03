@@ -923,10 +923,10 @@ proc ::Dam::write::GetConstructionDomainProcessDict { } {
     return $construction_dict
 }
 
-# Returns the Kratos model-part name for a Dam part group. The sub-model-part
+# Returns the sub-model-part name for a Dam part group. The sub-model-part
 # catalog is already populated when ProjectParameters is written (the .mdpa is
 # written first), so the resolved identifier is used whenever available.
-proc ::Dam::write::GetInitialStateModelPartName { group } {
+proc ::Dam::write::GetInitialStateSubModelPartName { group } {
     if {$group eq ""} {return ""}
 
     # Match the name used when the part sub-model-part was written.
@@ -937,7 +937,30 @@ proc ::Dam::write::GetInitialStateModelPartName { group } {
     if {$subModelPartId eq "" || $subModelPartId eq 0} {
         set subModelPartId "Parts_[write::transformGroupName $group]"
     }
+    return $subModelPartId
+}
+
+# Returns the full Kratos model-part name for a Dam part group.
+proc ::Dam::write::GetInitialStateModelPartName { group } {
+    set subModelPartId [Dam::write::GetInitialStateSubModelPartName $group]
+    if {$subModelPartId eq ""} {return ""}
     return [write::GetModelPartNameWithParent $subModelPartId]
+}
+
+# Safe getter for the new initial-state values. Old projects may not contain the
+# new tree nodes until the interface updates their tree; missing nodes must be
+# treated as disabled instead of breaking legacy configurations.
+proc ::Dam::write::GetInitialStateValue { name { it "" } } {
+    if {[spdAux::getRoute $name] eq ""} {return ""}
+    return [write::getValue $name $it]
+}
+
+# True when any of the initial-state transfer mechanisms is enabled.
+proc ::Dam::write::IsInitialStateTransferEnabled { } {
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialState]]} {return 1}
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamLoadInitialState]]} {return 1}
+    if {[write::isBooleanTrue [Dam::write::GetInitialStateValue DamRestartInitialStresses]]} {return 1}
+    return 0
 }
 
 # File-handler values use "- No file - ..." as the empty selection.
@@ -962,15 +985,15 @@ proc ::Dam::write::ResolveInitialStatePath { value } {
 }
 
 proc ::Dam::write::GetSaveInitialStateProcessDict { } {
-    if {![write::isBooleanTrue [write::getValue DamSaveInitialState]]} {return ""}
+    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialState]]} {return ""}
 
-    set group [write::getValue DamSaveInitialStatePart]
-    set saveStresses [write::isBooleanTrue [write::getValue DamSaveInitialStresses]]
-    set saveTemperature [write::isBooleanTrue [write::getValue DamSaveInitialTemperature]]
-    set saveReferenceTemperature [write::isBooleanTrue [write::getValue DamSaveInitialReferenceTemperature]]
-    set stressSource [write::getValue DamInitialStateStressSource]
+    set group [Dam::write::GetInitialStateValue DamSaveInitialStatePart]
+    set saveStresses [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialStresses]]
+    set saveTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialTemperature]]
+    set saveReferenceTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialReferenceTemperature]]
+    set stressSource [Dam::write::GetInitialStateValue DamInitialStateStressSource]
     if {$stressSource eq ""} {set stressSource "current_cauchy"}
-    set outputFile [string trim [write::getValue DamInitialStateOutputFile]]
+    set outputFile [string trim [Dam::write::GetInitialStateValue DamInitialStateOutputFile]]
 
     set parametersDict [dict create]
     dict set parametersDict model_part_name [Dam::write::GetInitialStateModelPartName $group]
@@ -1000,14 +1023,14 @@ proc ::Dam::write::GetSaveInitialStateProcessDict { } {
 }
 
 proc ::Dam::write::GetLoadInitialStateProcessDict { } {
-    if {![write::isBooleanTrue [write::getValue DamLoadInitialState]]} {return ""}
+    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamLoadInitialState]]} {return ""}
 
-    set group [write::getValue DamLoadInitialStatePart]
-    set inputFile [string trim [write::getValue DamLoadInitialStateFile]]
-    set transferStresses [write::isBooleanTrue [write::getValue DamTransferInitialStresses]]
-    set transferTemperature [write::isBooleanTrue [write::getValue DamTransferInitialTemperature]]
-    set transferReferenceTemperature [write::isBooleanTrue [write::getValue DamTransferInitialReferenceTemperature]]
-    set referencePolicy [write::getValue DamReferenceTemperaturePolicy]
+    set group [Dam::write::GetInitialStateValue DamLoadInitialStatePart]
+    set inputFile [string trim [Dam::write::GetInitialStateValue DamLoadInitialStateFile]]
+    set transferStresses [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialStresses]]
+    set transferTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialTemperature]]
+    set transferReferenceTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialReferenceTemperature]]
+    set referencePolicy [Dam::write::GetInitialStateValue DamReferenceTemperaturePolicy]
     if {$referencePolicy eq ""} {set referencePolicy "preserve"}
 
     set parametersDict [dict create]
@@ -1037,13 +1060,72 @@ proc ::Dam::write::GetLoadInitialStateProcessDict { } {
     return $processDict
 }
 
-# The load process runs before the first solution step and the save process at
-# finalization, so both can coexist in the same calculation. Keep the load
-# process first for a predictable lifecycle order.
+# Splits a restart file name such as MainModelPart_1.0.rest into the base path
+# expected by RestartUtility and the file label. Returns an empty pair when the
+# name does not follow the <model_part>_<label>.rest convention.
+proc ::Dam::write::ParseRestartCheckpoint { value } {
+    set value [string trim $value]
+    if {[Dam::write::IsNoInitialStateFile $value]} {return [list "" ""]}
+
+    if {[string tolower [file extension $value]] ne ".rest"} {return [list "" ""]}
+
+    set stem [string range $value 0 end-5]
+    set dir [file dirname $stem]
+    set name [file tail $stem]
+    set separator [string last "_" $name]
+    if {$separator <= 0 || $separator >= [expr {[string length $name] - 1}]} {
+        return [list "" ""]
+    }
+
+    set baseName [string range $name 0 [expr {$separator - 1}]]
+    set label [string range $name [expr {$separator + 1}] end]
+    return [list [file join $dir $baseName] $label]
+}
+
+# Exposes the existing validated selective_initial_stress_process. This route
+# transfers Gauss-point stresses only; it never transfers temperature fields.
+proc ::Dam::write::GetRestartInitialStressProcessDict { } {
+    if {![write::isBooleanTrue [Dam::write::GetInitialStateValue DamRestartInitialStresses]]} {return ""}
+
+    set group [Dam::write::GetInitialStateValue DamRestartInitialStressPart]
+    set checkpoint [string trim [Dam::write::GetInitialStateValue DamRestartInitialStressFile]]
+    lassign [Dam::write::ParseRestartCheckpoint $checkpoint] inputBase fileLabel
+    set sourcePart [string trim [Dam::write::GetInitialStateValue DamRestartInitialStressSourcePart]]
+    if {$sourcePart eq ""} {
+        set sourcePart [Dam::write::GetInitialStateSubModelPartName $group]
+    }
+
+    set restartSettings [dict create]
+    dict set restartSettings input_filename $inputBase
+    # Do not write "input_output_path" as an empty string: the GiD JSON writer
+    # encodes empty strings as [], while RestartUtility expects a string. The
+    # key is unnecessary when load_restart_files_from_folder is false.
+    dict set restartSettings restart_load_file_label $fileLabel
+    dict set restartSettings load_restart_files_from_folder false
+
+    set parametersDict [dict create]
+    dict set parametersDict model_part_name [Dam::write::GetInitialStateModelPartName $group]
+    dict set parametersDict source_model_part_name $sourcePart
+    dict set parametersDict source_root_model_part_name "MainModelPart"
+    dict set parametersDict restart_settings $restartSettings
+
+    set processDict [dict create]
+    dict set processDict python_module "selective_initial_stress_process"
+    dict set processDict kratos_module "KratosMultiphysics.DamApplication"
+    dict set processDict Parameters $parametersDict
+    return $processDict
+}
+
+# The load processes run before the first solution step and the save process at
+# finalization, so they can coexist in the same calculation. The JSON load runs
+# before the restart import so that temperature/reference fields imported from a
+# JSON file are available when the restart process checks T == T_ref.
 proc ::Dam::write::GetInitialStateProcessList { } {
     set processList [list]
     set loadProcess [Dam::write::GetLoadInitialStateProcessDict]
     if {$loadProcess ne ""} {lappend processList $loadProcess}
+    set restartProcess [Dam::write::GetRestartInitialStressProcessDict]
+    if {$restartProcess ne ""} {lappend processList $restartProcess}
     set saveProcess [Dam::write::GetSaveInitialStateProcessDict]
     if {$saveProcess ne ""} {lappend processList $saveProcess}
     return $processList
@@ -1067,32 +1149,48 @@ proc ::Dam::write::GetActiveReferenceTemperatureConditions { } {
 
 # Application-level validation. Returning a nonzero first element aborts the
 # write and displays every message in the GiD warning window.
+# Returns the constitutive law selected for a Dam part group, or an empty
+# string when the part/law cannot be resolved.
+proc ::Dam::write::GetPartConstitutiveLaw { group } {
+    if {$group eq ""} {return ""}
+    set root [customlib::GetBaseRoot]
+    foreach node [$root selectNodes "[spdAux::getRoute DamParts]/group"] {
+        if {[$node @n] eq $group} {
+            set lawNode [$node selectNodes "./value\[@n='ConstitutiveLaw'\]"]
+            if {$lawNode ne ""} {return [get_domnode_attribute $lawNode v]}
+            return ""
+        }
+    }
+    return ""
+}
+
 proc ::Dam::write::writeValidateEvent { } {
     set problem 0
     set messages [list]
     set legacyMapping [write::isBooleanTrue [write::getValue DamPreviousResults AddPreviousResults]]
     set damTypeofProblem [write::getValue DamTypeofProblem]
     set hasThermalFields [expr {$damTypeofProblem in [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]}]
+    set restartEnabled [write::isBooleanTrue [Dam::write::GetInitialStateValue DamRestartInitialStresses]]
 
-    set saveEnabled [write::isBooleanTrue [write::getValue DamSaveInitialState]]
+    set saveEnabled [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialState]]
     if {$saveEnabled} {
-        set saveStresses [write::isBooleanTrue [write::getValue DamSaveInitialStresses]]
-        set saveTemperature [write::isBooleanTrue [write::getValue DamSaveInitialTemperature]]
-        set saveReferenceTemperature [write::isBooleanTrue [write::getValue DamSaveInitialReferenceTemperature]]
+        set saveStresses [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialStresses]]
+        set saveTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialTemperature]]
+        set saveReferenceTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamSaveInitialReferenceTemperature]]
 
         if {!$saveStresses && !$saveTemperature && !$saveReferenceTemperature} {
             incr problem
             lappend messages "Save initial state: select at least one field to save (initial stresses, initial temperature or reference temperature)."
         }
 
-        set group [write::getValue DamSaveInitialStatePart]
+        set group [Dam::write::GetInitialStateValue DamSaveInitialStatePart]
         if {$group eq ""} {
             incr problem
             lappend messages "Save initial state: select the target part."
         }
 
         if {$saveStresses} {
-            set stressSource [write::getValue DamInitialStateStressSource]
+            set stressSource [Dam::write::GetInitialStateValue DamInitialStateStressSource]
             if {$stressSource ni [list "current_cauchy" "stored_initial_stress"]} {
                 incr problem
                 lappend messages "Save initial state: unsupported stress source '$stressSource'. Select 'Current Cauchy stress' or 'Stored initial stress'."
@@ -1113,7 +1211,7 @@ proc ::Dam::write::writeValidateEvent { } {
             }
         }
 
-        set outputFile [string trim [write::getValue DamInitialStateOutputFile]]
+        set outputFile [string trim [Dam::write::GetInitialStateValue DamInitialStateOutputFile]]
         if {$outputFile eq ""} {
             incr problem
             lappend messages "Save initial state: the output file is empty."
@@ -1126,17 +1224,22 @@ proc ::Dam::write::writeValidateEvent { } {
         }
     }
 
-    set loadEnabled [write::isBooleanTrue [write::getValue DamLoadInitialState]]
+    set loadEnabled [write::isBooleanTrue [Dam::write::GetInitialStateValue DamLoadInitialState]]
     if {$loadEnabled} {
-        set transferStresses [write::isBooleanTrue [write::getValue DamTransferInitialStresses]]
-        set transferTemperature [write::isBooleanTrue [write::getValue DamTransferInitialTemperature]]
-        set transferReferenceTemperature [write::isBooleanTrue [write::getValue DamTransferInitialReferenceTemperature]]
-        set referencePolicy [write::getValue DamReferenceTemperaturePolicy]
+        set transferStresses [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialStresses]]
+        set transferTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialTemperature]]
+        set transferReferenceTemperature [write::isBooleanTrue [Dam::write::GetInitialStateValue DamTransferInitialReferenceTemperature]]
+        set referencePolicy [Dam::write::GetInitialStateValue DamReferenceTemperaturePolicy]
         if {$referencePolicy eq ""} {set referencePolicy "preserve"}
 
         if {!$transferStresses && !$transferTemperature && !$transferReferenceTemperature} {
             incr problem
             lappend messages "Load initial state: select at least one field to transfer (initial stresses, initial temperature or reference temperature)."
+        }
+
+        if {$transferStresses && $restartEnabled} {
+            incr problem
+            lappend messages "Load initial state: both 'Transfer initial stresses' and the restart checkpoint stress transfer are enabled. Only one mechanism can assign the Gauss-point initial stress. Disable one of them."
         }
 
         if {!$hasThermalFields} {
@@ -1150,13 +1253,13 @@ proc ::Dam::write::writeValidateEvent { } {
             }
         }
 
-        set group [write::getValue DamLoadInitialStatePart]
+        set group [Dam::write::GetInitialStateValue DamLoadInitialStatePart]
         if {$group eq ""} {
             incr problem
             lappend messages "Load initial state: select the target part."
         }
 
-        set inputFile [string trim [write::getValue DamLoadInitialStateFile]]
+        set inputFile [string trim [Dam::write::GetInitialStateValue DamLoadInitialStateFile]]
         if {[Dam::write::IsNoInitialStateFile $inputFile]} {
             incr problem
             lappend messages "Load initial state: select an input .json or .json.gz file."
@@ -1203,6 +1306,70 @@ proc ::Dam::write::writeValidateEvent { } {
         if {$legacyMapping} {
             incr problem
             lappend messages "Load initial state: the legacy result mapping ('Add previous results') cannot be combined with 'Load initial state'. Disable one of the two mechanisms. The legacy mapping transfers nodal fields and is not equivalent to the constitutive initial-state transfer."
+        }
+    }
+
+    if {$restartEnabled} {
+        set group [Dam::write::GetInitialStateValue DamRestartInitialStressPart]
+        if {$group eq ""} {
+            incr problem
+            lappend messages "Restart initial stresses: select the target part."
+        }
+
+        set checkpoint [string trim [Dam::write::GetInitialStateValue DamRestartInitialStressFile]]
+        if {[Dam::write::IsNoInitialStateFile $checkpoint]} {
+            incr problem
+            lappend messages "Restart initial stresses: select a .rest checkpoint file."
+        } else {
+            set resolvedCheckpoint [Dam::write::ResolveInitialStatePath $checkpoint]
+            if {![file isfile $resolvedCheckpoint]} {
+                incr problem
+                lappend messages "Restart initial stresses: the checkpoint file '$checkpoint' does not exist (resolved to '$resolvedCheckpoint'). Select it with the File handler toolbar or use a valid path."
+            } elseif {[string tolower [file extension $resolvedCheckpoint]] ne ".rest"} {
+                incr problem
+                lappend messages "Restart initial stresses: the checkpoint file '$checkpoint' must end with '.rest'."
+            } else {
+                lassign [Dam::write::ParseRestartCheckpoint $checkpoint] inputBase fileLabel
+                if {$inputBase eq "" || $fileLabel eq ""} {
+                    incr problem
+                    lappend messages "Restart initial stresses: the checkpoint file '$checkpoint' does not follow the required <model_part>_<label>.rest naming convention (for example MainModelPart_1.0.rest)."
+                }
+            }
+        }
+
+        if {$legacyMapping} {
+            incr problem
+            lappend messages "Restart initial stresses: the legacy result mapping ('Add previous results') cannot be combined with the restart stress transfer. DamAnalysis rejects this combination. Disable one of the two mechanisms."
+        }
+
+        set law [Dam::write::GetPartConstitutiveLaw $group]
+        if {$law ne ""} {
+            set supportedRestartLaws [list \
+                "LinearElasticPlaneStrain2DLaw" \
+                "LinearElasticPlaneStress2DLaw" \
+                "LinearElastic3DLaw" \
+                "ThermalLinearElastic2DPlaneStrain" \
+                "ThermalLinearElastic2DPlaneStress" \
+                "ThermalLinearElastic3DLaw" \
+                "ThermalLinearElastic2DPlaneStrainNodal" \
+                "ThermalLinearElastic2DPlaneStressNodal" \
+                "ThermalLinearElastic3DLawNodal"]
+            set thermalRestartLaws [list \
+                "ThermalLinearElastic2DPlaneStrain" \
+                "ThermalLinearElastic2DPlaneStress" \
+                "ThermalLinearElastic3DLaw" \
+                "ThermalLinearElastic2DPlaneStrainNodal" \
+                "ThermalLinearElastic2DPlaneStressNodal" \
+                "ThermalLinearElastic3DLawNodal"]
+            if {$law ni $supportedRestartLaws} {
+                incr problem
+                lappend messages "Restart initial stresses: the constitutive law '$law' is not supported by the validated selective_initial_stress_process. Supported laws are the linear elastic plane strain/stress/3D laws and the Dam thermal linear elastic laws. Damage, plasticity, history-dependent and mechanical nodal laws are rejected."
+            } elseif {$law in $thermalRestartLaws} {
+                set referenceConditions [Dam::write::GetActiveReferenceTemperatureConditions]
+                if {[llength $referenceConditions] == 0} {
+                    W "Restart initial stresses: the selected part uses thermoelastic law '$law'. The selective initial-stress process requires T == T_ref at import. Make sure an active reference-temperature condition (or another mechanism) sets the reference field to match the current temperature before the transfer."
+                }
+            }
         }
     }
 
