@@ -32,7 +32,11 @@ proc ::Dam::write::getParametersDict { } {
     ### Load processes
     set mechanical_load_process_list [::write::getConditionsParametersDict DamLoads]
     set thermal_load_process_list [::write::getConditionsParametersDict DamThermalLoads]
-    dict set projectParametersDict loads_process_list [Dam::write::ChangeFileNameforTableid [concat $mechanical_load_process_list $thermal_load_process_list]]
+    set condition_load_process_list [Dam::write::ChangeFileNameforTableid [concat $mechanical_load_process_list $thermal_load_process_list]]
+    # Initial-state save/load processes are global (not condition-based), so they
+    # are appended after the table-id conversion applied to condition processes.
+    set initial_state_process_list [Dam::write::GetInitialStateProcessList]
+    dict set projectParametersDict loads_process_list [concat $condition_load_process_list $initial_state_process_list]
 
     ### Construction processes
     dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
@@ -917,6 +921,292 @@ proc ::Dam::write::GetConstructionDomainProcessDict { } {
 
     }
     return $construction_dict
+}
+
+# Returns the Kratos model-part name for a Dam part group. The sub-model-part
+# catalog is already populated when ProjectParameters is written (the .mdpa is
+# written first), so the resolved identifier is used whenever available.
+proc ::Dam::write::GetInitialStateModelPartName { group } {
+    if {$group eq ""} {return ""}
+
+    # Match the name used when the part sub-model-part was written.
+    set group [write::GetWriteGroupName $group]
+
+    set subModelPartId 0
+    catch {set subModelPartId [write::getSubModelPartId "Parts" $group]}
+    if {$subModelPartId eq "" || $subModelPartId eq 0} {
+        set subModelPartId "Parts_[write::transformGroupName $group]"
+    }
+    return [write::GetModelPartNameWithParent $subModelPartId]
+}
+
+# File-handler values use "- No file - ..." as the empty selection.
+proc ::Dam::write::IsNoInitialStateFile { value } {
+    set value [string trim $value]
+    return [expr {$value eq "" || [string match "- No file*" $value]}]
+}
+
+# Resolves a user-provided initial-state path for local validation. Relative
+# paths are interpreted from the GiD project directory, which is the working
+# directory used when Kratos is launched from GiD.
+proc ::Dam::write::ResolveInitialStatePath { value } {
+    set value [string trim $value]
+    if {[Dam::write::IsNoInitialStateFile $value]} {return ""}
+
+    if {[file pathtype $value] eq "absolute"} {return $value}
+
+    set baseDir ""
+    catch {set baseDir [write::GetConfigurationAttribute dir]}
+    if {$baseDir eq ""} {return $value}
+    return [file join $baseDir $value]
+}
+
+proc ::Dam::write::GetSaveInitialStateProcessDict { } {
+    if {![write::isBooleanTrue [write::getValue DamSaveInitialState]]} {return ""}
+
+    set group [write::getValue DamSaveInitialStatePart]
+    set saveStresses [write::isBooleanTrue [write::getValue DamSaveInitialStresses]]
+    set saveTemperature [write::isBooleanTrue [write::getValue DamSaveInitialTemperature]]
+    set saveReferenceTemperature [write::isBooleanTrue [write::getValue DamSaveInitialReferenceTemperature]]
+    set stressSource [write::getValue DamInitialStateStressSource]
+    if {$stressSource eq ""} {set stressSource "current_cauchy"}
+    set outputFile [string trim [write::getValue DamInitialStateOutputFile]]
+
+    set parametersDict [dict create]
+    dict set parametersDict model_part_name [Dam::write::GetInitialStateModelPartName $group]
+    if {$saveStresses} {
+        dict set parametersDict save_initial_stresses true
+    } else {
+        dict set parametersDict save_initial_stresses false
+    }
+    if {$saveTemperature} {
+        dict set parametersDict save_initial_temperature true
+    } else {
+        dict set parametersDict save_initial_temperature false
+    }
+    if {$saveReferenceTemperature} {
+        dict set parametersDict save_reference_temperature true
+    } else {
+        dict set parametersDict save_reference_temperature false
+    }
+    dict set parametersDict stress_source $stressSource
+    dict set parametersDict output_file_name $outputFile
+
+    set processDict [dict create]
+    dict set processDict python_module "save_dam_initial_state_process"
+    dict set processDict kratos_module "KratosMultiphysics.DamApplication"
+    dict set processDict Parameters $parametersDict
+    return $processDict
+}
+
+proc ::Dam::write::GetLoadInitialStateProcessDict { } {
+    if {![write::isBooleanTrue [write::getValue DamLoadInitialState]]} {return ""}
+
+    set group [write::getValue DamLoadInitialStatePart]
+    set inputFile [string trim [write::getValue DamLoadInitialStateFile]]
+    set transferStresses [write::isBooleanTrue [write::getValue DamTransferInitialStresses]]
+    set transferTemperature [write::isBooleanTrue [write::getValue DamTransferInitialTemperature]]
+    set transferReferenceTemperature [write::isBooleanTrue [write::getValue DamTransferInitialReferenceTemperature]]
+    set referencePolicy [write::getValue DamReferenceTemperaturePolicy]
+    if {$referencePolicy eq ""} {set referencePolicy "preserve"}
+
+    set parametersDict [dict create]
+    dict set parametersDict model_part_name [Dam::write::GetInitialStateModelPartName $group]
+    dict set parametersDict input_file_name $inputFile
+    if {$transferStresses} {
+        dict set parametersDict transfer_initial_stresses true
+    } else {
+        dict set parametersDict transfer_initial_stresses false
+    }
+    if {$transferTemperature} {
+        dict set parametersDict transfer_initial_temperature true
+    } else {
+        dict set parametersDict transfer_initial_temperature false
+    }
+    if {$transferReferenceTemperature} {
+        dict set parametersDict transfer_reference_temperature true
+    } else {
+        dict set parametersDict transfer_reference_temperature false
+    }
+    dict set parametersDict reference_temperature_policy $referencePolicy
+
+    set processDict [dict create]
+    dict set processDict python_module "load_dam_initial_state_process"
+    dict set processDict kratos_module "KratosMultiphysics.DamApplication"
+    dict set processDict Parameters $parametersDict
+    return $processDict
+}
+
+# The load process runs before the first solution step and the save process at
+# finalization, so both can coexist in the same calculation. Keep the load
+# process first for a predictable lifecycle order.
+proc ::Dam::write::GetInitialStateProcessList { } {
+    set processList [list]
+    set loadProcess [Dam::write::GetLoadInitialStateProcessDict]
+    if {$loadProcess ne ""} {lappend processList $loadProcess}
+    set saveProcess [Dam::write::GetSaveInitialStateProcessDict]
+    if {$saveProcess ne ""} {lappend processList $saveProcess}
+    return $processList
+}
+
+# Returns the active Dam conditions that assign NODAL_REFERENCE_TEMPERATURE.
+# Both the explicit nodal reference-temperature condition and the construction
+# grouting-reference condition are reported.
+proc ::Dam::write::GetActiveReferenceTemperatureConditions { } {
+    set conditionList [list]
+    set thermalLoadsRoute [spdAux::getRoute DamThermalLoads]
+    if {$thermalLoadsRoute eq ""} {return $conditionList}
+
+    set root [customlib::GetBaseRoot]
+    foreach conditionId [list NodalReferenceTemperature2D NodalReferenceTemperature3D GroutingTime2D GroutingTime3D] {
+        set groups [$root selectNodes "$thermalLoadsRoute/condition\[@n='$conditionId'\]/group"]
+        if {$groups ne ""} {lappend conditionList $conditionId}
+    }
+    return $conditionList
+}
+
+# Application-level validation. Returning a nonzero first element aborts the
+# write and displays every message in the GiD warning window.
+proc ::Dam::write::writeValidateEvent { } {
+    set problem 0
+    set messages [list]
+    set legacyMapping [write::isBooleanTrue [write::getValue DamPreviousResults AddPreviousResults]]
+    set damTypeofProblem [write::getValue DamTypeofProblem]
+    set hasThermalFields [expr {$damTypeofProblem in [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]}]
+
+    set saveEnabled [write::isBooleanTrue [write::getValue DamSaveInitialState]]
+    if {$saveEnabled} {
+        set saveStresses [write::isBooleanTrue [write::getValue DamSaveInitialStresses]]
+        set saveTemperature [write::isBooleanTrue [write::getValue DamSaveInitialTemperature]]
+        set saveReferenceTemperature [write::isBooleanTrue [write::getValue DamSaveInitialReferenceTemperature]]
+
+        if {!$saveStresses && !$saveTemperature && !$saveReferenceTemperature} {
+            incr problem
+            lappend messages "Save initial state: select at least one field to save (initial stresses, initial temperature or reference temperature)."
+        }
+
+        set group [write::getValue DamSaveInitialStatePart]
+        if {$group eq ""} {
+            incr problem
+            lappend messages "Save initial state: select the target part."
+        }
+
+        if {$saveStresses} {
+            set stressSource [write::getValue DamInitialStateStressSource]
+            if {$stressSource ni [list "current_cauchy" "stored_initial_stress"]} {
+                incr problem
+                lappend messages "Save initial state: unsupported stress source '$stressSource'. Select 'Current Cauchy stress' or 'Stored initial stress'."
+            } elseif {$legacyMapping && $stressSource eq "stored_initial_stress"} {
+                incr problem
+                lappend messages "Save initial state: 'Stored initial stress' cannot be combined with the legacy result mapping ('Add previous results'), because the legacy mapping does not populate the constitutive InitialState. Use 'Current Cauchy stress' or disable the legacy mapping."
+            }
+        }
+
+        if {!$hasThermalFields} {
+            if {$saveTemperature} {
+                incr problem
+                lappend messages "Save initial state: the analysis type '$damTypeofProblem' does not define nodal TEMPERATURE. Disable 'Save initial temperature' or use a thermo-mechanical analysis."
+            }
+            if {$saveReferenceTemperature} {
+                incr problem
+                lappend messages "Save initial state: the analysis type '$damTypeofProblem' does not define nodal NODAL_REFERENCE_TEMPERATURE. Disable 'Save reference temperature' or use a thermo-mechanical analysis."
+            }
+        }
+
+        set outputFile [string trim [write::getValue DamInitialStateOutputFile]]
+        if {$outputFile eq ""} {
+            incr problem
+            lappend messages "Save initial state: the output file is empty."
+        } elseif {![regexp {\.json(\.gz)?$} $outputFile]} {
+            incr problem
+            lappend messages "Save initial state: the output file '$outputFile' must end with '.json' or '.json.gz'."
+        } elseif {[file isdirectory [Dam::write::ResolveInitialStatePath $outputFile]]} {
+            incr problem
+            lappend messages "Save initial state: the output path '$outputFile' is an existing directory; provide a file name."
+        }
+    }
+
+    set loadEnabled [write::isBooleanTrue [write::getValue DamLoadInitialState]]
+    if {$loadEnabled} {
+        set transferStresses [write::isBooleanTrue [write::getValue DamTransferInitialStresses]]
+        set transferTemperature [write::isBooleanTrue [write::getValue DamTransferInitialTemperature]]
+        set transferReferenceTemperature [write::isBooleanTrue [write::getValue DamTransferInitialReferenceTemperature]]
+        set referencePolicy [write::getValue DamReferenceTemperaturePolicy]
+        if {$referencePolicy eq ""} {set referencePolicy "preserve"}
+
+        if {!$transferStresses && !$transferTemperature && !$transferReferenceTemperature} {
+            incr problem
+            lappend messages "Load initial state: select at least one field to transfer (initial stresses, initial temperature or reference temperature)."
+        }
+
+        if {!$hasThermalFields} {
+            if {$transferTemperature} {
+                incr problem
+                lappend messages "Load initial state: the analysis type '$damTypeofProblem' does not define nodal TEMPERATURE. Disable 'Transfer initial temperature' or use a thermo-mechanical analysis."
+            }
+            if {$transferReferenceTemperature} {
+                incr problem
+                lappend messages "Load initial state: the analysis type '$damTypeofProblem' does not define nodal NODAL_REFERENCE_TEMPERATURE. Disable 'Transfer reference temperature' or use a thermo-mechanical analysis."
+            }
+        }
+
+        set group [write::getValue DamLoadInitialStatePart]
+        if {$group eq ""} {
+            incr problem
+            lappend messages "Load initial state: select the target part."
+        }
+
+        set inputFile [string trim [write::getValue DamLoadInitialStateFile]]
+        if {[Dam::write::IsNoInitialStateFile $inputFile]} {
+            incr problem
+            lappend messages "Load initial state: select an input .json or .json.gz file."
+        } else {
+            set resolvedInput [Dam::write::ResolveInitialStatePath $inputFile]
+            if {![file isfile $resolvedInput]} {
+                incr problem
+                lappend messages "Load initial state: the input file '$inputFile' does not exist (resolved to '$resolvedInput'). Select it with the File handler toolbar or use a valid path."
+            } elseif {![regexp {\.json(\.gz)?$} $resolvedInput]} {
+                incr problem
+                lappend messages "Load initial state: the input file '$inputFile' must end with '.json' or '.json.gz'."
+            }
+        }
+
+        if {$referencePolicy ni [list "preserve" "initial_temperature"]} {
+            incr problem
+            lappend messages "Load initial state: unsupported reference temperature policy '$referencePolicy'."
+        }
+
+        if {$referencePolicy eq "initial_temperature"} {
+            if {!$transferTemperature} {
+                incr problem
+                lappend messages "Load initial state: the policy 'Use initial temperature as reference' requires transferring the initial temperature."
+            }
+            if {$transferReferenceTemperature} {
+                incr problem
+                lappend messages "Load initial state: 'Transfer reference temperature' and the policy 'Use initial temperature as reference' cannot be enabled at the same time. Disable one of them."
+            }
+        }
+
+        if {$transferReferenceTemperature || $referencePolicy eq "initial_temperature"} {
+            set referenceConditions [Dam::write::GetActiveReferenceTemperatureConditions]
+            if {[llength $referenceConditions] > 0} {
+                if {$referencePolicy eq "initial_temperature"} {
+                    set conflictAction "Disable or remove those conditions, or do not use the 'Use initial temperature as reference' policy."
+                } else {
+                    set conflictAction "Disable or remove those conditions, or disable 'Transfer reference temperature'."
+                }
+                incr problem
+                lappend messages "Load initial state: the imported NODAL_REFERENCE_TEMPERATURE would be overwritten by the active reference-temperature condition(s): [join $referenceConditions {, }]. $conflictAction The interface does not remove them automatically."
+            }
+        }
+
+        if {$legacyMapping} {
+            incr problem
+            lappend messages "Load initial state: the legacy result mapping ('Add previous results') cannot be combined with 'Load initial state'. Disable one of the two mechanisms. The legacy mapping transfers nodal fields and is not equivalent to the constitutive initial-state transfer."
+        }
+    }
+
+    return [list $problem $messages]
 }
 
 # This process write the transfer results process in case is selected
