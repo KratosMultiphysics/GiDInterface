@@ -428,11 +428,11 @@ proc ::Dam::xml::ProcAddResultsState {domNode args} {
     return $state
 }
 
-# File-handler list for transfer input files (.json, .json.gz and .rest). In
-# addition to the files added through the File handler toolbar, a user-provided
-# path is kept in the list so absolute paths and paths relative to the GiD
-# project directory can be typed directly. Values that do not look like a file
-# path fall back to the empty entry.
+# File-handler list for transfer input files (.json and .json.gz). In addition
+# to the files added through the File handler toolbar, a user-provided
+# .json/.json.gz path is kept in the list so absolute paths and paths relative
+# to the GiD project directory can be typed directly. Values without a supported
+# initial-state extension fall back to the empty entry.
 proc ::Dam::xml::ProcGetTransferFileValues {domNode args} {
     customlib::UpdateDocument
     spdAux::LoadModelFiles
@@ -442,11 +442,7 @@ proc ::Dam::xml::ProcGetTransferFileValues {domNode args} {
 
     set current [get_domnode_attribute $domNode v]
     if {$current ni $values} {
-        set looksLikePath [expr {
-            [string first "/" $current] >= 0 ||
-            [string first "\\" $current] >= 0 ||
-            [regexp {\.(json(\.gz)?|rest)$} $current]}]
-        if {$looksLikePath} {
+        if {[regexp {\.json(\.gz)?$} $current]} {
             lappend values $current
         } else {
             $domNode setAttribute v [lindex $values 0]
