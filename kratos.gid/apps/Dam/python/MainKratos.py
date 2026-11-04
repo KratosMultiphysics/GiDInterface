@@ -165,6 +165,37 @@ class Solution(object):
         self.list_of_processes += KratosMultiphysics.process_factory.KratosProcessFactory(self.model).ConstructListOfProcesses( self.ProjectParameters["temperature_by_device_list"] )
         self.list_of_processes += KratosMultiphysics.process_factory.KratosProcessFactory(self.model).ConstructListOfProcesses( self.ProjectParameters["output_device_list"] )
 
+        # The initial-state import must be the only mechanism that assigns each
+        # imported field. Multiple JSON imports are allowed for disjoint parts;
+        # their overlap is validated globally before any ExecuteBeforeSolutionLoop.
+        self.initial_state_import_processes = [
+            process for process in self.list_of_processes
+            if hasattr(process, "PrevalidateInitialState")]
+
+        if any(getattr(process, "imports_reference_temperature", False)
+               for process in self.list_of_processes):
+            reference_process_classes = (
+                "ImposeNodalReferenceTemperatureProcess",
+                "ImposeGroutingReferenceTemperatureProcess")
+            reference_processes = [
+                process for process in self.list_of_processes
+                if (getattr(process, "assigns_reference_temperature", False) or
+                    isinstance(
+                        process,
+                        KratosDam.DamNodalReferenceTemperatureProcess) or
+                    type(process).__name__ in reference_process_classes)]
+            if reference_processes:
+                raise RuntimeError(
+                    "Cannot import NODAL_REFERENCE_TEMPERATURE while a process "
+                    "that assigns it is active. Remove or disable the "
+                    "reference-temperature process for this analysis.")
+
+        if self.add_previous_results and self.initial_state_import_processes:
+            raise RuntimeError(
+                "An initial-state transfer process cannot be combined with "
+                "'transfer_results_process.add_previous_results'. Use only one "
+                "initial-state transfer mechanism per analysis.")
+
         # Print list of constructed processes
         if(self.echo_level>1):
             for self.process in self.list_of_processes:
@@ -239,6 +270,12 @@ class Solution(object):
         if self.consider_construction:
             # Execute initialize solution
             self.construction_utilities.BeforeSolutionLoop()
+
+        # Validate all configured imports before any process applies fields.
+        if self.initial_state_import_processes:
+            from KratosMultiphysics.DamApplication import dam_initial_state_file
+            dam_initial_state_file.ValidateCombinedImports(
+                self.initial_state_import_processes)
 
         # ExecuteBeforeSolutionLoop
         for self.process in self.list_of_processes:

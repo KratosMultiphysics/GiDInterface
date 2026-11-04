@@ -95,6 +95,20 @@ proc ::Dam::write::UpdateMaterials { } {
 
         dict set matdict $mat CONSTITUTIVE_LAW_NAME $newconstlaw
     }
+
+    # The Dam initial-state file format requires THICKNESS on 2D solid parts.
+    # Plane-strain laws do not define it themselves, so provide the standard
+    # unit thickness only when an initial-state transfer is enabled. This keeps
+    # unrelated analyses unchanged.
+    if {[Dam::write::IsInitialStateTransferEnabled] &&
+            [string match "2D*" [write::getValue nDim]]} {
+        foreach mat [dict keys $matdict] {
+            if {![dict exists $matdict $mat THICKNESS]} {
+                dict set matdict $mat THICKNESS 1.0
+            }
+        }
+    }
+
     write::setMatDict $matdict
 }
 

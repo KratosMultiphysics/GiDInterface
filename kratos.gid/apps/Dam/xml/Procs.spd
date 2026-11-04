@@ -81,4 +81,10 @@
 	  ]]>
 	</proc>
 
+	<proc n='GetTransferFileValues' args='args'>
+	  <![CDATA[
+	  return [Dam::xml::ProcGetTransferFileValues $domNode $args]
+	  ]]>
+	</proc>
+
 </container>

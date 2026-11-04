@@ -43,22 +43,52 @@
         </container>
     </container>
 
-    <container n="TransferResults" pn="Transfer results" un="DamTransferResults" icon="transfer_results" actualize_tree="1" open_window="0">
-        <container n="SaveResults" pn="Save results" un="DamSaveResults" help="" actualize_tree="1" open_window="0">
+    <container n="TransferResults" pn="Transfer results" un="DamTransferResults" icon="transfer_results" actualize_tree="1" open_window="0"
+        help="Transfer the initial state between Dam calculations. Export final state and Import initial state read and write exact constitutive state files (Gauss-point initial stresses plus nodal temperatures). Legacy result transfer maps nodal fields from previously saved .mdpa result files and is not equivalent to the exact constitutive-state transfer.">
+
+        <container n="ExportFinalState" pn="Export final state" un="DamExportFinalStateContainer" help="Selected fields are exported at the end of the calculation for use in a subsequent analysis." actualize_tree="1" open_window="0">
+            <value n="Enable" pn="Enable export" un="DamExportFinalState" v="No" values="Yes,No" actualize_tree="1" help="Export the selected fields when the analysis finishes"/>
+            <container n="Parts" pn="Parts to export" un="DamExportFinalStateParts" state="[HideIfUniqueName DamExportFinalState No]" actualize_tree="1" open_window="0">
+                <blockdata n="ExportPart" pn="Part" name="Part 1" sequence="1" editable_name="unique" can_delete_last_item="1">
+                    <value n="Part" pn="Structural part" values="[GetParts]" v=""/>
+                    <value n="ExportStresses" pn="Export Cauchy stresses" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="ExportTemperature" pn="Export temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="ExportReferenceTemperature" pn="Export reference temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="OutputFile" pn="Output file" v="final_state.json.gz" help="Output file for this part. Use .json or .json.gz. Different parts must use different output files."/>
+                </blockdata>
+            </container>
+        </container>
+
+        <container n="ImportInitialState" pn="Import initial state" un="DamImportInitialStateContainer" help="Selected fields are imported before the solution starts, without transferring displacements, time or solver history." actualize_tree="1" open_window="0">
+            <value n="Enable" pn="Enable import" un="DamImportInitialState" v="No" values="Yes,No" actualize_tree="1" help="Apply the selected initial-state fields before the first solution step"/>
+            <container n="Parts" pn="Parts to import" un="DamImportInitialStateParts" state="[HideIfUniqueName DamImportInitialState No]" actualize_tree="1" open_window="0">
+                <blockdata n="ImportPart" pn="Part" name="Part 1" sequence="1" editable_name="unique" can_delete_last_item="1">
+                    <value n="Part" pn="Structural part" values="[GetParts]" v=""/>
+                    <value n="InputFile" pn="Input file" type="file" v="- No file - (add files using File handler toolbar)" values="[GetTransferFileValues]" update_proc="AddFile" help="Final-state file for this part. Select an existing .json or .json.gz file, or type an absolute/relative path."/>
+                    <value n="ImportStresses" pn="Import initial stresses" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="ImportTemperature" pn="Import temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="ImportReferenceTemperature" pn="Import reference temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
+                    <value n="ReferenceTemperaturePolicy" pn="Reference temperature policy" v="preserve" values="preserve,initial_temperature" dict="preserve,Preserve,initial_temperature,Use initial temperature as reference"/>
+                </blockdata>
+            </container>
+        </container>
+
+        <container n="SaveResults" pn="Save results (legacy .mdpa)" un="DamSaveResults" help="Legacy workflow: write auxiliary .mdpa files with nodal displacement, nodal Cauchy stress, temperature and reference temperature. These files are consumed by the legacy mapping transfer and cannot be converted into an exact constitutive initial-state file." actualize_tree="1" open_window="0">
             <value n="SaveIntermediateResults" pn="Save Intermediate Results" un="DamSaveIntermediateResults" v="No" values="Yes,No" help="" actualize_tree="1"/>
             <value n="SaveIntermediateStep" pn="Step" un="DamSaveIntermediateStep" state="[checkStateByUniqueName DamSaveIntermediateResults Yes]" v="0" help="" actualize_tree="1"/>
             <value n="SaveFinalResults" pn="Save Final Results" un="DamSaveFinalResults" v="No" values="Yes,No" help="" actualize_tree="1"/>
         </container>
-        <container n="PreviousResults" pn="Previous results" un="DamPreviousResults" help="" actualize_tree="1" open_window="0">
-            <value n="AddPreviousResults" pn="Add previous results" un="DamAddPreviousResults" v="No" values="Yes,No" help="" actualize_tree="1"/>
+
+        <container n="PreviousResults" pn="Legacy result transfer (mapping)" un="DamPreviousResults" help="Legacy mapping from previously calculated Dam projects. It reads the .mdpa result files written by 'Save results (legacy .mdpa)', maps nodal DISPLACEMENT, nodal NODAL_CAUCHY_STRESS_TENSOR, TEMPERATURE and NODAL_REFERENCE_TEMPERATURE, and supports different meshes. It does not transfer the constitutive Gauss-point InitialState, so it is not equivalent to 'Import initial state'. It cannot be combined with 'Import initial state'." actualize_tree="1" open_window="0">
+            <value n="AddPreviousResults" pn="Add previous results" un="DamAddPreviousResults" v="No" values="Yes,No" help="Enable the legacy nodal-field mapping from previous .mdpa result files" actualize_tree="1"/>
             <value n="TypeResults" pn="Type of results" un="DamTypeResults" v="Thermo-Mechanical" values="Mechanical,Thermal,Thermo-Mechanical" state="[HideIfUniqueName DamAddPreviousResults No]" help="" actualize_tree="1"/>
             <container n="AddResultsData" pn="Add data" un="DamAddResultsData" state="[addResultsState]" actualize_tree="1" open_window="0">
                 <value n="DisplacementResults" pn="Displacement results" un="DamDisplacementResults" state="[HideIfUniqueName DamTypeResults Thermal]" v="No" values="Yes,No" help="" actualize_tree="1"/>
-                <value n="StressResults" pn="Nodal cauchy stress results" un="DamStressResults" state="[HideIfUniqueName DamTypeResults Thermal]" v="No" values="Yes,No" help="" actualize_tree="1"/>
-                <value n="FileNameMechanical" pn="File name for mechanical results" un="DamFileMech" v="- No File -" state="[HideIfUniqueName DamTypeResults Thermal]" help="" actualize_tree="1"/>
+                <value n="StressResults" pn="Nodal cauchy stress results" un="DamStressResults" state="[HideIfUniqueName DamTypeResults Thermal]" v="No" values="Yes,No" help="Maps the nodal NODAL_CAUCHY_STRESS_TENSOR field. This is not the Gauss-point constitutive initial stress." actualize_tree="1"/>
+                <value n="FileNameMechanical" pn="File name for mechanical results" un="DamFileMech" v="- No File -" state="[HideIfUniqueName DamTypeResults Thermal]" help="Legacy .mdpa file written by 'Save results (legacy .mdpa)'" actualize_tree="1"/>
                 <value n="TemperatureResults" pn="Initial temperature results" un="DamInitialTempResults" state="[HideIfUniqueName DamTypeResults Mechanical]" v="No" values="Yes,No" help="" actualize_tree="1"/>
                 <value n="RefTemperatureResults" pn="Nodal reference temperature results" un="DamRefTempResults" state="[HideIfUniqueName DamTypeResults Mechanical]" v="No" values="Yes,No" help="" actualize_tree="1"/>
-                <value n="FileNameThermal" pn="File name for thermal results" un="DamFileTherm" v="- No File -" state="[HideIfUniqueName DamTypeResults Mechanical]" help="" actualize_tree="1"/>
+                <value n="FileNameThermal" pn="File name for thermal results" un="DamFileTherm" v="- No File -" state="[HideIfUniqueName DamTypeResults Mechanical]" help="Legacy .mdpa file written by 'Save results (legacy .mdpa)'" actualize_tree="1"/>
             </container>
         </container>
     </container>
