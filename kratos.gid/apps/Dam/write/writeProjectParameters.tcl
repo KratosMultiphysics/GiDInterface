@@ -1019,10 +1019,15 @@ proc ::Dam::write::GetImportInitialStateEntries { } {
     foreach node [$root selectNodes $xp] {
         set policy [Dam::write::GetBlockValue $node ReferenceTemperaturePolicy]
         if {$policy eq ""} {set policy "preserve"}
+        # Projects created before the spatial-mapping option have no
+        # TransferMethod node; keep their historical matching-mesh behaviour.
+        set transferMethod [Dam::write::GetBlockValue $node TransferMethod]
+        if {$transferMethod eq ""} {set transferMethod "matching_mesh"}
         lappend entries [dict create \
             name [$node @name] \
             group [Dam::write::GetBlockValue $node Part] \
             input [string trim [Dam::write::GetBlockValue $node InputFile]] \
+            transfer_method $transferMethod \
             stresses [write::isBooleanTrue [Dam::write::GetBlockValue $node ImportStresses]] \
             temperature [write::isBooleanTrue [Dam::write::GetBlockValue $node ImportTemperature]] \
             reference [write::isBooleanTrue [Dam::write::GetBlockValue $node ImportReferenceTemperature]] \
@@ -1054,6 +1059,7 @@ proc ::Dam::write::GetImportInitialStateProcessDictFor { entry } {
     dict set parametersDict import_temperature [expr {[dict get $entry temperature] ? "true" : "false"}]
     dict set parametersDict import_reference_temperature [expr {[dict get $entry reference] ? "true" : "false"}]
     dict set parametersDict reference_temperature_policy [dict get $entry policy]
+    dict set parametersDict transfer_method [dict get $entry transfer_method]
 
     set processDict [dict create]
     dict set processDict python_module "import_dam_initial_state_process"
@@ -1181,6 +1187,7 @@ proc ::Dam::write::writeValidateEvent { } {
         set importTemperature [dict get $entry temperature]
         set importReferenceTemperature [dict get $entry reference]
         set referencePolicy [dict get $entry policy]
+        set transferMethod [dict get $entry transfer_method]
         set inputFile [string trim [dict get $entry input]]
 
         if {$group eq ""} {
@@ -1224,6 +1231,10 @@ proc ::Dam::write::writeValidateEvent { } {
         if {$referencePolicy ni [list "preserve" "initial_temperature"]} {
             incr problem
             lappend messages "Import initial state ($entryName): unsupported reference temperature policy '$referencePolicy'."
+        }
+        if {$transferMethod ni [list "matching_mesh" "spatial_mapping"]} {
+            incr problem
+            lappend messages "Import initial state ($entryName): unsupported transfer method '$transferMethod'."
         }
         if {$referencePolicy eq "initial_temperature"} {
             if {!$importTemperature} {
