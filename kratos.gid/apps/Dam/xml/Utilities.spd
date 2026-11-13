@@ -65,6 +65,7 @@
                 <blockdata n="ImportPart" pn="Part" name="Part 1" sequence="1" editable_name="unique" can_delete_last_item="1">
                     <value n="Part" pn="Structural part" values="[GetParts]" v=""/>
                     <value n="InputFile" pn="Input file" type="file" v="- No file - (add files using File handler toolbar)" values="[GetTransferFileValues]" update_proc="AddFile" help="Final-state file for this part. Select an existing .json or .json.gz file, or type an absolute/relative path."/>
+                    <value n="TransferMethod" pn="Transfer method" v="matching_mesh" values="matching_mesh,spatial_mapping" dict="matching_mesh,Matching mesh,spatial_mapping,Spatial mapping" help="Matching mesh: transfer the initial state between identical meshes.\nSpatial mapping: transfer the initial state between different 2D or 3D meshes representing the same physical domain."/>
                     <value n="ImportStresses" pn="Import initial stresses" v="Yes" values="Yes,No" actualize_tree="1"/>
                     <value n="ImportTemperature" pn="Import temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
                     <value n="ImportReferenceTemperature" pn="Import reference temperature" v="Yes" values="Yes,No" actualize_tree="1"/>
