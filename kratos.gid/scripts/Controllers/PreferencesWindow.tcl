@@ -44,6 +44,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "kratos_bin_path" {
                     set ret [file join $::Kratos::kratos_private(Path) exec kratos runkratos.exe]
                 }
+                "run_window" {
+                    set ret 1
+                }
                 default {
                     set ret 0
                 }

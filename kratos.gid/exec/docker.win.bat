@@ -7,12 +7,14 @@ REM Problem directory                 = %3
 REM OutputFile: "%2\%1.info"
 REM ErrorFile: "%2\%1.err"
 
-REM Remove previous calculation files and results
-DEL "%2\%1.info"
-DEL "%2\%1.err"
-DEL "%2\%1*.post.bin"
-DEL "%2\%1*.post.res"
-DEL "%2\%1*.post.msh"
+@REM if case_path environment variable is defined use it, change directory to it
+cd %case_path%
 
+REM Remove previous calculation files and results
+DEL "%case_path%\%1.info"
+DEL "%case_path%\%1.err"
+DEL "%case_path%\%1*.post.bin"
+DEL "%case_path%\%1*.post.res"
+DEL "%case_path%\%1*.post.msh"
 @REM Calculate!
-docker run -v "%2:/model" --rm --name "%1" %kratos_docker_image% > "%2\\%1.info" 2> "%2\\%1.err"
+docker run -v "%case_path%:/model" --rm --name "%1" %kratos_docker_image% > "%case_path%\%1.info" 2> "%case_path%\%1.err"
