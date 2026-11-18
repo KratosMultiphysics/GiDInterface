@@ -120,7 +120,6 @@ proc Kratos::EndCreatePreprocessTBar {} {
     if {[info exists kratos_private(MenuItems)]} {
         unset kratos_private(MenuItems)
     }
-    update
 }
 
 
