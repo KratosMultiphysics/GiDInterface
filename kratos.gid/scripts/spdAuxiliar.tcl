@@ -66,9 +66,10 @@ proc spdAux::RequestRefresh {} {
 
 proc spdAux::TryRefreshTree { } {
     variable refreshTreeTurn
-    #W "HI"
-    update
-    update idletasks
+    # No update here: this proc runs from a timer, so the pending events have already been
+    # processed. The timer also fires inside any other code that enters the event loop (e.g. an
+    # update of GiD while it goes from postprocess to preprocess); an update here then processes
+    # user events (clicks on the menubar...) in the middle of that code.
     if {$refreshTreeTurn} {
         #W "there"
         catch {
